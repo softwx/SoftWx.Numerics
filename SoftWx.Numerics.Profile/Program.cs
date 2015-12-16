@@ -1,44 +1,64 @@
-﻿using SoftWx.Diagnostics;
+﻿// Copyright ©2015 SoftWx, Inc.
+// Released under the MIT License the text of which appears at the end of this file.
+// <authors> Steve Hatchett
+using SoftWx.Diagnostics;
 using System;
 
 namespace SoftWx.Numerics.Profile {
     class Program {
         static void Main(string[] args) {
-            ((byte)1).LowBit(); // gets the assembly going
-            sbyte sr, s1; s1 = -1;
-            sr = s1.BitCount();
-            sr = s1.HighBit();
-            sr = s1.HighBitPosition();
-            sr = s1.LeadingZeroBits();
-            sr = s1.LowBit();
-            sr = s1.LowBitPosition();
-            sr = s1.TrailingZeroBits();
+            ((byte)1).LowBit(); // gets the assembly and class going
+            ((byte)1).Log2(); // get the class going
+
             ProfileBitMath();
-            //int val = -10;
-            //sbyte s = sbyte.MinValue;
-            //Console.WriteLine(ToBinString(10));
-            //Console.WriteLine(ToBinString(-10));
-            //Console.WriteLine(ToBinString(10u));
-            //Console.WriteLine(ToBinString((uint)val));
-            //Console.WriteLine(ToBinString(val.HighBit()));
-            //var bench = new Bench();
-            //int ur; int u1 = 123;
-            //bench.Time("old", () => { ur = u1.LowBitPosition(); ur = u1.LowBitPosition(); ur = u1.LowBitPosition(); ur = u1.LowBitPosition(); ur = u1.LowBitPosition(); ur = u1.LowBitPosition(); ur = u1.LowBitPosition(); ur = u1.LowBitPosition(); ur = u1.LowBitPosition(); ur = u1.LowBitPosition(); }, 10);
-            //bench.Time("2", () => { ur = u1.LowBitPosition2(); ur = u1.LowBitPosition2(); ur = u1.LowBitPosition2(); ur = u1.LowBitPosition2(); ur = u1.LowBitPosition2(); ur = u1.LowBitPosition2(); ur = u1.LowBitPosition2(); ur = u1.LowBitPosition2(); ur = u1.LowBitPosition2(); ur = u1.LowBitPosition2(); }, 10);
-            //byte b = byte.MinValue;
-            //while (true) {
-            //    if (b.LeadingZeroBits() != b.LeadingZeroBits2()) throw new Exception();
-            //    sbyte br = b.LowBit();
-            //    Console.WriteLine(ToBinString(b)+" " + b);
-            //    Console.WriteLine(ToBinString(br));
-            //    Console.ReadKey();
-            //    Console.WriteLine();
-            //    //if (b.TrailingZeroBits() != br.TrailingZeroBits()) throw new Exception();
-            //    if (b == byte.MaxValue) break;
-            //    b++;
-            //}
+            ProfileLog2Math();
+
             Console.Write("press any key to exit...");
             Console.ReadKey();
+        }
+        static void ProfileLog2Math() {
+            bool bo;
+            byte b1; int br; b1 = 123;
+            sbyte sb1, sbr; sb1 = 123;
+            ushort us1, usr; us1 = 123;
+            short s1, sr; s1 = 123;
+            uint ui1, uir; ui1 = 123;
+            int i1, ir; i1 = 123;
+            ulong ul1, ulr; ul1 = 123;
+            long l1, lr; l1 = 123;
+            var bench = new Bench();
+            bench.Time("byte.Log2", () => { br = b1.Log2(); br = b1.Log2(); br = b1.Log2(); br = b1.Log2(); br = b1.Log2(); }, 5);
+            bench.Time("sbyte.Log2", () => { sbr = sb1.Log2(); sbr = sb1.Log2(); sbr = sb1.Log2(); sbr = sb1.Log2(); sbr = sb1.Log2(); }, 5);
+            bench.Time("ushort.Log2", () => { usr = us1.Log2(); usr = us1.Log2(); usr = us1.Log2(); usr = us1.Log2(); usr = us1.Log2(); }, 5);
+            bench.Time("short.Log2", () => { sr = s1.Log2(); sr = s1.Log2(); sr = s1.Log2(); sr = s1.Log2(); sr = s1.Log2(); }, 5);
+            bench.Time("uint.Log2", () => { uir = ui1.Log2(); uir = ui1.Log2(); uir = ui1.Log2(); uir = ui1.Log2(); uir = ui1.Log2(); }, 5);
+            bench.Time("int.Log2", () => { ir = i1.Log2(); ir = i1.Log2(); ir = i1.Log2(); ir = i1.Log2(); ir = i1.Log2(); }, 5);
+            bench.Time("ulong.Log2", () => { ulr = ul1.Log2(); ulr = ul1.Log2(); ulr = ul1.Log2(); ulr = ul1.Log2(); ulr = ul1.Log2(); }, 5);
+            bench.Time("long.Log2", () => { lr = l1.Log2(); lr = l1.Log2(); lr = l1.Log2(); lr = l1.Log2(); lr = l1.Log2(); }, 5);
+            bench.Time("byte.IsPowerOf2", () => { bo = b1.IsPowerOf2(); bo = b1.IsPowerOf2(); bo = b1.IsPowerOf2(); bo = b1.IsPowerOf2(); bo = b1.IsPowerOf2(); }, 5);
+            bench.Time("sbyte.IsPowerOf2", () => { bo = sb1.IsPowerOf2(); bo = sb1.IsPowerOf2(); bo = sb1.IsPowerOf2(); bo = sb1.IsPowerOf2(); bo = sb1.IsPowerOf2(); }, 5);
+            bench.Time("ushort.IsPowerOf2", () => { bo = us1.IsPowerOf2(); bo = us1.IsPowerOf2(); bo = us1.IsPowerOf2(); bo = us1.IsPowerOf2(); bo = us1.IsPowerOf2(); }, 5);
+            bench.Time("short.IsPowerOf2", () => { bo = s1.IsPowerOf2(); bo = s1.IsPowerOf2(); bo = s1.IsPowerOf2(); bo = s1.IsPowerOf2(); bo = s1.IsPowerOf2(); }, 5);
+            bench.Time("uint.IsPowerOf2", () => { bo = ui1.IsPowerOf2(); bo = ui1.IsPowerOf2(); bo = ui1.IsPowerOf2(); bo = ui1.IsPowerOf2(); bo = ui1.IsPowerOf2(); }, 5);
+            bench.Time("int.IsPowerOf2", () => { bo = i1.IsPowerOf2(); bo = i1.IsPowerOf2(); bo = i1.IsPowerOf2(); bo = i1.IsPowerOf2(); bo = i1.IsPowerOf2(); }, 5);
+            bench.Time("ulong.IsPowerOf2", () => { bo = ul1.IsPowerOf2(); bo = ul1.IsPowerOf2(); bo = ul1.IsPowerOf2(); bo = ul1.IsPowerOf2(); bo = ul1.IsPowerOf2(); }, 5);
+            bench.Time("long.IsPowerOf2", () => { bo = l1.IsPowerOf2(); bo = l1.IsPowerOf2(); bo = l1.IsPowerOf2(); bo = l1.IsPowerOf2(); bo = l1.IsPowerOf2(); }, 5);
+            bench.Time("byte.PowerOf2Floor", () => { br = b1.PowerOf2Floor(); br = b1.PowerOf2Floor(); br = b1.PowerOf2Floor(); br = b1.PowerOf2Floor(); br = b1.PowerOf2Floor(); }, 5);
+            bench.Time("sbyte.PowerOf2Floor", () => { sbr = sb1.PowerOf2Floor(); sbr = sb1.PowerOf2Floor(); sbr = sb1.PowerOf2Floor(); sbr = sb1.PowerOf2Floor(); sbr = sb1.PowerOf2Floor(); }, 5);
+            bench.Time("ushort.PowerOf2Floor", () => { usr = us1.PowerOf2Floor(); usr = us1.PowerOf2Floor(); usr = us1.PowerOf2Floor(); usr = us1.PowerOf2Floor(); usr = us1.PowerOf2Floor(); }, 5);
+            bench.Time("short.PowerOf2Floor", () => { sr = s1.PowerOf2Floor(); sr = s1.PowerOf2Floor(); sr = s1.PowerOf2Floor(); sr = s1.PowerOf2Floor(); sr = s1.PowerOf2Floor(); }, 5);
+            bench.Time("uint.PowerOf2Floor", () => { uir = ui1.PowerOf2Floor(); uir = ui1.PowerOf2Floor(); uir = ui1.PowerOf2Floor(); uir = ui1.PowerOf2Floor(); uir = ui1.PowerOf2Floor(); }, 5);
+            bench.Time("int.PowerOf2Floor", () => { ir = i1.PowerOf2Floor(); ir = i1.PowerOf2Floor(); ir = i1.PowerOf2Floor(); ir = i1.PowerOf2Floor(); ir = i1.PowerOf2Floor(); }, 5);
+            bench.Time("ulong.PowerOf2Floor", () => { ulr = ul1.PowerOf2Floor(); ulr = ul1.PowerOf2Floor(); ulr = ul1.PowerOf2Floor(); ulr = ul1.PowerOf2Floor(); ulr = ul1.PowerOf2Floor(); }, 5);
+            bench.Time("long.PowerOf2Floor", () => { lr = l1.PowerOf2Floor(); lr = l1.PowerOf2Floor(); lr = l1.PowerOf2Floor(); lr = l1.PowerOf2Floor(); lr = l1.PowerOf2Floor(); }, 5);
+            bench.Time("byte.PowerOf2Ceiling", () => { br = b1.PowerOf2Ceiling(); br = b1.PowerOf2Ceiling(); br = b1.PowerOf2Ceiling(); br = b1.PowerOf2Ceiling(); br = b1.PowerOf2Ceiling(); }, 5);
+            bench.Time("sbyte.PowerOf2Ceiling", () => { sbr = sb1.PowerOf2Ceiling(); sbr = sb1.PowerOf2Ceiling(); sbr = sb1.PowerOf2Ceiling(); sbr = sb1.PowerOf2Ceiling(); sbr = sb1.PowerOf2Ceiling(); }, 5);
+            bench.Time("ushort.PowerOf2Ceiling", () => { usr = us1.PowerOf2Ceiling(); usr = us1.PowerOf2Ceiling(); usr = us1.PowerOf2Ceiling(); usr = us1.PowerOf2Ceiling(); usr = us1.PowerOf2Ceiling(); }, 5);
+            bench.Time("short.PowerOf2Ceiling", () => { sr = s1.PowerOf2Ceiling(); sr = s1.PowerOf2Ceiling(); sr = s1.PowerOf2Ceiling(); sr = s1.PowerOf2Ceiling(); sr = s1.PowerOf2Ceiling(); }, 5);
+            bench.Time("uint.PowerOf2Ceiling", () => { uir = ui1.PowerOf2Ceiling(); uir = ui1.PowerOf2Ceiling(); uir = ui1.PowerOf2Ceiling(); uir = ui1.PowerOf2Ceiling(); uir = ui1.PowerOf2Ceiling(); }, 5);
+            bench.Time("int.PowerOf2Ceiling", () => { ir = i1.PowerOf2Ceiling(); ir = i1.PowerOf2Ceiling(); ir = i1.PowerOf2Ceiling(); ir = i1.PowerOf2Ceiling(); ir = i1.PowerOf2Ceiling(); }, 5);
+            bench.Time("ulong.PowerOf2Ceiling", () => { ulr = ul1.PowerOf2Ceiling(); ulr = ul1.PowerOf2Ceiling(); ulr = ul1.PowerOf2Ceiling(); ulr = ul1.PowerOf2Ceiling(); ulr = ul1.PowerOf2Ceiling(); }, 5);
+            bench.Time("long.PowerOf2Ceiling", () => { lr = l1.PowerOf2Ceiling(); lr = l1.PowerOf2Ceiling(); lr = l1.PowerOf2Ceiling(); lr = l1.PowerOf2Ceiling(); lr = l1.PowerOf2Ceiling(); }, 5);
         }
         static void ProfileBitMath() {
             byte b1, br; b1 = 123;
@@ -106,18 +126,6 @@ namespace SoftWx.Numerics.Profile {
             bench.Time("int.ReverseBits", () => { ir = i1.ReverseBits(); ir = i1.ReverseBits(); ir = i1.ReverseBits(); ir = i1.ReverseBits(); ir = i1.ReverseBits(); }, 5);
             bench.Time("ulong.ReverseBits", () => { ulr = ul1.ReverseBits(); ulr = ul1.ReverseBits(); ulr = ul1.ReverseBits(); ulr = ul1.ReverseBits(); ulr = ul1.ReverseBits(); }, 5);
             bench.Time("long.ReverseBits", () => { lr = l1.ReverseBits(); lr = l1.ReverseBits(); lr = l1.ReverseBits(); lr = l1.ReverseBits(); lr = l1.ReverseBits(); }, 5);
-        }
-        public static String ToBinString(byte value) {
-            return Convert.ToString(value, 2).PadLeft(8, '0');
-        }
-        public static String ToBinString(sbyte value) {
-            return Convert.ToString((byte)value, 2).PadLeft(8, '0');
-        }
-        public static String ToBinString(uint value) {
-            return Convert.ToString(value, 2).PadLeft(32, '0');
-        }
-        public static String ToBinString(int value) {
-            return Convert.ToString(value, 2).PadLeft(32, '0');
         }
     }
 }

@@ -54,7 +54,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TestByteBitExtensions.cs" />
+    <Compile Include="TestBase2Math.cs" />
+    <Compile Include="TestBitMath.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SoftWx.Numerics\SoftWx.Numerics.csproj">
