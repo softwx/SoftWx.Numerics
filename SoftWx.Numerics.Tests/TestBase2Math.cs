@@ -9,7 +9,7 @@ namespace SoftWx.Numerics.Tests {
     public class TestBase2Math {
 
         [Test]
-        public void Log2UnsignedShouldReturnMaxValueFor0() {
+        public void Log2UnsignedOf0ShouldReturnMaxValue() {
             Assert.AreEqual(byte.MaxValue, Base2Math.Log2((byte)0), "byte");
             Assert.AreEqual(ushort.MaxValue, Base2Math.Log2((ushort)0), "ushort");
             Assert.AreEqual(uint.MaxValue, Base2Math.Log2((uint)0), "uint");
@@ -17,7 +17,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void Log2SignedShouldReturnNeg1For0() {
+        public void Log2SignedOf0ShouldReturnNeg1() {
             Assert.AreEqual(-1, Base2Math.Log2((sbyte)0), "sbyte");
             Assert.AreEqual(-1, Base2Math.Log2((short)0), "short");
             Assert.AreEqual(-1, Base2Math.Log2((int)0), "int");
@@ -25,7 +25,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void Log2SignedShouldReturnNeg1ForNegative() {
+        public void Log2SignedOfNegativeShouldReturnNeg1() {
             Assert.AreEqual(-1, Base2Math.Log2((sbyte)-10), "sbyte");
             Assert.AreEqual(-1, Base2Math.Log2((short)-10), "short");
             Assert.AreEqual(-1, Base2Math.Log2((int)-10), "int");
@@ -33,7 +33,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void Log2ShouldReturn0For1() {
+        public void Log2Of1ShouldReturn0() {
             Assert.AreEqual(0, Base2Math.Log2((byte)1), "byte");
             Assert.AreEqual(0, Base2Math.Log2((sbyte)1), "sbyte");
             Assert.AreEqual(0, Base2Math.Log2((ushort)1), "ushort");
@@ -45,7 +45,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void Log2ShouldReturn1For2() {
+        public void Log2Of2ShouldReturn1() {
             Assert.AreEqual(1, Base2Math.Log2((byte)2), "byte");
             Assert.AreEqual(1, Base2Math.Log2((sbyte)2), "sbyte");
             Assert.AreEqual(1, Base2Math.Log2((ushort)2), "ushort");
@@ -57,7 +57,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void Log2ShouldReturn3For10() {
+        public void Log2Of10ShouldReturn3() {
             Assert.AreEqual(3, Base2Math.Log2((byte)10), "byte");
             Assert.AreEqual(3, Base2Math.Log2((sbyte)10), "sbyte");
             Assert.AreEqual(3, Base2Math.Log2((ushort)10), "ushort");
@@ -98,7 +98,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void IsPowerOf2SignedShouldReturnFalseorNegative() {
+        public void IsPowerOf2SignedOfNegativeShouldReturnFalse() {
             Assert.AreEqual(false, Base2Math.IsPowerOf2((sbyte)-10), "sbyte");
             Assert.AreEqual(false, Base2Math.IsPowerOf2((short)-10), "short");
             Assert.AreEqual(false, Base2Math.IsPowerOf2((int)-10), "int");
@@ -106,7 +106,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void IsPowerOf2ShouldReturnFalseFor0() {
+        public void IsPowerOf2Of0ShouldReturnFalse() {
             Assert.AreEqual(false, Base2Math.IsPowerOf2((byte)0), "byte");
             Assert.AreEqual(false, Base2Math.IsPowerOf2((sbyte)0), "sbyte");
             Assert.AreEqual(false, Base2Math.IsPowerOf2((ushort)0), "ushort");
@@ -118,7 +118,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void IsPowerOf2ShouldReturnTrueFor1() {
+        public void IsPowerOf2Of1ShouldReturnTrue() {
             Assert.AreEqual(true, Base2Math.IsPowerOf2((byte)1), "byte");
             Assert.AreEqual(true, Base2Math.IsPowerOf2((sbyte)1), "sbyte");
             Assert.AreEqual(true, Base2Math.IsPowerOf2((ushort)1), "ushort");
@@ -130,7 +130,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void IsPowerOf2ShouldReturnTrueFor2() {
+        public void IsPowerOf2Of2ShouldReturnTrue() {
             Assert.AreEqual(true, Base2Math.IsPowerOf2((byte)2), "byte");
             Assert.AreEqual(true, Base2Math.IsPowerOf2((sbyte)2), "sbyte");
             Assert.AreEqual(true, Base2Math.IsPowerOf2((ushort)2), "ushort");
@@ -142,7 +142,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void IsPowerOf2ShouldReturnFalseFor3() {
+        public void IsPowerOf2Of3ShouldReturnFalse() {
             Assert.AreEqual(false, Base2Math.IsPowerOf2((byte)3), "byte");
             Assert.AreEqual(false, Base2Math.IsPowerOf2((sbyte)3), "sbyte");
             Assert.AreEqual(false, Base2Math.IsPowerOf2((ushort)3), "ushort");
@@ -183,7 +183,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void PowerOf2FloorShouldReturn0For0() {
+        public void PowerOf2FloorOf0ShouldReturn0() {
             Assert.AreEqual(0, Base2Math.PowerOf2Floor((byte)0), "byte");
             Assert.AreEqual(0, Base2Math.PowerOf2Floor((sbyte)0), "sbyte");
             Assert.AreEqual(0, Base2Math.PowerOf2Floor((ushort)0), "ushort");
@@ -195,7 +195,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void PowerOf2FloorShouldReturn0ForNegative() {
+        public void PowerOf2FloorOfNegativeShouldReturn0() {
             Assert.AreEqual(0, Base2Math.PowerOf2Floor((sbyte)-10), "sbyte");
             Assert.AreEqual(0, Base2Math.PowerOf2Floor((short)-10), "short");
             Assert.AreEqual(0, Base2Math.PowerOf2Floor((int)-10), "int");
@@ -203,7 +203,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void PowerOf2FloorShouldReturn1For1() {
+        public void PowerOf2FloorOf1ShouldReturn1() {
             Assert.AreEqual(1, Base2Math.PowerOf2Floor((byte)1), "byte");
             Assert.AreEqual(1, Base2Math.PowerOf2Floor((sbyte)1), "sbyte");
             Assert.AreEqual(1, Base2Math.PowerOf2Floor((ushort)1), "ushort");
@@ -215,7 +215,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void PowerOf2FloorShouldReturn2For3() { 
+        public void PowerOf2FloorOf3ShouldReturn2() { 
             Assert.AreEqual(2, Base2Math.PowerOf2Floor((byte)3), "byte");
             Assert.AreEqual(2, Base2Math.PowerOf2Floor((sbyte)3), "sbyte");
             Assert.AreEqual(2, Base2Math.PowerOf2Floor((ushort)3), "ushort");
@@ -256,7 +256,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void PowerOf2CeilingShouldReturn1For0() {
+        public void PowerOf2CeilingOf0ShouldReturn1() {
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((byte)0), "byte");
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((sbyte)0), "sbyte");
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((ushort)0), "ushort");
@@ -268,7 +268,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void PowerOf2CeilingShouldReturn1ForNegative() {
+        public void PowerOf2CeilingOfNegativeShouldReturn1() {
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((sbyte)-10), "sbyte");
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((short)-10), "short");
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((int)-10), "int");
@@ -276,7 +276,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void PowerOf2CeilingShouldReturn1For1() {
+        public void PowerOf2CeilingOf1ShouldReturn1() {
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((byte)1), "byte");
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((sbyte)1), "sbyte");
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((ushort)1), "ushort");
@@ -288,7 +288,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void PowerOf2CeilingShouldReturn4For3() {
+        public void PowerOf2CeilingOf3ShouldReturn4() {
             Assert.AreEqual(4, Base2Math.PowerOf2Ceiling((byte)3), "byte");
             Assert.AreEqual(4, Base2Math.PowerOf2Ceiling((sbyte)3), "sbyte");
             Assert.AreEqual(4, Base2Math.PowerOf2Ceiling((ushort)3), "ushort");
@@ -300,7 +300,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void PowerOf2CeilingShouldReturn0ForMaxValue() {
+        public void PowerOf2CeilingOfMaxValueShouldReturn0() {
             Assert.AreEqual(0, Base2Math.PowerOf2Ceiling(byte.MaxValue), "byte");
             Assert.AreEqual(0, Base2Math.PowerOf2Ceiling(sbyte.MaxValue), "sbyte");
             Assert.AreEqual(0, Base2Math.PowerOf2Ceiling(ushort.MaxValue), "ushort");

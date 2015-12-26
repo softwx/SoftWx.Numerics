@@ -6,73 +6,73 @@ namespace SoftWx.Numerics {
     /// Numeric extension methods for base 2 math operations on integer numeric types.
     /// </summary>
     public static class Base2Math {
-        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(number))) of the specified value
+        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
         /// , or MaxValue if value is less than 1, to denote Log2 is undefined for such values.</summary>
         /// <remarks>Example: Log2(10) returns 3.</remarks>
-        /// <param name="value">The number whose base 2 log is desired.</param>
+        /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or MaxValue when the value is less than 1.</returns>
         public static byte Log2(this byte value) {
             return BitMath.HighBitPosition(value);
         }
 
-        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(number))) of the specified value
+        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
         /// , or -1 if value is less than 1, to denote Log2 is undefined for such values.</summary>
         /// <remarks>Example: Log2(10) returns 3.</remarks>
-        /// <param name="value">The number whose base 2 log is desired.</param>
+        /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or -1 when the value is less than 1.</returns>
         public static sbyte Log2(this sbyte value) {
             return (value > 0) ? BitMath.HighBitPosition(value) : (sbyte)-1;
         }
 
-        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(number))) of the specified value
+        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
         /// , or MaxValue if value is less than 1, to denote Log2 is undefined for such values.</summary>
         /// <remarks>Example: Log2(10) returns 3.</remarks>
-        /// <param name="value">The number whose base 2 log is desired.</param>
+        /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or MaxValue when the value is less than 1.</returns>
         public static ushort Log2(this ushort value) {
             return BitMath.HighBitPosition(value);
         }
 
-        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(number))) of the specified value
+        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
         /// , or -1 if value is less than 1, to denote Log2 is undefined for such values.</summary>
         /// <remarks>Example: Log2(10) returns 3.</remarks>
-        /// <param name="value">The number whose base 2 log is desired.</param>
+        /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or -1 when the value is less than 1.</returns>
         public static short Log2(this short value) {
             return (value > 0) ? BitMath.HighBitPosition(value) : (short) -1;
         }
 
-        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(number))) of the specified value
+        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
         /// , or MaxValue if value is less than 1, to denote Log2 is undefined for such values.</summary>
         /// <remarks>Example: Log2(10) returns 3.</remarks>
-        /// <param name="value">The number whose base 2 log is desired.</param>
+        /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or MaxValue when the value is less than 1.</returns>
         public static uint Log2(this uint value) {
             return BitMath.HighBitPosition(value);
         }
 
-        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(number))) of the specified value
+        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
         /// , or -1 if value is less than 1, to denote Log2 is undefined for such values.</summary>
         /// <remarks>Example: Log2(10) returns 3.</remarks>
-        /// <param name="value">The number whose base 2 log is desired.</param>
+        /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or -1 when the value is less than 1.</returns>
         public static int Log2(this int value) {
             return (value > 0) ? BitMath.HighBitPosition(value) : -1;
         }
 
-        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(number))) of the specified value
+        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
         /// , or MaxValue if value is less than 1, to denote Log2 is undefined for such values.</summary>
         /// <remarks>Example: Log2(10) returns 3.</remarks>
-        /// <param name="value">The number whose base 2 log is desired.</param>
+        /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or MaxValue when the value is less than 1.</returns>
         public static ulong Log2(this ulong value) {
             return BitMath.HighBitPosition(value);
         }
 
-        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(number))) of the specified value
+        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
         /// , or -1 if value is less than 1, to denote Log2 is undefined for such values.</summary>
         /// <remarks>Example: Log2(10) returns 3.</remarks>
-        /// <param name="value">The number whose base 2 log is desired.</param>
+        /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or -1 when the value is less than 1.</returns>
         public static long Log2(this long value) {
             return (value > 0) ? BitMath.HighBitPosition(value) : -1;
@@ -82,70 +82,70 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value to be tested as a power of 2.</param>
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
         public static bool IsPowerOf2(this byte value) {
-            return (value != 0) && (value == BitMath.LowBit(value));
+            return ((value & unchecked(value - 1)) == 0) && (value != 0);
         }
 
         /// <summary>Determines if the specified value is a power of 2.</summary>
         /// <param name="value">The value to be tested as a power of 2.</param>
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
         public static bool IsPowerOf2(this sbyte value) {
-            return (value > 0) && (value == BitMath.LowBit(value));
+            return ((value & unchecked(value - 1)) == 0) && (value > 0);
         }
 
         /// <summary>Determines if the specified value is a power of 2.</summary>
         /// <param name="value">The value to be tested as a power of 2.</param>
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
         public static bool IsPowerOf2(this ushort value) {
-            return (value != 0) && (value == BitMath.LowBit(value));
+            return ((value & unchecked(value - 1)) == 0) && (value != 0);
         }
 
         /// <summary>Determines if the specified value is a power of 2.</summary>
         /// <param name="value">The value to be tested as a power of 2.</param>
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
         public static bool IsPowerOf2(this short value) {
-            return (value > 0) && (value == BitMath.LowBit(value));
+            return ((value & unchecked(value - 1)) == 0) && (value > 0);
         }
 
         /// <summary>Determines if the specified value is a power of 2.</summary>
         /// <param name="value">The value to be tested as a power of 2.</param>
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
         public static bool IsPowerOf2(this uint value) {
-            return (value != 0) && (value == BitMath.LowBit(value));
+            return ((value & unchecked(value - 1)) == 0) && (value != 0);
         }
 
         /// <summary>Determines if the specified value is a power of 2.</summary>
         /// <param name="value">The value to be tested as a power of 2.</param>
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
         public static bool IsPowerOf2(this int value) {
-            return (value > 0) && (value == BitMath.LowBit(value));
+            return ((value & unchecked(value - 1)) == 0) && (value > 0);
         }
 
         /// <summary>Determines if the specified value is a power of 2.</summary>
         /// <param name="value">The value to be tested as a power of 2.</param>
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
         public static bool IsPowerOf2(this ulong value) {
-            return (value != 0) && (value == BitMath.LowBit(value));
+            return ((value & unchecked(value - 1UL)) == 0) && (value != 0);
         }
 
         /// <summary>Determines if the specified value is a power of 2.</summary>
         /// <param name="value">The value to be tested as a power of 2.</param>
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
         public static bool IsPowerOf2(this long value) {
-            return (value > 0) && (value == (value & unchecked(-value)));// BitMath.LowBit(value));
+            return ((value & unchecked(value - 1L)) == 0) && (value > 0);
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or less than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or less than the specified value.</summary>
         /// <remarks>Example: PowerOf2Floor(10) returns 8.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or less than the value parameter,
         /// or 0 if the value is less than 1.</returns>
         public static byte PowerOf2Floor(this byte value) {
             return BitMath.HighBit(value);
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or less than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or less than the specified value.</summary>
         /// <remarks>Example: PowerOf2Floor(10) returns 8.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or less than the value parameter,
         /// or 0 if the value is less than 1.</returns>
         public static sbyte PowerOf2Floor(this sbyte value) {
@@ -153,63 +153,63 @@ namespace SoftWx.Numerics {
             return (sbyte)(BitMath.HighBit(value) & ~(value >> 7));
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or less than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or less than the specified value.</summary>
         /// <remarks>Example: PowerOf2Floor(10) returns 8.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or less than the value parameter,
         /// or 0 if the value is less than 1.</returns>
         public static ushort PowerOf2Floor(this ushort value) {
             return BitMath.HighBit(value);
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or less than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or less than the specified value.</summary>
         /// <remarks>Example: PowerOf2Floor(10) returns 8.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or less than the value parameter,
         /// or 0 if the value is less than 1.</returns>
         public static short PowerOf2Floor(this short value) {
             return (short)PowerOf2Floor((int)value);
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or less than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or less than the specified value.</summary>
         /// <remarks>Example: PowerOf2Floor(10) returns 8.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or less than the value parameter,
         /// or 0 if the value is less than 1.</returns>
         public static uint PowerOf2Floor(this uint value) {
             return BitMath.HighBit(value);
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or less than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or less than the specified value.</summary>
         /// <remarks>Example: PowerOf2Floor(10) returns 8.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or less than the value parameter,
         /// or 0 if the value is less than 1.</returns>
         public static int PowerOf2Floor(this int value) {
             return (value > 0) ? BitMath.HighBit(value): 0;
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or less than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or less than the specified value.</summary>
         /// <remarks>Example: PowerOf2Floor(10) returns 8.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or less than the value parameter,
         /// or 0 if the value is less than 1.</returns>
         public static ulong PowerOf2Floor(this ulong value) {
             return BitMath.HighBit(value);
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or less than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or less than the specified value.</summary>
         /// <remarks>Example: PowerOf2Floor(10) returns 8.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or less than the value parameter,
         /// or 0 if the value is less than 1.</returns>
         public static long PowerOf2Floor(this long value) {
             return (value > 0) ? BitMath.HighBit(value) : 0;
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified value.</summary>
         /// <remarks>Example: PowerOf2Ceiling(10) returns 16.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or greater than the value parameter,
         /// or 0 if the result would be greater than the type's maximum value.</returns>
         public static byte PowerOf2Ceiling(this byte value) {
@@ -221,9 +221,9 @@ namespace SoftWx.Numerics {
             return (byte)unchecked((v | (v >> 4)) + 1);
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified value.</summary>
         /// <remarks>Example: PowerOf2Ceiling(10) returns 16.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or greater than the value parameter,
         /// or 0 if the result would be greater than the type's maximum value.</returns>
         public static sbyte PowerOf2Ceiling(this sbyte value) {
@@ -235,9 +235,9 @@ namespace SoftWx.Numerics {
             return (sbyte)(sbyte.MaxValue & unchecked((v | (v >> 4)) + 1));
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified value.</summary>
         /// <remarks>Example: PowerOf2Ceiling(10) returns 16.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or greater than the value parameter,
         /// or 0 if the result would be greater than the type's maximum value.</returns>
         public static ushort PowerOf2Ceiling(this ushort value) {
@@ -250,9 +250,9 @@ namespace SoftWx.Numerics {
             return (ushort)unchecked((v | (v >> 8)) + 1);
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified value.</summary>
         /// <remarks>Example: PowerOf2Ceiling(10) returns 16.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or greater than the value parameter,
         /// or 0 if the result would be greater than the type's maximum value.</returns>
         public static short PowerOf2Ceiling(this short value) {
@@ -265,9 +265,9 @@ namespace SoftWx.Numerics {
             return (short)(short.MaxValue & unchecked((v | (v >> 8)) + 1));
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified value.</summary>
         /// <remarks>Example: PowerOf2Ceiling(10) returns 16.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or greater than the value parameter,
         /// or 0 if the result would be greater than the type's maximum value.</returns>
         public static uint PowerOf2Ceiling(this uint value) {
@@ -280,9 +280,9 @@ namespace SoftWx.Numerics {
             return unchecked((value | (value >> 16)) + 1);
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified value.</summary>
         /// <remarks>Example: PowerOf2Ceiling(10) returns 16.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or greater than the value parameter,
         /// or 0 if the result would be greater than the type's maximum value.</returns>
         public static int PowerOf2Ceiling(this int value) {
@@ -295,9 +295,9 @@ namespace SoftWx.Numerics {
             return int.MaxValue & unchecked((value | (value >> 16)) + 1);
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified value.</summary>
         /// <remarks>Example: PowerOf2Ceiling(10) returns 16.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or greater than the value parameter,
         /// or 0 if the result would be greater than the type's maximum value.</returns>
         public static ulong PowerOf2Ceiling(this ulong value) {
@@ -311,9 +311,9 @@ namespace SoftWx.Numerics {
             return unchecked((value | (value >> 32)) + 1);
         }
 
-        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified number.</summary>
+        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified value.</summary>
         /// <remarks>Example: PowerOf2Ceiling(10) returns 16.</remarks>
-        /// <param name="number">The number whose nearest power of 2 is desired.</param>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
         /// <returns>The nearest power of 2 that's equal or greater than the value parameter,
         /// or 0 if the result would be greater than the type's maximum value.</returns>
         public static long PowerOf2Ceiling(this long value) {

@@ -39,6 +39,8 @@
   <ItemGroup>
     <Compile Include="BitMath.cs" />
     <Compile Include="Base2Math.cs" />
+    <Compile Include="Math.cs" />
+    <Compile Include="PrimeMath.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />

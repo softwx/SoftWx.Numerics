@@ -73,7 +73,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose least significant bit is desired.</param>
         /// <returns>The value parameter's the least significant bit.</returns>
         public static uint LowBit(this uint value) {
-            return value & unchecked(1u + ~value);
+            return (value & unchecked((uint)-value));
         }
 
         /// <summary>Returns the least significant set bit of the specified value.</summary>
@@ -89,7 +89,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose least significant bit is desired.</param>
         /// <returns>The value parameter's the least significant bit.</returns>
         public static ulong LowBit(this ulong value) {
-            return value & unchecked(1ul + ~value);
+            return value & unchecked((ulong)-(long)value);
         }
 
         /// <summary>Returns the least significant set bit of the specified value.</summary>
@@ -479,6 +479,83 @@ namespace SoftWx.Numerics {
         /// <returns>The count of the value parameter's leading zero bits.</returns>
         public static long LeadingZeroBits(this long value) {
             return (long)LeadingZeroBits((ulong)value);
+        }
+
+        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
+        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
+        /// <param name="value">The value whose leading zero bit count is desired.</param>
+        /// <returns>The count of the value parameter's leading zero bits.</returns>
+        public static byte SignificantBits(this byte value) {
+            // note that (byte)(7 - 255) = 8, so no need to test for value == 0
+            return (byte)(msbPos256[value] + 1);
+        }
+
+        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
+        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
+        /// <param name="value">The value whose leading zero bit count is desired.</param>
+        /// <returns>The count of the value parameter's leading zero bits.</returns>
+        public static sbyte SignificantBits(this sbyte value) {
+            // note that (byte)(7 - 255) = 8, so no need to test for value == 0
+            return (sbyte)(msbPos256[(byte)value] + 1); // the cast to byte is not redundant (avoids sign bit extension)
+        }
+
+        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
+        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
+        /// <param name="value">The value whose leading zero bit count is desired.</param>
+        /// <returns>The count of the value parameter's leading zero bits.</returns>
+        public static ushort SignificantBits(this ushort value) {
+            // note that (byte)(7 - 255) = 8, so no need to test for value == 0
+            int high = (byte)(value >> 8);
+            if (high != 0) return (ushort)(msbPos256[high] + 1);
+            return (ushort)(msbPos256[(byte)value] + 1 + 8);
+        }
+
+        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
+        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
+        /// <param name="value">The value whose leading zero bit count is desired.</param>
+        /// <returns>The count of the value parameter's leading zero bits.</returns>
+        public static short SignificantBits(this short value) {
+            return (short)LeadingZeroBits((ushort)value);
+        }
+
+        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
+        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
+        /// <param name="value">The value whose leading zero bit count is desired.</param>
+        /// <returns>The count of the value parameter's leading zero bits.</returns>
+        public static uint SignificantBits(this uint value) {
+            byte b = (byte)(value >> 24);
+            if (b != 0) return msbPos256[b] + 1u + 24u;
+            b = (byte)(value >> 16);
+            if (b != 0) return msbPos256[b] + 1u + 16u;
+            b = (byte)(value >> 8);
+            if (b == 0) return msbPos256[(byte)value] + 1u;
+            return msbPos256[b] + 1u + 8u;
+        }
+
+        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
+        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
+        /// <param name="value">The value whose leading zero bit count is desired.</param>
+        /// <returns>The count of the value parameter's leading zero bits.</returns>
+        public static int SignificantBits(this int value) {
+            return (int)SignificantBits((uint)value);
+        }
+
+        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
+        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
+        /// <param name="value">The value whose leading zero bit count is desired.</param>
+        /// <returns>The count of the value parameter's leading zero bits.</returns>
+        public static ulong SignificantBits(this ulong value) {
+            uint high;
+            if ((high = (uint)(value >> 32)) != 0) return SignificantBits(high) + 32;
+            return SignificantBits((uint)value);
+        }
+
+        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
+        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
+        /// <param name="value">The value whose leading zero bit count is desired.</param>
+        /// <returns>The count of the value parameter's leading zero bits.</returns>
+        public static long SignificantBits(this long value) {
+            return (long)SignificantBits((ulong)value);
         }
 
         /// <summary>Returns the count of set bits in the specified value.</summary>

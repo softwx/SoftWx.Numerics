@@ -9,7 +9,7 @@ namespace SoftWx.Numerics.Tests {
     public class TestBitMath {
 
         [Test]
-        public void LowBitShouldReturn0For0() {
+        public void LowBit0ShouldReturn0() {
             Assert.AreEqual(0, BitMath.LowBit((byte)0), "byte");
             Assert.AreEqual(0, BitMath.LowBit((sbyte)0), "sbyte");
             Assert.AreEqual(0, BitMath.LowBit((ushort)0), "ushort");
@@ -21,7 +21,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void LowBitShouldReturn1For1() {
+        public void LowBit1ShouldReturn1() {
             Assert.AreEqual(1, BitMath.LowBit((byte)1), "byte");
             Assert.AreEqual(1, BitMath.LowBit((sbyte)1), "sbyte");
             Assert.AreEqual(1, BitMath.LowBit((ushort)1), "ushort");
@@ -33,7 +33,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void LowBitShouldReturn1ForAllBitsSet() {
+        public void LowBitAllBitsSetShouldReturn1() {
             Assert.AreEqual(1, BitMath.LowBit((byte)0xff), "byte");
             Assert.AreEqual(1, BitMath.LowBit((sbyte)-1), "sbyte");
             Assert.AreEqual(1, BitMath.LowBit((ushort)0xffff), "ushort");
@@ -45,7 +45,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void LowBitShouldReturn2ForAllBitsMinus1() {
+        public void LowBitNegatve1ShouldReturn2() {
             Assert.AreEqual(2, BitMath.LowBit((byte)0xfe), "byte");
             Assert.AreEqual(2, BitMath.LowBit((sbyte)-2), "sbyte");
             Assert.AreEqual(2, BitMath.LowBit((ushort)0xfffe), "ushort");
@@ -74,7 +74,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void HighBitShouldReturn0For0() {
+        public void HighBit0ShouldReturn0() {
             Assert.AreEqual(0, BitMath.HighBit((byte)0), "byte");
             Assert.AreEqual(0, BitMath.HighBit((sbyte)0), "sbyte");
             Assert.AreEqual(0, BitMath.HighBit((ushort)0), "ushort");
@@ -86,7 +86,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void HighBitShouldReturn1For1() {
+        public void HighBit1ShouldReturn1() {
             Assert.AreEqual(1, BitMath.HighBit((byte)1), "byte");
             Assert.AreEqual(1, BitMath.HighBit((sbyte)1), "sbyte");
             Assert.AreEqual(1, BitMath.HighBit((ushort)1), "ushort");
@@ -98,7 +98,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void HighBitShouldReturnMsbForAllBitsSet() {
+        public void HighBitAllBitsSetShouldReturnMsb() {
             Assert.AreEqual(0x80, BitMath.HighBit((byte)0xff), "byte");
             Assert.AreEqual(sbyte.MinValue, BitMath.HighBit((sbyte)-1), "sbyte");
             Assert.AreEqual(0x8000, BitMath.HighBit((ushort)0xffff), "ushort");
@@ -127,7 +127,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void LowBitPositionShouldReturnAllBitsSetFor0() {
+        public void LowBitPosition0ShouldReturnAllBitsSet() {
             Assert.AreEqual(byte.MaxValue, BitMath.LowBitPosition((byte)0), "byte");
             Assert.AreEqual(-1, BitMath.LowBitPosition((sbyte)0), "sbyte");
             Assert.AreEqual(ushort.MaxValue, BitMath.LowBitPosition((ushort)0), "ushort");
@@ -139,7 +139,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void LowBitPositionShouldReturn0For1() {
+        public void LowBitPosition1ShouldReturn0() {
             Assert.AreEqual(0, BitMath.LowBitPosition((byte)1), "byte");
             Assert.AreEqual(0, BitMath.LowBitPosition((sbyte)1), "sbyte");
             Assert.AreEqual(0, BitMath.LowBitPosition((ushort)1), "ushort");
@@ -151,7 +151,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void LowBitPositionShouldReturn0ForAllBitsSet() {
+        public void LowBitPositionAllBitsSetShouldReturn0() {
             Assert.AreEqual(0, BitMath.LowBitPosition((byte)0xff), "byte");
             Assert.AreEqual(0, BitMath.LowBitPosition((sbyte)-1), "sbyte");
             Assert.AreEqual(0, BitMath.LowBitPosition((ushort)0xffff), "ushort");
@@ -163,7 +163,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void LowBitPositionShouldReturn1ForAllBitsMinus1() {
+        public void LowBitPositionAllBitsMinus11ShouldReturn1() {
             Assert.AreEqual(1, BitMath.LowBitPosition((byte)0xfe), "byte");
             Assert.AreEqual(1, BitMath.LowBitPosition((sbyte)-2), "sbyte");
             Assert.AreEqual(1, BitMath.LowBitPosition((ushort)0xfffe), "ushort");
@@ -192,7 +192,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void HighBitPositionShouldReturnAllBitsSetFor0() {
+        public void HighBitPosition0ShouldReturnAllBitsSet() {
             Assert.AreEqual(byte.MaxValue, BitMath.HighBitPosition((byte)0), "byte");
             Assert.AreEqual(-1, BitMath.HighBitPosition((sbyte)0), "sbyte");
             Assert.AreEqual(ushort.MaxValue, BitMath.HighBitPosition((ushort)0), "ushort");
@@ -204,7 +204,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void HighBitPositionShouldReturn0For1() {
+        public void HighBitPosition1ShouldReturn0() {
             Assert.AreEqual(0, BitMath.HighBitPosition((byte)1), "byte");
             Assert.AreEqual(0, BitMath.HighBitPosition((sbyte)1), "sbyte");
             Assert.AreEqual(0, BitMath.HighBitPosition((ushort)1), "ushort");
@@ -216,7 +216,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void HighBitPositionShouldReturnMsbPosForAllBitsSet() {
+        public void HighBitPositionAllBitsSetShouldReturnMsbPos() {
             Assert.AreEqual(7, BitMath.HighBitPosition((byte)0xff), "byte");
             Assert.AreEqual(7, BitMath.HighBitPosition((sbyte)-1), "sbyte");
             Assert.AreEqual(15, BitMath.HighBitPosition((ushort)0xffff), "ushort");
@@ -245,7 +245,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void TrailingZeroBitsShouldReturnBitWidthFor0() {
+        public void TrailingZeroBits0ShouldReturnBitWidth() {
             Assert.AreEqual(8, BitMath.TrailingZeroBits((byte)0), "byte");
             Assert.AreEqual(8, BitMath.TrailingZeroBits((sbyte)0), "sbyte");
             Assert.AreEqual(16, BitMath.TrailingZeroBits((ushort)0), "ushort");
@@ -257,7 +257,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void TrailingZeroBitsShouldReturn0For1() {
+        public void TrailingZeroBits1ShouldReturn0() {
             Assert.AreEqual(0, BitMath.TrailingZeroBits((byte)1), "byte");
             Assert.AreEqual(0, BitMath.TrailingZeroBits((sbyte)1), "sbyte");
             Assert.AreEqual(0, BitMath.TrailingZeroBits((ushort)1), "ushort");
@@ -269,7 +269,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void TrailingZeroBitsShouldReturn0ForAllBitsSet() {
+        public void TrailingZeroBitsAllBitsSetShouldReturn0() {
             Assert.AreEqual(0, BitMath.TrailingZeroBits((byte)0xff), "byte");
             Assert.AreEqual(0, BitMath.TrailingZeroBits((sbyte)-1), "sbyte");
             Assert.AreEqual(0, BitMath.TrailingZeroBits((ushort)0xffff), "ushort");
@@ -281,7 +281,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void TrailingZeroBitsShouldReturn1ForAllBitsMinus1() {
+        public void TrailingZeroBitsAllBitsMinus1ShouldReturn1() {
             Assert.AreEqual(1, BitMath.TrailingZeroBits((byte)0xfe), "byte");
             Assert.AreEqual(1, BitMath.TrailingZeroBits((sbyte)-2), "sbyte");
             Assert.AreEqual(1, BitMath.TrailingZeroBits((ushort)0xfffe), "ushort");
@@ -313,7 +313,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void LeadingZeroBitsShouldReturnBitWidthFor0() {
+        public void LeadingZeroBits0ShouldReturnBitWidth() {
             Assert.AreEqual(8, BitMath.LeadingZeroBits((byte)0), "byte");
             Assert.AreEqual(8, BitMath.LeadingZeroBits((sbyte)0), "sbyte");
             Assert.AreEqual(16, BitMath.LeadingZeroBits((ushort)0), "ushort");
@@ -325,7 +325,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void LeadingZeroBitsShouldReturnBitWidthLessOneFor1() {
+        public void LeadingZeroBits1ShouldReturnBitWidthLessOne() {
             Assert.AreEqual(7, BitMath.LeadingZeroBits((byte)1), "byte");
             Assert.AreEqual(7, BitMath.LeadingZeroBits((sbyte)1), "sbyte");
             Assert.AreEqual(15, BitMath.LeadingZeroBits((ushort)1), "ushort");
@@ -337,7 +337,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void LeadingZeroBitsShouldReturn0ForAllBitsSet() {
+        public void LeadingZeroBitsAllBitsSetShouldReturn0() {
             Assert.AreEqual(0, BitMath.LeadingZeroBits((byte)0xff), "byte");
             Assert.AreEqual(0, BitMath.LeadingZeroBits((sbyte)-1), "sbyte");
             Assert.AreEqual(0, BitMath.LeadingZeroBits((ushort)0xffff), "ushort");
@@ -349,7 +349,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void BitCountShouldReturn0For0() {
+        public void BitCount0ShouldReturn0() {
             Assert.AreEqual(0, BitMath.BitCount((byte)0), "byte");
             Assert.AreEqual(0, BitMath.BitCount((sbyte)0), "sbyte");
             Assert.AreEqual(0, BitMath.BitCount((ushort)0), "ushort");
@@ -361,7 +361,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void BitCountShouldReturn1For1() {
+        public void BitCount1ShouldReturn1() {
             Assert.AreEqual(1, BitMath.BitCount((byte)1), "byte");
             Assert.AreEqual(1, BitMath.BitCount((sbyte)1), "sbyte");
             Assert.AreEqual(1, BitMath.BitCount((ushort)1), "ushort");
@@ -373,7 +373,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void BitCountShouldReturnBitWidthForAllBitsSet() {
+        public void BitCountAllBitsSetShouldReturnBitWidth() {
             Assert.AreEqual(8, BitMath.BitCount((byte)0xff), "byte");
             Assert.AreEqual(8, BitMath.BitCount((sbyte)-1), "sbyte");
             Assert.AreEqual(16, BitMath.BitCount((ushort)0xffff), "ushort");
@@ -385,7 +385,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void BitCountShouldReturn1ForMsbSet() {
+        public void BitCountMsbSetShouldReturn1() {
             Assert.AreEqual(1, BitMath.BitCount((byte)0x80), "byte");
             Assert.AreEqual(1, BitMath.BitCount(sbyte.MinValue), "sbyte");
             Assert.AreEqual(1, BitMath.BitCount((ushort)0x8000), "ushort");
@@ -413,7 +413,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void ReverseBitsShouldReturn0For0() {
+        public void ReverseBits0ShouldReturn0() {
             Assert.AreEqual(0, BitMath.ReverseBits((byte)0), "byte");
             Assert.AreEqual(0, BitMath.ReverseBits((sbyte)0), "sbyte");
             Assert.AreEqual(0, BitMath.ReverseBits((ushort)0), "ushort");
@@ -425,7 +425,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void ReverseBitsShouldReturnMsbFor1() {
+        public void ReverseBits1ShouldReturnMsb() {
             Assert.AreEqual(0x80, BitMath.ReverseBits((byte)1), "byte");
             Assert.AreEqual(sbyte.MinValue, BitMath.ReverseBits((sbyte)1), "sbyte");
             Assert.AreEqual(0x8000, BitMath.ReverseBits((ushort)1), "ushort");
@@ -437,7 +437,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void ReverseBitsShouldReturnAllBitsSetForAllBitsSet() {
+        public void ReverseBitsAllBitsSetShouldReturnAllBitsSet() {
             Assert.AreEqual(0xff, BitMath.ReverseBits((byte)0xff), "byte");
             Assert.AreEqual(-1, BitMath.ReverseBits((sbyte)-1), "sbyte");
             Assert.AreEqual(0xffff, BitMath.ReverseBits((ushort)0xffff), "ushort");
@@ -449,7 +449,7 @@ namespace SoftWx.Numerics.Tests {
         }
 
         [Test]
-        public void ReverseBitsShouldReturn1ForMsbSet() {
+        public void ReverseBitsMsbSetShouldReturn1() {
             Assert.AreEqual(1, BitMath.ReverseBits((byte)0x80), "byte");
             Assert.AreEqual(1, BitMath.ReverseBits(sbyte.MinValue), "sbyte");
             Assert.AreEqual(1, BitMath.ReverseBits((ushort)0x8000), "ushort");
