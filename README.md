@@ -6,6 +6,8 @@ Currently contains bit fiddling, and base 2 math methods for the 8 built-in inte
 Soon will add in prime number related functions (deterministic Miller Rabin) described in series of blog posts starting with (http://blog.softwx.net/2013/05/miller-rabin-primality-test-in-c.html).
 This github library is meant to replace the code that went with those blog posts.
 
+This is currently a work in progress. Still to do: add unit test for new stuff, complete implementation of UInt128, add Miller Rabin prime methods, with new speed optimizations made after the code was posted the blog post mentioned above.
+
 Classes:
 * BitMath - optimized bit fiddling methods for integer types
   * LowBit - Returns the least significant set bit
@@ -31,7 +33,7 @@ Classes:
   * IsCoprime - Determines if the specified values are coprime to each other
   * NearestCoprimeFloor - Computes the nearest number less than or equal to the specified start value that is coprime to another specified value
   * NearestCoprimeCeiling - Computes the nearest number greater than or equal to the specified start value that is coprime to another specified value
-  UInt128 - Represents 128 bit unsigned integers.
+* UInt128 - Represents 128 bit unsigned integers.
   * Multiply(ulong,ulong) - Computes the 128 bit product of two 64 bit unsigned integers
   * Square(ulong,ulon) - Computes the 128 bit product of squaring a 64 bit unsigned integer
   * IsULong - Determines if the UInt128 value is less than or equal to UInt64.MaxValue
