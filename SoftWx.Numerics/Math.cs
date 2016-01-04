@@ -52,10 +52,22 @@ namespace SoftWx.Numerics {
             }
         }
 
+        /// <summary>Compute the modulo (division remainder) of a number multiplied by another number.</summary>
+        /// <remarks>Overflow safe for all input values. </remarks>
+        /// <param name="value1">The number to be multiplied by value2.</param>
+        /// <param name="value2">The number to be multiplied by value1.</param>
+        /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
+        /// <returns>The remainder after dividing the product of multiplying value1 and value2.</returns>
         public static byte MulMod(this byte value1, byte value2, byte modulus) {
             return (byte)((value1 * value2) % modulus);
         }
 
+        /// <summary>Compute the modulo (division remainder) of a number multiplied by another number.</summary>
+        /// <remarks>Overflow safe for all input values. </remarks>
+        /// <param name="value1">The number to be multiplied by value2.</param>
+        /// <param name="value2">The number to be multiplied by value1.</param>
+        /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
+        /// <returns>The remainder after dividing the product of multiplying value1 and value2.</returns>
         public static sbyte MulMod(this sbyte value1, sbyte value2, sbyte modulus) {
             if (modulus <= 0) return 0;
             return (sbyte)((value1 * value2) % modulus);
@@ -65,48 +77,54 @@ namespace SoftWx.Numerics {
             return (ushort)((value1 * value2) % modulus);
         }
 
+        /// <summary>Compute the modulo (division remainder) of a number multiplied by another number.</summary>
+        /// <remarks>Overflow safe for all input values. </remarks>
+        /// <param name="value1">The number to be multiplied by value2.</param>
+        /// <param name="value2">The number to be multiplied by value1.</param>
+        /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
+        /// <returns>The remainder after dividing the product of multiplying value1 and value2.</returns>
         public static short MulMod(this short value1, short value2, short modulus) {
             if (modulus <= 0) return 0;
             return (short)((value1 * value2) % modulus);
         }
 
+        /// <summary>Compute the modulo (division remainder) of a number multiplied by another number.</summary>
+        /// <remarks>Overflow safe for all input values. </remarks>
+        /// <param name="value1">The number to be multiplied by value2.</param>
+        /// <param name="value2">The number to be multiplied by value1.</param>
+        /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
+        /// <returns>The remainder after dividing the product of multiplying value1 and value2.</returns>
         public static uint MulMod(this uint value1, uint value2, uint modulus) {
             return (uint)(((ulong)value1 * value2) % modulus);
         }
 
+        /// <summary>Compute the modulo (division remainder) of a number multiplied by another number.</summary>
+        /// <remarks>Overflow safe for all input values. </remarks>
+        /// <param name="value1">The number to be multiplied by value2.</param>
+        /// <param name="value2">The number to be multiplied by value1.</param>
+        /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
+        /// <returns>The remainder after dividing the product of multiplying value1 and value2.</returns>
         public static int MulMod(this int value1, int value2, int modulus) {
             if (modulus <= 0) return 0;
             return (int)(((long)value1 * value2) % modulus);
         }
 
-        // from Craig McQueen's answer at http://stackoverflow.com/questions/12168348/ways-to-do-modulo-multiplication-with-primitive-types
+        /// <summary>Compute the modulo (division remainder) of a number multiplied by another number.</summary>
+        /// <remarks>Overflow safe for all input values. </remarks>
+        /// <param name="value1">The number to be multiplied by value2.</param>
+        /// <param name="value2">The number to be multiplied by value1.</param>
+        /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
+        /// <returns>The remainder after dividing the product of multiplying value1 and value2.</returns>
         public static ulong MulMod(this ulong value1, ulong value2, ulong modulus) {
-            // ensuring a is the smaller value increases chances that the
-            // while loop below will be able to exit early
-            if (value2 < value1) return InternalMulMod(value2, value1, modulus);
-            return InternalMulMod(value1, value2, modulus);
-        }
-        private static ulong InternalMulMod(this ulong value1, ulong value2, ulong modulus) {
-            ulong res = 0;
-            ulong temp;
-            ulong halfMod = modulus >> 1;
-            unchecked {
-                while (value1 != 0) {
-                    temp = (value1 & 1) * value2;
-                    value1 >>= 1;
-                    // add value2 to res, modulo modulus, without overflow
-                    if (temp >= modulus - res) res -= modulus;
-                    res += temp;
-
-                    //value2 * 2 mod modulus
-                    temp = value2;
-                    value2 += value2;
-                    if (temp >= halfMod) value2 -= modulus;
-                }
-            }
-            return res;
+            return UInt128.Multiply(value1, value2) % modulus;
         }
 
+        /// <summary>Compute the modulo (division remainder) of a number multiplied by another number.</summary>
+        /// <remarks>Overflow safe for all input values. </remarks>
+        /// <param name="value1">The number to be multiplied by value2.</param>
+        /// <param name="value2">The number to be multiplied by value1.</param>
+        /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
+        /// <returns>The remainder after dividing the product of multiplying value1 and value2.</returns>
         public static long MulMod(this long value1, long value2, long modulus) {
             if (modulus <= 0) return 0;
             unchecked {
@@ -115,85 +133,84 @@ namespace SoftWx.Numerics {
             }
         }
 
-        /// <summary>Compute the mod of a number raised to the specified power.</summary>
+        /// <summary>Compute the modulo (division remainder) of a number raised to the power
+        /// of another number.</summary>
         /// <remarks>Overflow safe for all input values. </remarks>
-        /// <param name="b">The base number.</param>
-        /// <param name="e">The exponent applied to the base number.</param>
-        /// <param name="m">The modulo value.</param>
-        /// <returns>The mod of the base number raised to the specified power.</returns>
-        public static uint ModPow(this uint b, uint e, uint m) {
-            const uint sqrtMax = 65535; // (uint)Math.Sqrt(uint.MaxValue);
-            if ((b | m) == 0) return 0;
-            switch (e) {
+        /// <param name="value">The number to raise to the exponent power.</param>
+        /// <param name="exponent">The exponent to raise value by.</param>
+        /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
+        /// <returns>The remainder after dividing value raised to the exponent power.</returns>
+        public static uint ModPow(this uint value, uint exponent, uint modulus) {
+            value %= modulus;
+            if ((value | modulus) == 0) return 0;
+            switch (exponent) {
                 case 0: return 1;
-                case 1: return b % m;
-                case 2: return (b > sqrtMax) ? (uint)((b * (ulong)b) % m) : (b * b) % m;
+                case 1: return value % modulus;
+                case 2: return (value == (ushort)value) ? (value * value) % modulus : (uint)((value * (ulong)value) % modulus);
                 default:
                     uint result = 1;
-                    if (m > sqrtMax) {
-                        while (true) {
-                            if ((e & 1) != 0) {
-                                result = (uint)((result * (ulong)b) % m);
-                                if (e == 1) return result;
-                            }
-                            e /= 2;
-                            b = (uint)((b * (ulong)b) % m);
+                    if (modulus == (ushort)modulus) return ModPow(value, exponent, (ushort)modulus);
+                    while (true) {
+                        if ((exponent & 1) != 0) {
+                            result = (uint)((result * (ulong)value) % modulus);
+                            if (exponent == 1) return result;
                         }
-                    } else {
-                        b %= m;
-                        while (true) {
-                            if ((e & 1) != 0) {
-                                result = (result * b) % m;
-                                if (e == 1) return result;
-                            }
-                            e /= 2;
-                            b = (b * b) % m;
-                        }
+                        exponent /= 2;
+                        value = (uint)((value * (ulong)value) % modulus);
                     }
             }
         }
 
-        /// <summary>Compute the mod of a number raised to the specified power.</summary>
+        private static uint ModPow(this uint v, uint e, ushort m) {
+            uint result = 1;
+            while (true) {
+                if ((e & 1) != 0) {
+                    result = (result * v) % m;
+                    if (e == 1) return result;
+                }
+                e /= 2;
+                v = (v * v) % m;
+            }
+        }
+
+        /// <summary>Compute the modulo (division remainder) of a number raised to the power
+        /// of another number.</summary>
         /// <remarks>Overflow safe for all input values. </remarks>
-        /// <param name="b">The base number.</param>
-        /// <param name="e">The exponent applied to the base number.</param>
-        /// <param name="m">The modulo value.</param>
-        /// <returns>The mod of the base number raised to the specified power.</returns>
-        public static ulong ModPow(this ulong b, ulong e, ulong m) {
-            const ulong sqrtMax = uint.MaxValue; // (uint)Math.Sqrt(uint.MaxValue);
-            if ((m == 0) || ((b %= m) == 0)) return 0;
-            //switch (e) {
-            //case 0: return 1;
-            //case 1: return b % m;
-            ////case 2: return (b <= sqrtMax) ? (b * b) % m : ModPow(b*b, e, m);
-            //default:
-            if (e < 3) {
-                if (e == 0) return 1;
-                if (e == 1) return b % m;
-                if ((e == 2) && (b <= sqrtMax)) return (b * b) % m;
+        /// <param name="value">The number to raise to the exponent power.</param>
+        /// <param name="exponent">The exponent to raise value by.</param>
+        /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
+        /// <returns>The remainder after dividing value raised to the exponent power.</returns>
+        public static ulong ModPow(this ulong value, ulong exponent, ulong modulus) {
+            value %= modulus;
+            //if ((m == 0) || (b == 0)) return 0;
+            if ((modulus | value) == 0) return 0;
+            if (exponent < 3) {
+                if (exponent == 0) return 1;
+                if (exponent == 1) return value;
+                if (exponent == 2) return (value == (uint)value) ? (value * value) % modulus : UInt128.Square(value) % modulus; 
             }
+            if (modulus == (uint)modulus) return ModPow(value, exponent, (uint)modulus);
             ulong result = 1;
-            if (m > sqrtMax) {
-                while (true) {
-                    if ((e & 1) != 0) {
-                        result = MulMod(result, b, m);
-                        if (e == 1) return result;
-                    }
-                    e >>= 1;// /= 2;
-                    b = MulMod(b, b, m);
+            while (true) {
+                if ((exponent & 1) != 0) {
+                    result = MulMod(result, value, modulus);
+                    if (exponent == 1) return result;
                 }
-            } else {
-                b %= m;
-                while (true) {
-                    if ((e & 1) != 0) {
-                        result = (result * b) % m;
-                        if (e == 1) return result;
-                    }
-                    e >>= 1;// /= 2;
-                    b = (b * b) % m;
-                }
+                exponent /= 2;
+                value = (value == (uint)value) ? (value * value) % modulus : UInt128.Square(value) % modulus;
             }
-            //}
+        }
+
+        private static ulong ModPow(this ulong v, ulong e, uint m) {
+            ulong result = 1;
+            while (true) {
+                if ((e & 1) != 0) {
+                    result = (result * v) % m;
+                    if (e == 1) return result;
+                }
+                e /= 2;
+                v = (v * v) % m;
+            }
         }
     }
 }

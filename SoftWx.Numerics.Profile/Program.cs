@@ -50,30 +50,39 @@ namespace SoftWx.Numerics.Profile {
         }
         static void ProfileMath() {
             bool bo;
-            byte b1, br, b2; b1 = 123; b2 = 127;
-            sbyte sb1, sbr, sb2; sb1 = 123; sb2 = 127;
-            ushort us1, usr, us2; us1 = 123; us2 = 127;
-            short s1, sr, s2; s1 = 123; s2 = 127;
-            uint ui1, uir, ui2; ui1 = 123; ui2 = 127;
-            int i1, ir, i2; i1 = 123; i2 = 127;
-            ulong ul1, ulr, ul2; ul1 = 123; ul2 = 127;
-            long l1, lr, l2; l1 = 123; l2 = 127;
+            //byte b1, br, b2; b1 = 123; b2 = 127;
+            //sbyte sb1, sbr, sb2; sb1 = 123; sb2 = 127;
+            //ushort us1, usr, us2; us1 = 123; us2 = 127;
+            //short s1, sr, s2; s1 = 123; s2 = 127;
+            //uint ui1, uir, ui2; ui1 = 123; ui2 = 127;
+            //int i1, ir, i2; i1 = 123; i2 = 127;
+            //ulong ul1, ulr, ul2; ul1 = 123; ul2 = 127;
+            //long l1, lr, l2; l1 = 123; l2 = 127;
+            byte b1, br, b2; b1 = sbyte.MaxValue-7; b2 = sbyte.MaxValue-13;
+            sbyte sb1, sbr, sb2; sb1 = (sbyte)b1; sb2 = (sbyte)b2;
+            ushort us1, usr, us2; us1 = short.MaxValue-7; us2 = short.MaxValue-13;
+            short s1, sr, s2; s1 = (short)us1; s2 = (short)us2;
+            uint ui1, uir, ui2; ui1 = int.MaxValue-7; ui2 = int.MaxValue-13;
+            int i1, ir, i2; i1 = (int)ui1; i2 = (int)ui2;
+            ulong ul1, ulr, ul2; ul1 = long.MaxValue-7; ul2 = long.MaxValue-13;
+            long l1, lr, l2; l1 = (long)ul1; l2 = (long)ul2;
             br = 0; ulr = 0;
+            const byte mod = 121;
             var bench = new Bench();
             bench.Time("sbyte.AbsU", () => { br = sb1.AbsU(); br = sb1.AbsU(); br = sb1.AbsU(); br = sb1.AbsU(); br = sb1.AbsU(); }, 5);
             bench.Time("short.AbsU", () => { usr = s1.AbsU(); usr = s1.AbsU(); usr = s1.AbsU(); usr = s1.AbsU(); usr = s1.AbsU(); }, 5);
             bench.Time("int.AbsU", () => { uir = i1.AbsU(); uir = i1.AbsU(); uir = i1.AbsU(); uir = i1.AbsU(); uir = i1.AbsU(); }, 5);
             bench.Time("long.AbsU", () => { ulr = l1.AbsU(); ulr = l1.AbsU(); ulr = l1.AbsU(); ulr = l1.AbsU(); ulr = l1.AbsU(); }, 5);
             bench.Time("byte.MulMod", () => { br = b1.MulMod(b2, 143); br = b1.MulMod(b2, 143); br = b1.MulMod(b2, 143); br = b1.MulMod(b2, 143); br = b1.MulMod(b2, 143); }, 5);
-            bench.Time("sbyte.MulMod", () => { sbr = sb1.MulMod(sb2, 121); sbr = sb1.MulMod(sb2, 121); sbr = sb1.MulMod(sb2, 121); sbr = sb1.MulMod(sb2, 121); sbr = sb1.MulMod(sb2, 121); }, 5);
-            bench.Time("ushort.MulMod", () => { usr = us1.MulMod(us2, 121); usr = us1.MulMod(us2, 121); usr = us1.MulMod(us2, 121); usr = us1.MulMod(us2, 121); usr = us1.MulMod(us2, 121); }, 5);
-            bench.Time("short.MulMod", () => { sr = s1.MulMod(s2, 121); sr = s1.MulMod(s2, 121); sr = s1.MulMod(s2, 121); sr = s1.MulMod(s2, 121); sr = s1.MulMod(s2, 121); }, 5);
-            bench.Time("uint.MulMod", () => { uir = ui1.MulMod(ui2, 121); uir = ui1.MulMod(ui2, 121); uir = ui1.MulMod(ui2, 121); uir = ui1.MulMod(ui2, 121); uir = ui1.MulMod(ui2, 121); }, 5);
-            bench.Time("int.MulMod", () => { ir = i1.MulMod(i2, 121); ir = i1.MulMod(i2, 121); ir = i1.MulMod(i2, 121); ir = i1.MulMod(i2, 121); ir = i1.MulMod(i2, 121); }, 5);
-            bench.Time("ulong.MulMod", () => { ulr = ul1.MulMod(ul2, 121); ulr = ul1.MulMod(ul2, 121); ulr = ul1.MulMod(ul2, 121); ulr = ul1.MulMod(ul2, 121); ulr = ul1.MulMod(ul2, 121); }, 5);
-            bench.Time("long.MulMod", () => { lr = l1.MulMod(l2, 121); lr = l1.MulMod(l2, 121); lr = l1.MulMod(l2, 121); lr = l1.MulMod(l2, 121); lr = l1.MulMod(l2, 121); }, 5);
-            bench.Time("uint.ModPow", () => { uir = ui1.ModPow(ui2, 121); uir = ui1.ModPow(ui2, 121); uir = ui1.ModPow(ui2, 121); uir = ui1.ModPow(ui2, 121); uir = ui1.ModPow(ui2, 121); }, 5);
-            bench.Time("ulong.ModPow", () => { ulr = ul1.ModPow(ul2, 121); ulr = ul1.ModPow(ul2, 121); ulr = ul1.ModPow(ul2, 121); ulr = ul1.ModPow(ul2, 121); ulr = ul1.ModPow(ul2, 121); }, 5);
+            bench.Time("sbyte.MulMod", () => { sbr = sb1.MulMod(sb2, (sbyte)mod); sbr = sb1.MulMod(sb2, (sbyte)mod); sbr = sb1.MulMod(sb2, (sbyte)mod); sbr = sb1.MulMod(sb2, (sbyte)mod); sbr = sb1.MulMod(sb2, (sbyte)mod); }, 5);
+            bench.Time("ushort.MulMod", () => { usr = us1.MulMod(us2, mod); usr = us1.MulMod(us2, mod); usr = us1.MulMod(us2, mod); usr = us1.MulMod(us2, mod); usr = us1.MulMod(us2, mod); }, 5);
+            bench.Time("short.MulMod", () => { sr = s1.MulMod(s2, mod); sr = s1.MulMod(s2, mod); sr = s1.MulMod(s2, mod); sr = s1.MulMod(s2, mod); sr = s1.MulMod(s2, mod); }, 5);
+            bench.Time("uint.MulMod", () => { uir = ui1.MulMod(ui2, mod); uir = ui1.MulMod(ui2, mod); uir = ui1.MulMod(ui2, mod); uir = ui1.MulMod(ui2, mod); uir = ui1.MulMod(ui2, mod); }, 5);
+            bench.Time("int.MulMod", () => { ir = i1.MulMod(i2, mod); ir = i1.MulMod(i2, mod); ir = i1.MulMod(i2, mod); ir = i1.MulMod(i2, mod); ir = i1.MulMod(i2, mod); }, 5);
+            bench.Time("ulong.MulMod", () => { ulr = ul1.MulMod(ul2, mod); ulr = ul1.MulMod(ul2, mod); ulr = ul1.MulMod(ul2, mod); ulr = ul1.MulMod(ul2, mod); ulr = ul1.MulMod(ul2, mod); }, 5);
+            bench.Time("long.MulMod", () => { lr = l1.MulMod(l2, mod); lr = l1.MulMod(l2, mod); lr = l1.MulMod(l2, mod); lr = l1.MulMod(l2, mod); lr = l1.MulMod(l2, mod); }, 5);
+            bench.Time("uint.ModPow", () => { uir = ui1.ModPow(ui2, mod); uir = ui1.ModPow(ui2, mod); uir = ui1.ModPow(ui2, mod); uir = ui1.ModPow(ui2, mod); uir = ui1.ModPow(ui2, mod); }, 5);
+            bench.Time("ulong.ModPow", () => { ulr = ul1.ModPow(ul2, mod); ulr = ul1.ModPow(ul2, mod); ulr = ul1.ModPow(ul2, mod); ulr = ul1.ModPow(ul2, mod); ulr = ul1.ModPow(ul2, mod); }, 5);
         }
         static void ProfileLog2Math() {
             bool bo;
