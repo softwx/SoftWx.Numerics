@@ -11,6 +11,7 @@ namespace SoftWx.Numerics.Profile {
             ((byte)1).Log2(); // get the class going
             ((sbyte)1).AbsU(); // get the class going
             ((int)10).Gcd((int)10); // get the class going
+            (UInt128.Zero).LowBit();
 
             ProfileBitMath();
             ProfileLog2Math();
@@ -137,6 +138,7 @@ namespace SoftWx.Numerics.Profile {
             int i1, ir; i1 = 123;
             ulong ul1, ulr; ul1 = 123;
             long l1, lr; l1 = 123;
+            UInt128 ull1, ullr; ull1 = new UInt128(0, 123);
             var bench = new Bench();
             bench.Time("byte.LowBit", () => { br = b1.LowBit(); br = b1.LowBit(); br = b1.LowBit(); br = b1.LowBit(); br = b1.LowBit(); }, 5);
             bench.Time("sbyte.LowBit", () => { sbr = sb1.LowBit(); sbr = sb1.LowBit(); sbr = sb1.LowBit(); sbr = sb1.LowBit(); sbr = sb1.LowBit(); }, 5);
@@ -146,6 +148,7 @@ namespace SoftWx.Numerics.Profile {
             bench.Time("int.LowBit", () => { ir = i1.LowBit(); ir = i1.LowBit(); ir = i1.LowBit(); ir = i1.LowBit(); ir = i1.LowBit(); }, 5);
             bench.Time("ulong.LowBit", () => { ulr = ul1.LowBit(); ulr = ul1.LowBit(); ulr = ul1.LowBit(); ulr = ul1.LowBit(); ulr = ul1.LowBit(); }, 5);
             bench.Time("long.LowBit", () => { lr = l1.LowBit(); lr = l1.LowBit(); lr = l1.LowBit(); lr = l1.LowBit(); lr = l1.LowBit(); }, 5);
+            bench.Time("UInt128.LowBit", () => { ullr = ull1.LowBit(); ullr = ull1.LowBit(); ullr = ull1.LowBit(); ullr = ull1.LowBit(); ullr = ull1.LowBit(); }, 5);
             bench.Time("byte.HighBit", () => { br = b1.HighBit(); br = b1.HighBit(); br = b1.HighBit(); br = b1.HighBit(); br = b1.HighBit(); }, 5);
             bench.Time("sbyte.HighBit", () => { sbr = sb1.HighBit(); sbr = sb1.HighBit(); sbr = sb1.HighBit(); sbr = sb1.HighBit(); sbr = sb1.HighBit(); }, 5);
             bench.Time("ushort.HighBit", () => { usr = us1.HighBit(); usr = us1.HighBit(); usr = us1.HighBit(); usr = us1.HighBit(); usr = us1.HighBit(); }, 5);
@@ -154,38 +157,52 @@ namespace SoftWx.Numerics.Profile {
             bench.Time("int.HighBit", () => { ir = i1.HighBit(); ir = i1.HighBit(); ir = i1.HighBit(); ir = i1.HighBit(); ir = i1.HighBit(); }, 5);
             bench.Time("ulong.HighBit", () => { ulr = ul1.HighBit(); ulr = ul1.HighBit(); ulr = ul1.HighBit(); ulr = ul1.HighBit(); ulr = ul1.HighBit(); }, 5);
             bench.Time("long.HighBit", () => { lr = l1.HighBit(); lr = l1.HighBit(); lr = l1.HighBit(); lr = l1.HighBit(); lr = l1.HighBit(); }, 5);
-            bench.Time("byte.LowBitPosition", () => { br = b1.LowBitPosition(); br = b1.LowBitPosition(); br = b1.LowBitPosition(); br = b1.LowBitPosition(); br = b1.LowBitPosition(); }, 5);
-            bench.Time("sbyte.LowBitPosition", () => { sbr = sb1.LowBitPosition(); sbr = sb1.LowBitPosition(); sbr = sb1.LowBitPosition(); sbr = sb1.LowBitPosition(); sbr = sb1.LowBitPosition(); }, 5);
-            bench.Time("ushort.LowBitPosition", () => { usr = us1.LowBitPosition(); usr = us1.LowBitPosition(); usr = us1.LowBitPosition(); usr = us1.LowBitPosition(); usr = us1.LowBitPosition(); }, 5);
-            bench.Time("short.LowBitPosition", () => { sr = s1.LowBitPosition(); sr = s1.LowBitPosition(); sr = s1.LowBitPosition(); sr = s1.LowBitPosition(); sr = s1.LowBitPosition(); }, 5);
-            bench.Time("uint.LowBitPosition", () => { uir = ui1.LowBitPosition(); uir = ui1.LowBitPosition(); uir = ui1.LowBitPosition(); uir = ui1.LowBitPosition(); uir = ui1.LowBitPosition(); }, 5);
+            bench.Time("UInt128.HighBit", () => { ullr = ull1.HighBit(); ullr = ull1.HighBit(); ullr = ull1.HighBit(); ullr = ull1.HighBit(); ullr = ull1.HighBit(); }, 5);
+            bench.Time("byte.LowBitPosition", () => { ir = b1.LowBitPosition(); ir = b1.LowBitPosition(); ir = b1.LowBitPosition(); ir = b1.LowBitPosition(); ir = b1.LowBitPosition(); }, 5);
+            bench.Time("sbyte.LowBitPosition", () => { ir = sb1.LowBitPosition(); ir = sb1.LowBitPosition(); ir = sb1.LowBitPosition(); ir = sb1.LowBitPosition(); ir = sb1.LowBitPosition(); }, 5);
+            bench.Time("ushort.LowBitPosition", () => { ir = us1.LowBitPosition(); ir = us1.LowBitPosition(); ir = us1.LowBitPosition(); ir = us1.LowBitPosition(); ir = us1.LowBitPosition(); }, 5);
+            bench.Time("short.LowBitPosition", () => { ir = s1.LowBitPosition(); ir = s1.LowBitPosition(); ir = s1.LowBitPosition(); ir = s1.LowBitPosition(); ir = s1.LowBitPosition(); }, 5);
+            bench.Time("uint.LowBitPosition", () => { ir = ui1.LowBitPosition(); ir = ui1.LowBitPosition(); ir = ui1.LowBitPosition(); ir = ui1.LowBitPosition(); ir = ui1.LowBitPosition(); }, 5);
             bench.Time("int.LowBitPosition", () => { ir = i1.LowBitPosition(); ir = i1.LowBitPosition(); ir = i1.LowBitPosition(); ir = i1.LowBitPosition(); ir = i1.LowBitPosition(); }, 5);
-            bench.Time("ulong.LowBitPosition", () => { ulr = ul1.LowBitPosition(); ulr = ul1.LowBitPosition(); ulr = ul1.LowBitPosition(); ulr = ul1.LowBitPosition(); ulr = ul1.LowBitPosition(); }, 5);
-            bench.Time("long.LowBitPosition", () => { lr = l1.LowBitPosition(); lr = l1.LowBitPosition(); lr = l1.LowBitPosition(); lr = l1.LowBitPosition(); lr = l1.LowBitPosition(); }, 5);
-            bench.Time("byte.HighBitPosition", () => { br = b1.HighBitPosition(); br = b1.HighBitPosition(); br = b1.HighBitPosition(); br = b1.HighBitPosition(); br = b1.HighBitPosition(); }, 5);
-            bench.Time("sbyte.HighBitPosition", () => { sbr = sb1.HighBitPosition(); sbr = sb1.HighBitPosition(); sbr = sb1.HighBitPosition(); sbr = sb1.HighBitPosition(); sbr = sb1.HighBitPosition(); }, 5);
-            bench.Time("ushort.HighBitPosition", () => { usr = us1.HighBitPosition(); usr = us1.HighBitPosition(); usr = us1.HighBitPosition(); usr = us1.HighBitPosition(); usr = us1.HighBitPosition(); }, 5);
-            bench.Time("short.HighBitPosition", () => { sr = s1.HighBitPosition(); sr = s1.HighBitPosition(); sr = s1.HighBitPosition(); sr = s1.HighBitPosition(); sr = s1.HighBitPosition(); }, 5);
-            bench.Time("uint.HighBitPosition", () => { uir = ui1.HighBitPosition(); uir = ui1.HighBitPosition(); uir = ui1.HighBitPosition(); uir = ui1.HighBitPosition(); uir = ui1.HighBitPosition(); }, 5);
+            bench.Time("ulong.LowBitPosition", () => { ir = ul1.LowBitPosition(); ir = ul1.LowBitPosition(); ir = ul1.LowBitPosition(); ir = ul1.LowBitPosition(); ir = ul1.LowBitPosition(); }, 5);
+            bench.Time("long.LowBitPosition", () => { ir = l1.LowBitPosition(); ir = l1.LowBitPosition(); ir = l1.LowBitPosition(); ir = l1.LowBitPosition(); ir = l1.LowBitPosition(); }, 5);
+            bench.Time("UInt128.LowBitPosition", () => { ir = ull1.LowBitPosition(); ir = ull1.LowBitPosition(); ir = ull1.LowBitPosition(); ir = ull1.LowBitPosition(); ir = ull1.LowBitPosition(); }, 5);
+            bench.Time("byte.HighBitPosition", () => { ir = b1.HighBitPosition(); ir = b1.HighBitPosition(); ir = b1.HighBitPosition(); ir = b1.HighBitPosition(); ir = b1.HighBitPosition(); }, 5);
+            bench.Time("sbyte.HighBitPosition", () => { ir = sb1.HighBitPosition(); ir = sb1.HighBitPosition(); ir = sb1.HighBitPosition(); ir = sb1.HighBitPosition(); ir = sb1.HighBitPosition(); }, 5);
+            bench.Time("ushort.HighBitPosition", () => { ir = us1.HighBitPosition(); ir = us1.HighBitPosition(); ir = us1.HighBitPosition(); ir = us1.HighBitPosition(); ir = us1.HighBitPosition(); }, 5);
+            bench.Time("short.HighBitPosition", () => { ir = s1.HighBitPosition(); ir = s1.HighBitPosition(); ir = s1.HighBitPosition(); ir = s1.HighBitPosition(); ir = s1.HighBitPosition(); }, 5);
+            bench.Time("uint.HighBitPosition", () => { ir = ui1.HighBitPosition(); ir = ui1.HighBitPosition(); ir = ui1.HighBitPosition(); ir = ui1.HighBitPosition(); ir = ui1.HighBitPosition(); }, 5);
             bench.Time("int.HighBitPosition", () => { ir = i1.HighBitPosition(); ir = i1.HighBitPosition(); ir = i1.HighBitPosition(); ir = i1.HighBitPosition(); ir = i1.HighBitPosition(); }, 5);
-            bench.Time("ulong.HighBitPosition", () => { ulr = ul1.HighBitPosition(); ulr = ul1.HighBitPosition(); ulr = ul1.HighBitPosition(); ulr = ul1.HighBitPosition(); ulr = ul1.HighBitPosition(); }, 5);
-            bench.Time("long.HighBitPosition", () => { lr = l1.HighBitPosition(); lr = l1.HighBitPosition(); lr = l1.HighBitPosition(); lr = l1.HighBitPosition(); lr = l1.HighBitPosition(); }, 5);
-            bench.Time("byte.LeadingZeroBits", () => { br = b1.LeadingZeroBits(); br = b1.LeadingZeroBits(); br = b1.LeadingZeroBits(); br = b1.LeadingZeroBits(); br = b1.LeadingZeroBits(); }, 5);
-            bench.Time("sbyte.LeadingZeroBits", () => { br = b1.LeadingZeroBits(); br = b1.LeadingZeroBits(); br = b1.LeadingZeroBits(); br = b1.LeadingZeroBits(); br = b1.LeadingZeroBits(); }, 5);
-            bench.Time("ushort.LeadingZeroBits", () => { usr = us1.LeadingZeroBits(); usr = us1.LeadingZeroBits(); usr = us1.LeadingZeroBits(); usr = us1.LeadingZeroBits(); usr = us1.LeadingZeroBits(); }, 5);
-            bench.Time("short.LeadingZeroBits", () => { sr = s1.LeadingZeroBits(); sr = s1.LeadingZeroBits(); sr = s1.LeadingZeroBits(); sr = s1.LeadingZeroBits(); sr = s1.LeadingZeroBits(); }, 5);
-            bench.Time("uint.LeadingZeroBits", () => { uir = ui1.LeadingZeroBits(); uir = ui1.LeadingZeroBits(); uir = ui1.LeadingZeroBits(); uir = ui1.LeadingZeroBits(); uir = ui1.LeadingZeroBits(); }, 5);
+            bench.Time("ulong.HighBitPosition", () => { ir = ul1.HighBitPosition(); ir = ul1.HighBitPosition(); ir = ul1.HighBitPosition(); ir = ul1.HighBitPosition(); ir = ul1.HighBitPosition(); }, 5);
+            bench.Time("long.HighBitPosition", () => { ir = l1.HighBitPosition(); ir = l1.HighBitPosition(); ir = l1.HighBitPosition(); ir = l1.HighBitPosition(); ir = l1.HighBitPosition(); }, 5);
+            bench.Time("UInt128.HighBitPosition", () => { ir = ull1.HighBitPosition(); ir = ull1.HighBitPosition(); ir = ull1.HighBitPosition(); ir = ull1.HighBitPosition(); ir = ull1.HighBitPosition(); }, 5);
+            bench.Time("byte.TrailingZeroBits", () => { ir = b1.TrailingZeroBits(); ir = b1.TrailingZeroBits(); ir = b1.TrailingZeroBits(); ir = b1.TrailingZeroBits(); ir = b1.TrailingZeroBits(); }, 5);
+            bench.Time("sbyte.TrailingZeroBits", () => { ir = sb1.TrailingZeroBits(); ir = sb1.TrailingZeroBits(); ir = sb1.TrailingZeroBits(); ir = sb1.TrailingZeroBits(); ir = sb1.TrailingZeroBits(); }, 5);
+            bench.Time("ushort.TrailingZeroBits", () => { ir = us1.TrailingZeroBits(); ir = us1.TrailingZeroBits(); ir = us1.TrailingZeroBits(); ir = us1.TrailingZeroBits(); ir = us1.TrailingZeroBits(); }, 5);
+            bench.Time("short.TrailingZeroBits", () => { ir = s1.TrailingZeroBits(); ir = s1.TrailingZeroBits(); ir = s1.TrailingZeroBits(); ir = s1.TrailingZeroBits(); ir = s1.TrailingZeroBits(); }, 5);
+            bench.Time("uint.TrailingZeroBits", () => { ir = ui1.TrailingZeroBits(); ir = ui1.TrailingZeroBits(); ir = ui1.TrailingZeroBits(); ir = ui1.TrailingZeroBits(); ir = ui1.TrailingZeroBits(); }, 5);
+            bench.Time("int.TrailingZeroBits", () => { ir = i1.TrailingZeroBits(); ir = i1.TrailingZeroBits(); ir = i1.TrailingZeroBits(); ir = i1.TrailingZeroBits(); ir = i1.TrailingZeroBits(); }, 5);
+            bench.Time("ulong.TrailingZeroBits", () => { ir = ul1.TrailingZeroBits(); ir = ul1.TrailingZeroBits(); ir = ul1.TrailingZeroBits(); ir = ul1.TrailingZeroBits(); ir = ul1.TrailingZeroBits(); }, 5);
+            bench.Time("long.TrailingZeroBits", () => { ir = l1.TrailingZeroBits(); ir = l1.TrailingZeroBits(); ir = l1.TrailingZeroBits(); ir = l1.TrailingZeroBits(); ir = l1.TrailingZeroBits(); }, 5);
+            bench.Time("UInt128.TrailingZeroBits", () => { ir = ull1.TrailingZeroBits(); ir = ull1.TrailingZeroBits(); ir = ull1.TrailingZeroBits(); ir = ull1.TrailingZeroBits(); ir = ull1.TrailingZeroBits(); }, 5);
+            bench.Time("byte.LeadingZeroBits", () => { ir = b1.LeadingZeroBits(); ir = b1.LeadingZeroBits(); ir = b1.LeadingZeroBits(); ir = b1.LeadingZeroBits(); ir = b1.LeadingZeroBits(); }, 5);
+            bench.Time("sbyte.LeadingZeroBits", () => { ir = sb1.LeadingZeroBits(); ir = sb1.LeadingZeroBits(); ir = sb1.LeadingZeroBits(); ir = sb1.LeadingZeroBits(); ir = sb1.LeadingZeroBits(); }, 5);
+            bench.Time("ushort.LeadingZeroBits", () => { ir = us1.LeadingZeroBits(); ir = us1.LeadingZeroBits(); ir = us1.LeadingZeroBits(); ir = us1.LeadingZeroBits(); ir = us1.LeadingZeroBits(); }, 5);
+            bench.Time("short.LeadingZeroBits", () => { ir = s1.LeadingZeroBits(); ir = s1.LeadingZeroBits(); ir = s1.LeadingZeroBits(); ir = s1.LeadingZeroBits(); ir = s1.LeadingZeroBits(); }, 5);
+            bench.Time("uint.LeadingZeroBits", () => { ir = ui1.LeadingZeroBits(); ir = ui1.LeadingZeroBits(); ir = ui1.LeadingZeroBits(); ir = ui1.LeadingZeroBits(); ir = ui1.LeadingZeroBits(); }, 5);
             bench.Time("int.LeadingZeroBits", () => { ir = i1.LeadingZeroBits(); ir = i1.LeadingZeroBits(); ir = i1.LeadingZeroBits(); ir = i1.LeadingZeroBits(); ir = i1.LeadingZeroBits(); }, 5);
-            bench.Time("ulong.LeadingZeroBits", () => { ulr = ul1.LeadingZeroBits(); ulr = ul1.LeadingZeroBits(); ulr = ul1.LeadingZeroBits(); ulr = ul1.LeadingZeroBits(); ulr = ul1.LeadingZeroBits(); }, 5);
-            bench.Time("long.LeadingZeroBits", () => { lr = l1.LeadingZeroBits(); lr = l1.LeadingZeroBits(); lr = l1.LeadingZeroBits(); lr = l1.LeadingZeroBits(); lr = l1.LeadingZeroBits(); }, 5);
-            bench.Time("byte.BitCount", () => { br = b1.BitCount(); br = b1.BitCount(); br = b1.BitCount(); br = b1.BitCount(); br = b1.BitCount(); }, 5);
-            bench.Time("sbyte.BitCount", () => { sbr = sb1.BitCount(); sbr = sb1.BitCount(); sbr = sb1.BitCount(); sbr = sb1.BitCount(); sbr = sb1.BitCount(); }, 5);
-            bench.Time("ushort.BitCount", () => { usr = us1.BitCount(); usr = us1.BitCount(); usr = us1.BitCount(); usr = us1.BitCount(); usr = us1.BitCount(); }, 5);
-            bench.Time("short.BitCount", () => { sr = s1.BitCount(); sr = s1.BitCount(); sr = s1.BitCount(); sr = s1.BitCount(); sr = s1.BitCount(); }, 5);
-            bench.Time("uint.BitCount", () => { uir = ui1.BitCount(); uir = ui1.BitCount(); uir = ui1.BitCount(); uir = ui1.BitCount(); uir = ui1.BitCount(); }, 5);
+            bench.Time("ulong.LeadingZeroBits", () => { ir = ul1.LeadingZeroBits(); ir = ul1.LeadingZeroBits(); ir = ul1.LeadingZeroBits(); ir = ul1.LeadingZeroBits(); ir = ul1.LeadingZeroBits(); }, 5);
+            bench.Time("long.LeadingZeroBits", () => { ir = l1.LeadingZeroBits(); ir = l1.LeadingZeroBits(); ir = l1.LeadingZeroBits(); ir = l1.LeadingZeroBits(); ir = l1.LeadingZeroBits(); }, 5);
+            bench.Time("UInt128.LeadingZeroBits", () => { ir = ull1.LeadingZeroBits(); ir = ull1.LeadingZeroBits(); ir = ull1.LeadingZeroBits(); ir = ull1.LeadingZeroBits(); ir = ull1.LeadingZeroBits(); }, 5);
+            bench.Time("byte.BitCount", () => { ir = b1.BitCount(); ir = b1.BitCount(); ir = b1.BitCount(); ir = b1.BitCount(); ir = b1.BitCount(); }, 5);
+            bench.Time("sbyte.BitCount", () => { ir = sb1.BitCount(); ir = sb1.BitCount(); ir = sb1.BitCount(); ir = sb1.BitCount(); ir = sb1.BitCount(); }, 5);
+            bench.Time("ushort.BitCount", () => { ir = us1.BitCount(); ir = us1.BitCount(); ir = us1.BitCount(); ir = us1.BitCount(); ir = us1.BitCount(); }, 5);
+            bench.Time("short.BitCount", () => { ir = s1.BitCount(); ir = s1.BitCount(); ir = s1.BitCount(); ir = s1.BitCount(); ir = s1.BitCount(); }, 5);
+            bench.Time("uint.BitCount", () => { ir = ui1.BitCount(); ir = ui1.BitCount(); ir = ui1.BitCount(); ir = ui1.BitCount(); ir = ui1.BitCount(); }, 5);
             bench.Time("int.BitCount", () => { ir = i1.BitCount(); ir = i1.BitCount(); ir = i1.BitCount(); ir = i1.BitCount(); ir = i1.BitCount(); }, 5);
-            bench.Time("ulong.BitCount", () => { ulr = ul1.BitCount(); ulr = ul1.BitCount(); ulr = ul1.BitCount(); ulr = ul1.BitCount(); ulr = ul1.BitCount(); }, 5);
-            bench.Time("long.BitCount", () => { lr = l1.BitCount(); lr = l1.BitCount(); lr = l1.BitCount(); lr = l1.BitCount(); lr = l1.BitCount(); }, 5);
+            bench.Time("ulong.BitCount", () => { ir = ul1.BitCount(); ir = ul1.BitCount(); ir = ul1.BitCount(); ir = ul1.BitCount(); ir = ul1.BitCount(); }, 5);
+            bench.Time("long.BitCount", () => { ir = l1.BitCount(); ir = l1.BitCount(); ir = l1.BitCount(); ir = l1.BitCount(); ir = l1.BitCount(); }, 5);
+            bench.Time("UInt128.BitCount", () => { ir = ull1.BitCount(); ir = ull1.BitCount(); ir = ull1.BitCount(); ir = ull1.BitCount(); ir = ull1.BitCount(); }, 5);
             bench.Time("byte.ReverseBits", () => { br = b1.ReverseBits(); br = b1.ReverseBits(); br = b1.ReverseBits(); br = b1.ReverseBits(); br = b1.ReverseBits(); }, 5);
             bench.Time("sbyte.ReverseBits", () => { sbr = sb1.ReverseBits(); sbr = sb1.ReverseBits(); sbr = sb1.ReverseBits(); sbr = sb1.ReverseBits(); sbr = sb1.ReverseBits(); }, 5);
             bench.Time("ushort.ReverseBits", () => { usr = us1.ReverseBits(); usr = us1.ReverseBits(); usr = us1.ReverseBits(); usr = us1.ReverseBits(); usr = us1.ReverseBits(); }, 5);
@@ -194,6 +211,7 @@ namespace SoftWx.Numerics.Profile {
             bench.Time("int.ReverseBits", () => { ir = i1.ReverseBits(); ir = i1.ReverseBits(); ir = i1.ReverseBits(); ir = i1.ReverseBits(); ir = i1.ReverseBits(); }, 5);
             bench.Time("ulong.ReverseBits", () => { ulr = ul1.ReverseBits(); ulr = ul1.ReverseBits(); ulr = ul1.ReverseBits(); ulr = ul1.ReverseBits(); ulr = ul1.ReverseBits(); }, 5);
             bench.Time("long.ReverseBits", () => { lr = l1.ReverseBits(); lr = l1.ReverseBits(); lr = l1.ReverseBits(); lr = l1.ReverseBits(); lr = l1.ReverseBits(); }, 5);
+            bench.Time("UInt128.ReverseBits", () => { ullr = ull1.ReverseBits(); ullr = ull1.ReverseBits(); ullr = ull1.ReverseBits(); ullr = ull1.ReverseBits(); ullr = ull1.ReverseBits(); }, 5);
         }
     }
 }

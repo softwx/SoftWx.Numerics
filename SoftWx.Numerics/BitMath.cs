@@ -25,11 +25,6 @@ namespace SoftWx.Numerics {
             7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
             7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,
             7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7};
-        // bit position lookup table where all bits set after most significant bit
-        internal static readonly byte[] DeBruijnLSBsSet = new byte[] {
-            0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
-            8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31
-        };
         // bit position lookup table where all bits zero after most significant bit
         internal static readonly byte[] DeBruijnMSBSet = new byte[] {
             0, 1, 28, 2, 29, 14, 24, 3, 30, 22, 20, 15, 25, 17, 4, 8,
@@ -100,6 +95,14 @@ namespace SoftWx.Numerics {
             return value & unchecked(-value);
         }
 
+        /// <summary>Returns the least significant set bit of the specified value.</summary>
+        /// <remarks>Example: LowBit(10) returns 2, i.e. low bit of 00001010 is 00000010.</remarks>
+        /// <param name="value">The value whose least significant bit is desired.</param>
+        /// <returns>The value parameter's the least significant bit.</returns>
+        public static UInt128 LowBit(this UInt128 value) {
+            return (value.Low != 0) ? new UInt128(0, LowBit(value.Low)) : new UInt128(LowBit(value.High), 0);
+        }
+
         /// <summary>Returns the most significant set bit of the specified value.</summary>
         /// <remarks>Example: HighBit(10) returns 8, i.e. high bit of 00001010 is 00001000.</remarks>
         /// <param name="value">The value whose most significant bit is desired.</param>
@@ -165,9 +168,8 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose most significant bit is desired.</param>
         /// <returns>The value parameter's the most significant bit.</returns>
         public static ulong HighBit(this ulong value) {
-            if (value == 0) return 0;
             uint high = (uint)(value >> 32);
-            return (high == 0) ? HighBit((uint)value) : ((ulong)HighBit(high)) << 32;
+            return (high != 0) ? ((ulong)HighBit(high)) << 32 : HighBit((uint)value);
         }
 
         /// <summary>Returns the most significant set bit of the specified value.</summary>
@@ -178,13 +180,12 @@ namespace SoftWx.Numerics {
             return (long)HighBit((ulong)value);
         }
 
-        /// <summary>Returns the least significant set bit position of the specified value,
-        /// or MaxValue if no bits were set. The least significant bit position is 0.</summary>
-        /// <remarks>Example: LowBitPosition(10) returns 1, i.e. low bit of 00001010 is position 1.</remarks>
-        /// <param name="value">The value whose least significant bit position is desired.</param>
-        /// <returns>The value parameter's least significant bit position.</returns>
-        public static byte LowBitPosition(this byte value) {
-            return msbPos256[value & -value];
+        /// <summary>Returns the most significant set bit of the specified value.</summary>
+        /// <remarks>Example: HighBit(10) returns 8, i.e. high bit of 00001010 is 00001000.</remarks>
+        /// <param name="value">The value whose most significant bit is desired.</param>
+        /// <returns>The value parameter's the most significant bit.</returns>
+        public static UInt128 HighBit(this UInt128 value) {
+            return (value.High != 0) ? new UInt128(HighBit(value.High), 0UL) : new UInt128(0UL, HighBit(value.Low));
         }
 
         /// <summary>Returns the least significant set bit position of the specified value,
@@ -192,19 +193,28 @@ namespace SoftWx.Numerics {
         /// <remarks>Example: LowBitPosition(10) returns 1, i.e. low bit of 00001010 is position 1.</remarks>
         /// <param name="value">The value whose least significant bit position is desired.</param>
         /// <returns>The value parameter's least significant bit position.</returns>
-        public static sbyte LowBitPosition(this sbyte value) {
-            return (sbyte)msbPos256[value & -value];
+        public static int LowBitPosition(this byte value) {
+            return (int)(sbyte)msbPos256[value & -value];
         }
 
         /// <summary>Returns the least significant set bit position of the specified value,
-        /// or MaxValue if no bits were set. The least significant bit position is 0.</summary>
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
         /// <remarks>Example: LowBitPosition(10) returns 1, i.e. low bit of 00001010 is position 1.</remarks>
         /// <param name="value">The value whose least significant bit position is desired.</param>
         /// <returns>The value parameter's least significant bit position.</returns>
-        public static ushort LowBitPosition(this ushort value) {
+        public static int LowBitPosition(this sbyte value) {
+            return (int)(sbyte)msbPos256[value & -value];
+        }
+
+        /// <summary>Returns the least significant set bit position of the specified value,
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
+        /// <remarks>Example: LowBitPosition(10) returns 1, i.e. low bit of 00001010 is position 1.</remarks>
+        /// <param name="value">The value whose least significant bit position is desired.</param>
+        /// <returns>The value parameter's least significant bit position.</returns>
+        public static int LowBitPosition(this ushort value) {
             byte low = (byte)value;
-            return (low == 0) ? (value == 0) ? ushort.MaxValue : (ushort)(8 + LowBitPosition((byte)(value >> 8)))
-                : msbPos256[low & -low];
+            return (low != 0) ? LowBitPosition(low)
+                : (value != 0) ? (8 + LowBitPosition((byte)(value >> 8))) : -1;
         }
 
         /// <summary>Returns the least significant set bit position of the specified value,
@@ -212,19 +222,17 @@ namespace SoftWx.Numerics {
         /// <remarks>Example: LowBitPosition(10) returns 1, i.e. low bit of 00001010 is position 1.</remarks>
         /// <param name="value">The value whose least significant bit position is desired.</param>
         /// <returns>The value parameter's least significant bit position.</returns>
-        public static short LowBitPosition(this short value) {
-            return (short)LowBitPosition((ushort)value);
+        public static int LowBitPosition(this short value) {
+            return LowBitPosition((ushort)value);
         }
 
         /// <summary>Returns the least significant set bit position of the specified value,
-        /// or MaxValue if no bits were set. The least significant bit position is 0.</summary>
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
         /// <remarks>Example: LowBitPosition(10) returns 1, i.e. low bit of 00001010 is position 1.</remarks>
         /// <param name="value">The value whose least significant bit position is desired.</param>
         /// <returns>The value parameter's least significant bit position.</returns>
-        public static uint LowBitPosition(this uint value) {
-            //return (value != 0) ? DeBruijnMSBSet[unchecked((value & (1u + ~value)) * 0x077cb531u) >> 27]
-            //    : uint.MaxValue;
-            return (value == 0) ? uint.MaxValue : DeBruijnMSBSet[unchecked((value & (1u + ~value)) * 0x077cb531u) >> 27];
+        public static int LowBitPosition(this uint value) {
+            return (value != 0) ? DeBruijnMSBSet[unchecked((value & (1u + ~value)) * 0x077cb531u) >> 27] : -1;
         }
 
         /// <summary>Returns the least significant set bit position of the specified value,
@@ -237,14 +245,14 @@ namespace SoftWx.Numerics {
         }
 
         /// <summary>Returns the least significant set bit position of the specified value,
-        /// or MaxValue if no bits were set. The least significant bit position is 0.</summary>
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
         /// <remarks>Example: LowBitPosition(10) returns 1, i.e. low bit of 00001010 is position 1.</remarks>
         /// <param name="value">The value whose least significant bit position is desired.</param>
         /// <returns>The value parameter's least significant bit position.</returns>
-        public static ulong LowBitPosition(this ulong value) {
+        public static int LowBitPosition(this ulong value) {
             uint low = (uint)value;
-            return (low == 0) ? (value == 0) ? ulong.MaxValue : 32UL + (ulong)LowBitPosition((uint)(value >> 32))
-                : (ulong)DeBruijnMSBSet[unchecked((low & (1u + ~low)) * 0x077cb531u) >> 27];
+            return (low != 0) ? LowBitPosition(low)
+                : (value != 0) ? (32 + LowBitPosition((uint)(value >> 32))) : -1;
         }
 
         /// <summary>Returns the least significant set bit position of the specified value,
@@ -252,17 +260,18 @@ namespace SoftWx.Numerics {
         /// <remarks>Example: LowBitPosition(10) returns 1, i.e. low bit of 00001010 is position 1.</remarks>
         /// <param name="value">The value whose least significant bit position is desired.</param>
         /// <returns>The value parameter's least significant bit position.</returns>
-        public static long LowBitPosition(this long value) {
-            return (long)LowBitPosition((ulong)value);
+        public static int LowBitPosition(this long value) {
+            return LowBitPosition((ulong)value);
         }
 
-        /// <summary>Returns the most significant set bit position of the specified value,
-        /// or MaxValue if no bits were set. The least significant bit position is 0.</summary>
-        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
-        /// <param name="value">The value whose most significant bit position is desired.</param>
-        /// <returns>The value parameter's most significant bit position.</returns>
-        public static byte HighBitPosition(this byte value) {
-            return msbPos256[value];
+        /// <summary>Returns the least significant set bit position of the specified value,
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
+        /// <remarks>Example: LowBitPosition(10) returns 1, i.e. low bit of 00001010 is position 1.</remarks>
+        /// <param name="value">The value whose least significant bit position is desired.</param>
+        /// <returns>The value parameter's least significant bit position.</returns>
+        public static int LowBitPosition(this UInt128 value) {
+            return (value.Low != 0) ? LowBitPosition(value.Low)
+                : (value != 0) ? (64 + LowBitPosition(value.High)) : -1;
         }
 
         /// <summary>Returns the most significant set bit position of the specified value,
@@ -270,18 +279,27 @@ namespace SoftWx.Numerics {
         /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
         /// <param name="value">The value whose most significant bit position is desired.</param>
         /// <returns>The value parameter's most significant bit position.</returns>
-        public static sbyte HighBitPosition(this sbyte value) {
-            return (sbyte)msbPos256[(byte)value]; // the cast to byte is not redundant (avoids sign bit extension)
+        public static int HighBitPosition(this byte value) {
+            return (int)(sbyte)msbPos256[value];
         }
 
         /// <summary>Returns the most significant set bit position of the specified value,
-        /// or MaxValue if no bits were set. The least significant bit position is 0.</summary>
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
         /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
         /// <param name="value">The value whose most significant bit position is desired.</param>
         /// <returns>The value parameter's most significant bit position.</returns>
-        public static ushort HighBitPosition(this ushort value) {
+        public static int HighBitPosition(this sbyte value) {
+            return (int)(sbyte)msbPos256[(byte)value]; // the cast to byte is not redundant (avoids sign bit extension)
+        }
+
+        /// <summary>Returns the most significant set bit position of the specified value,
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
+        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
+        /// <param name="value">The value whose most significant bit position is desired.</param>
+        /// <returns>The value parameter's most significant bit position.</returns>
+        public static int HighBitPosition(this ushort value) {
             int high = (byte)(value >> 8);
-            return (high == 0) ? (value == 0) ? ushort.MaxValue : msbPos256[(byte)value] : (ushort)(8 + msbPos256[high]);
+            return (high != 0) ? 8 + msbPos256[high] : (int)(sbyte)msbPos256[(byte)value];
         }
 
         /// <summary>Returns the most significant set bit position of the specified value,
@@ -289,22 +307,18 @@ namespace SoftWx.Numerics {
         /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
         /// <param name="value">The value whose most significant bit position is desired.</param>
         /// <returns>The value parameter's most significant bit position.</returns>
-        public static short HighBitPosition(this short value) {
-            return (short)HighBitPosition((ushort)value);
+        public static int HighBitPosition(this short value) {
+            return HighBitPosition((ushort)value);
         }
 
         /// <summary>Returns the most significant set bit position of the specified value,
-        /// or MaxValue if no bits were set. The least significant bit position is 0.</summary>
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
         /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
         /// <param name="value">The value whose most significant bit position is desired.</param>
         /// <returns>The value parameter's most significant bit position.</returns>
-        public static uint HighBitPosition(this uint value) {
-            if (value == 0) return uint.MaxValue;
-            value |= value >> 1;
-            value |= value >> 2;
-            value |= value >> 4;
-            value |= value >> 8;
-            return DeBruijnLSBsSet[unchecked((value | value >> 16) * 0x07c4acddu) >> 27];
+        public static int HighBitPosition(this uint value) {
+            ushort high = (ushort)(value >> 16);
+            return (high != 0) ? 16 + HighBitPosition(high) : HighBitPosition((ushort)value);
         }
 
         /// <summary>Returns the most significant set bit position of the specified value,
@@ -313,18 +327,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose most significant bit position is desired.</param>
         /// <returns>The value parameter's most significant bit position.</returns>
         public static int HighBitPosition(this int value) {
-            return (int)HighBitPosition((uint)value);
-        }
-
-        /// <summary>Returns the most significant set bit position of the specified value,
-        /// or MaxValue if no bits were set. The least significant bit position is 0.</summary>
-        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
-        /// <param name="value">The value whose most significant bit position is desired.</param>
-        /// <returns>The value parameter's most significant bit position.</returns>
-        public static ulong HighBitPosition(this ulong value) {
-            uint high = (uint)(value >> 32);
-            return (high == 0) ? (value == 0) ? ulong.MaxValue : (ulong)HighBitPosition((uint)value)
-                : 32ul + (ulong)HighBitPosition(high);
+            return HighBitPosition((uint)value);
         }
 
         /// <summary>Returns the most significant set bit position of the specified value,
@@ -332,50 +335,68 @@ namespace SoftWx.Numerics {
         /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
         /// <param name="value">The value whose most significant bit position is desired.</param>
         /// <returns>The value parameter's most significant bit position.</returns>
-        public static long HighBitPosition(this long value) {
-            return (long)HighBitPosition((ulong)value);
+        public static int HighBitPosition(this ulong value) {
+            uint high = (uint)(value >> 32);
+            return (high != 0) ? 32 + HighBitPosition(high) : HighBitPosition((uint)value);
+        }
+
+        /// <summary>Returns the most significant set bit position of the specified value,
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
+        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
+        /// <param name="value">The value whose most significant bit position is desired.</param>
+        /// <returns>The value parameter's most significant bit position.</returns>
+        public static int HighBitPosition(this long value) {
+            return HighBitPosition((ulong)value);
+        }
+
+        /// <summary>Returns the most significant set bit position of the specified value,
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
+        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
+        /// <param name="value">The value whose most significant bit position is desired.</param>
+        /// <returns>The value parameter's most significant bit position.</returns>
+        public static int HighBitPosition(this UInt128 value) {
+            return (value.High != 0) ? 64 + HighBitPosition(value.High) : HighBitPosition(value.Low);
         }
 
         /// <summary>Returns the count of trailing zero bits in the specified value.</summary>
         /// <remarks>Example: TrailingZeroBits(10) returns 1, i.e. 00001010 has 1 trailing 0 bit.</remarks>
         /// <param name="value">The value whose trailing zero bit count is desired.</param>
         /// <returns>The count of the value parameter's trailing zero bits.</returns>
-        public static byte TrailingZeroBits(this byte value) {
-            return (value == 0) ? (byte)8 : msbPos256[value & -value];
+        public static int TrailingZeroBits(this byte value) {
+            return (value != 0) ? msbPos256[value & -value] : 8;
         }
 
         /// <summary>Returns the count of trailing zero bits in the specified value.</summary>
         /// <remarks>Example: TrailingZeroBits(10) returns 1, i.e. 00001010 has 1 trailing 0 bit.</remarks>
         /// <param name="value">The value whose trailing zero bit count is desired.</param>
         /// <returns>The count of the value parameter's trailing zero bits.</returns>
-        public static sbyte TrailingZeroBits(this sbyte value) {
-            //return (sbyte)msbPos256[value & -value];
-            return (sbyte)TrailingZeroBits((byte)value);
+        public static int TrailingZeroBits(this sbyte value) {
+            return TrailingZeroBits((byte)value);
         }
 
         /// <summary>Returns the count of trailing zero bits in the specified value.</summary>
         /// <remarks>Example: TrailingZeroBits(10) returns 1, i.e. 00001010 has 1 trailing 0 bit.</remarks>
         /// <param name="value">The value whose trailing zero bit count is desired.</param>
         /// <returns>The count of the value parameter's trailing zero bits.</returns>
-        public static ushort TrailingZeroBits(this ushort value) {
+        public static int TrailingZeroBits(this ushort value) {
             byte low = (byte)value;
-            return (low == 0) ? (ushort)(8 + TrailingZeroBits((byte)(value >> 8))) : msbPos256[low & -low];
+            return (low != 0) ? msbPos256[low & -low] : (8 + TrailingZeroBits((byte)(value >> 8)));
         }
 
         /// <summary>Returns the count of trailing zero bits in the specified value.</summary>
         /// <remarks>Example: TrailingZeroBits(10) returns 1, i.e. 00001010 has 1 trailing 0 bit.</remarks>
         /// <param name="value">The value whose trailing zero bit count is desired.</param>
         /// <returns>The count of the value parameter's trailing zero bits.</returns>
-        public static short TrailingZeroBits(this short value) {
-            return (short)TrailingZeroBits((ushort)value);
+        public static int TrailingZeroBits(this short value) {
+            return TrailingZeroBits((ushort)value);
         }
 
         /// <summary>Returns the count of trailing zero bits in the specified value.</summary>
         /// <remarks>Example: TrailingZeroBits(10) returns 1, i.e. 00001010 has 1 trailing 0 bit.</remarks>
         /// <param name="value">The value whose trailing zero bit count is desired.</param>
         /// <returns>The count of the value parameter's trailing zero bits.</returns>
-        public static uint TrailingZeroBits(this uint value) {
-            return (value == 0) ? 32u : DeBruijnMSBSet[unchecked((value & (1u + ~value)) * 0x077cb531u) >> 27];
+        public static int TrailingZeroBits(this uint value) {
+            return (value != 0) ? DeBruijnMSBSet[unchecked((value & (1u + ~value)) * 0x077cb531u) >> 27] : 32;
         }
 
         /// <summary>Returns the count of trailing zero bits in the specified value.</summary>
@@ -383,34 +404,41 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose trailing zero bit count is desired.</param>
         /// <returns>The count of the value parameter's trailing zero bits.</returns>
         public static int TrailingZeroBits(this int value) {
-            return (int)TrailingZeroBits((uint)value);
+            return TrailingZeroBits((uint)value);
         }
 
         /// <summary>Returns the count of trailing zero bits in the specified value.</summary>
         /// <remarks>Example: TrailingZeroBits(10) returns 1, i.e. 00001010 has 1 trailing 0 bit.</remarks>
         /// <param name="value">The value whose trailing zero bit count is desired.</param>
         /// <returns>The count of the value parameter's trailing zero bits.</returns>
-        public static ulong TrailingZeroBits(this ulong value) {
+        public static int TrailingZeroBits(this ulong value) {
             uint low = (uint)value;
-            if (low == 0) {
-                return 32UL + (ulong)TrailingZeroBits((uint)(value >> 32));
-            }
-            return (ulong)DeBruijnMSBSet[unchecked((low & (1u + ~low)) * 0x077cb531u) >> 27];
+            if (low != 0) return DeBruijnMSBSet[unchecked((low & (1u + ~low)) * 0x077cb531u) >> 27];
+            return 32 + TrailingZeroBits((uint)(value >> 32));
         }
 
         /// <summary>Returns the count of trailing zero bits in the specified value.</summary>
         /// <remarks>Example: TrailingZeroBits(10) returns 1, i.e. 00001010 has 1 trailing 0 bit.</remarks>
         /// <param name="value">The value whose trailing zero bit count is desired.</param>
         /// <returns>The count of the value parameter's trailing zero bits.</returns>
-        public static long TrailingZeroBits(this long value) {
-            return (long)TrailingZeroBits((ulong)value);
+        public static int TrailingZeroBits(this long value) {
+            return TrailingZeroBits((ulong)value);
+        }
+
+        /// <summary>Returns the count of trailing zero bits in the specified value.</summary>
+        /// <remarks>Example: TrailingZeroBits(10) returns 1, i.e. 00001010 has 1 trailing 0 bit.</remarks>
+        /// <param name="value">The value whose trailing zero bit count is desired.</param>
+        /// <returns>The count of the value parameter's trailing zero bits.</returns>
+        public static int TrailingZeroBits(this UInt128 value) {
+            if (value.Low != 0) return TrailingZeroBits(value.Low);
+            return 64 + TrailingZeroBits(value.High);
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
         /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static byte LeadingZeroBits(this byte value) {
+        public static int LeadingZeroBits(this byte value) {
             // note that (byte)(7 - 255) = 8, so no need to test for value == 0
             return (byte)(7 - msbPos256[value]);
         }
@@ -419,41 +447,32 @@ namespace SoftWx.Numerics {
         /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static sbyte LeadingZeroBits(this sbyte value) {
-            // note that (byte)(7 - 255) = 8, so no need to test for value == 0
-            return (sbyte)(7 - msbPos256[(byte)value]); // the cast to byte is not redundant (avoids sign bit extension)
+        public static int LeadingZeroBits(this sbyte value) {
+            return LeadingZeroBits((byte)value);
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
         /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static ushort LeadingZeroBits(this ushort value) {
-            // note that (byte)(7 - 255) = 8, so no need to test for value == 0
-            int high = (byte)(value >> 8);
-            return (ushort)((high == 0) ? 8 + (byte)(7 - msbPos256[(byte)value])
-                : 7 - msbPos256[high]);
+        public static int LeadingZeroBits(this ushort value) {
+            return 15 - HighBitPosition(value);
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
         /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static short LeadingZeroBits(this short value) {
-            return (short)LeadingZeroBits((ushort)value);
+        public static int LeadingZeroBits(this short value) {
+            return LeadingZeroBits((ushort)value);
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
         /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static uint LeadingZeroBits(this uint value) {
-            if (value == 0) return 32;
-            value |= value >> 1;
-            value |= value >> 2;
-            value |= value >> 4;
-            value |= value >> 8;
-            return 31U - DeBruijnLSBsSet[unchecked((value | value >> 16) * 0x07c4acddu) >> 27];
+        public static int LeadingZeroBits(this uint value) {
+            return 31 - HighBitPosition(value);
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
@@ -461,164 +480,173 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
         public static int LeadingZeroBits(this int value) {
-            return (int)LeadingZeroBits((uint)value);
+            return LeadingZeroBits((uint)value);
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
         /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static ulong LeadingZeroBits(this ulong value) {
-            uint high = (uint)(value >> 32);
-            return (ulong)((high == 0) ? 32 + LeadingZeroBits((uint)value) : LeadingZeroBits(high));
+        public static int LeadingZeroBits(this ulong value) {
+            return 63 - HighBitPosition(value);
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
         /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static long LeadingZeroBits(this long value) {
-            return (long)LeadingZeroBits((ulong)value);
+        public static int LeadingZeroBits(this long value) {
+            return LeadingZeroBits((ulong)value);
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
         /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static byte SignificantBits(this byte value) {
-            // note that (byte)(7 - 255) = 8, so no need to test for value == 0
-            return (byte)(msbPos256[value] + 1);
+        public static int LeadingZeroBits(this UInt128 value) {
+            return 127 - HighBitPosition(value);
         }
 
-        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
-        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
-        /// <param name="value">The value whose leading zero bit count is desired.</param>
-        /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static sbyte SignificantBits(this sbyte value) {
-            // note that (byte)(7 - 255) = 8, so no need to test for value == 0
-            return (sbyte)(msbPos256[(byte)value] + 1); // the cast to byte is not redundant (avoids sign bit extension)
+        /// <summary>Returns the count of bits up to and including the most significant bit for the specified value.</summary>
+        /// <remarks>Example: SignificantBits(6) returns 3, i.e. 00000110 has 3 significant bits.</remarks>
+        /// <param name="value">The value whose significant bit count is desired.</param>
+        /// <returns>The count of the value parameter's significant bits.</returns>
+        public static int SignificantBits(this byte value) {
+            return (sbyte)msbPos256[value] + 1;
         }
 
-        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
-        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
-        /// <param name="value">The value whose leading zero bit count is desired.</param>
-        /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static ushort SignificantBits(this ushort value) {
-            // note that (byte)(7 - 255) = 8, so no need to test for value == 0
-            int high = (byte)(value >> 8);
-            if (high != 0) return (ushort)(msbPos256[high] + 1);
-            return (ushort)(msbPos256[(byte)value] + 1 + 8);
+        /// <summary>Returns the count of bits up to and including the most significant bit for the specified value.</summary>
+        /// <remarks>Example: SignificantBits(6) returns 3, i.e. 00000110 has 3 significant bits.</remarks>
+        /// <param name="value">The value whose significant bit count is desired.</param>
+        /// <returns>The count of the value parameter's significant bits.</returns>
+        public static int SignificantBits(this sbyte value) {
+            return (sbyte)msbPos256[(byte)value] + 1; // the cast to byte is not redundant (avoids sign bit extension)
         }
 
-        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
-        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
-        /// <param name="value">The value whose leading zero bit count is desired.</param>
-        /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static short SignificantBits(this short value) {
-            return (short)LeadingZeroBits((ushort)value);
+        /// <summary>Returns the count of bits up to and including the most significant bit for the specified value.</summary>
+        /// <remarks>Example: SignificantBits(6) returns 3, i.e. 00000110 has 3 significant bits.</remarks>
+        /// <param name="value">The value whose significant bit count is desired.</param>
+        /// <returns>The count of the value parameter's significant bits.</returns>
+        public static int SignificantBits(this ushort value) {
+            return HighBitPosition(value) + 1;
         }
 
-        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
-        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
-        /// <param name="value">The value whose leading zero bit count is desired.</param>
-        /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static uint SignificantBits(this uint value) {
-            byte b = (byte)(value >> 24);
-            if (b != 0) return msbPos256[b] + 1u + 24u;
-            b = (byte)(value >> 16);
-            if (b != 0) return msbPos256[b] + 1u + 16u;
-            b = (byte)(value >> 8);
-            if (b == 0) return msbPos256[(byte)value] + 1u;
-            return msbPos256[b] + 1u + 8u;
+        /// <summary>Returns the count of bits up to and including the most significant bit for the specified value.</summary>
+        /// <remarks>Example: SignificantBits(6) returns 3, i.e. 00000110 has 3 significant bits.</remarks>
+        /// <param name="value">The value whose significant bit count is desired.</param>
+        /// <returns>The count of the value parameter's significant bits.</returns>
+        public static int SignificantBits(this short value) {
+            return SignificantBits((ushort)value);
         }
 
-        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
-        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
-        /// <param name="value">The value whose leading zero bit count is desired.</param>
-        /// <returns>The count of the value parameter's leading zero bits.</returns>
+        /// <summary>Returns the count of bits up to and including the most significant bit for the specified value.</summary>
+        /// <remarks>Example: SignificantBits(6) returns 3, i.e. 00000110 has 3 significant bits.</remarks>
+        /// <param name="value">The value whose significant bit count is desired.</param>
+        /// <returns>The count of the value parameter's significant bits.</returns>
+        public static int SignificantBits(this uint value) {
+            return HighBitPosition(value) + 1;
+        }
+
+        /// <summary>Returns the count of bits up to and including the most significant bit for the specified value.</summary>
+        /// <remarks>Example: SignificantBits(6) returns 3, i.e. 00000110 has 3 significant bits.</remarks>
+        /// <param name="value">The value whose significant bit count is desired.</param>
+        /// <returns>The count of the value parameter's significant bits.</returns>
         public static int SignificantBits(this int value) {
-            return (int)SignificantBits((uint)value);
-        }
-
-        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
-        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
-        /// <param name="value">The value whose leading zero bit count is desired.</param>
-        /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static ulong SignificantBits(this ulong value) {
-            uint high;
-            if ((high = (uint)(value >> 32)) != 0) return SignificantBits(high) + 32;
             return SignificantBits((uint)value);
         }
 
-        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
-        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
-        /// <param name="value">The value whose leading zero bit count is desired.</param>
-        /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static long SignificantBits(this long value) {
-            return (long)SignificantBits((ulong)value);
+        /// <summary>Returns the count of bits up to and including the most significant bit for the specified value.</summary>
+        /// <remarks>Example: SignificantBits(6) returns 3, i.e. 00000110 has 3 significant bits.</remarks>
+        /// <param name="value">The value whose significant bit count is desired.</param>
+        /// <returns>The count of the value parameter's significant bits.</returns>
+        public static int SignificantBits(this ulong value) {
+            return HighBitPosition(value) + 1;
+        }
+
+        /// <summary>Returns the count of bits up to and including the most significant bit for the specified value.</summary>
+        /// <remarks>Example: SignificantBits(6) returns 3, i.e. 00000110 has 3 significant bits.</remarks>
+        /// <param name="value">The value whose significant bit count is desired.</param>
+        /// <returns>The count of the value parameter's significant bits.</returns>
+        public static int SignificantBits(this long value) {
+            return SignificantBits((ulong)value);
+        }
+
+        /// <summary>Returns the count of bits up to and including the most significant bit for the specified value.</summary>
+        /// <remarks>Example: SignificantBits(6) returns 3, i.e. 00000110 has 3 significant bits.</remarks>
+        /// <param name="value">The value whose significant bit count is desired.</param>
+        /// <returns>The count of the value parameter's significant bits.</returns>
+        public static int SignificantBits(this UInt128 value) {
+            return HighBitPosition(value) + 1;
         }
 
         /// <summary>Returns the count of set bits in the specified value.</summary>
         /// <param name="value">The value whose bit count is desired.</param>
         /// <returns>The count of set bits in the specified value.</returns>
-        public static byte BitCount(this byte value) {
+        public static int BitCount(this byte value) {
             uint v = value;
             v = v - ((v >> 1) & 0x55u);
             v = (v & 0x33u) + ((v >> 2) & 0x33u);
-            return (byte)((v + (v >> 4) & 0x0Fu));
+            return (int)((v + (v >> 4) & 0x0Fu));
         }
 
         /// <summary>Returns the count of set bits in the specified value.</summary>
         /// <param name="value">The value whose bit count is desired.</param>
         /// <returns>The count of set bits in the specified value.</returns>
-        public static sbyte BitCount(this sbyte value) {
-            return (sbyte)BitCount((byte)value);
+        public static int BitCount(this sbyte value) {
+            return BitCount((byte)value);
         }
 
         /// <summary>Returns the count of set bits in the specified value.</summary>
         /// <param name="value">The value whose bit count is desired.</param>
         /// <returns>The count of set bits in the specified value.</returns>
-        public static ushort BitCount(this ushort value) {
-            return (ushort)BitCount((uint)value);
+        public static int BitCount(this ushort value) {
+            return BitCount((uint)value);
         }
 
         /// <summary>Returns the count of set bits in the specified value.</summary>
         /// <param name="value">The value whose bit count is desired.</param>
         /// <returns>The count of set bits in the specified value.</returns>
-        public static short BitCount(this short value) {
-            return (short)BitCount((ushort)value);
+        public static int BitCount(this short value) {
+            return BitCount((ushort)value);
         }
 
         /// <summary>Returns the count of set bits in the specified value.</summary>
         /// <param name="value">The value whose bit count is desired.</param>
         /// <returns>The count of set bits in the specified value.</returns>
-        public static uint BitCount(this uint value) {
+        public static int BitCount(this uint value) {
             value = value - ((value >> 1) & 0x55555555u);
             value = (value & 0x33333333u) + ((value >> 2) & 0x33333333u);
-            return ((value + (value >> 4) & 0xF0F0F0Fu) * 0x1010101u) >> (32 - 8);
+            return (int)(((value + (value >> 4) & 0xF0F0F0Fu) * 0x1010101u) >> (32 - 8));
         }
 
         /// <summary>Returns the count of set bits in the specified value.</summary>
         /// <param name="value">The value whose bit count is desired.</param>
         /// <returns>The count of set bits in the specified value.</returns>
         public static int BitCount(this int value) {
-            return (int)BitCount((uint)value);
+            return BitCount((uint)value);
         }
 
         /// <summary>Returns the count of set bits in the specified value.</summary>
         /// <param name="value">The value whose bit count is desired.</param>
         /// <returns>The count of set bits in the specified value.</returns>
-        public static ulong BitCount(this ulong value) {
+        public static int BitCount(this ulong value) {
             value = value - ((value >> 1) & 0x5555555555555555UL);
             value = (value & 0x3333333333333333UL) + ((value >> 2) & 0x3333333333333333UL);
-            return ((value + (value >> 4) & 0x0F0F0F0F0F0F0F0FUL) * 0x0101010101010101UL) >> (64 - 8);
+            return (int)(((value + (value >> 4) & 0x0F0F0F0F0F0F0F0FUL) * 0x0101010101010101UL) >> (64 - 8));
         }
 
         /// <summary>Returns the count of set bits in the specified value.</summary>
         /// <param name="value">The value whose bit count is desired.</param>
         /// <returns>The count of set bits in the specified value.</returns>
-        public static long BitCount(this long value) {
-            return (long)BitCount((ulong)value);
+        public static int BitCount(this long value) {
+            return BitCount((ulong)value);
+        }
+
+        /// <summary>Returns the count of set bits in the specified value.</summary>
+        /// <param name="value">The value whose bit count is desired.</param>
+        /// <returns>The count of set bits in the specified value.</returns>
+        public static int BitCount(this UInt128 value) {
+            return BitCount(value.Low) + BitCount(value.High);
         }
 
         /// <summary>Returns the specified value with all bits reversed 
@@ -705,6 +733,15 @@ namespace SoftWx.Numerics {
         /// <returns>The reversed bits of the specified value.</returns>
         public static long ReverseBits(this long value) {
             return (long)ReverseBits((ulong)value);
+        }
+
+        /// <summary>Returns the specified value with all bits reversed 
+        /// (i.e. 01001101 is returned as 10110010).
+        /// </summary>
+        /// <param name="value">The value to be reversed.</param>
+        /// <returns>The reversed bits of the specified value.</returns>
+        public static UInt128 ReverseBits(this UInt128 value) {
+            return new UInt128(ReverseBits(value.Low), ReverseBits(value.High));
         }
     }
 }

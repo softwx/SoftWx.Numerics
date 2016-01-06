@@ -12,7 +12,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or MaxValue when the value is less than 1.</returns>
         public static byte Log2(this byte value) {
-            return BitMath.HighBitPosition(value);
+            return (byte)BitMath.HighBitPosition(value);
         }
 
         /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
@@ -21,7 +21,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or -1 when the value is less than 1.</returns>
         public static sbyte Log2(this sbyte value) {
-            return (value > 0) ? BitMath.HighBitPosition(value) : (sbyte)-1;
+            return (value > 0) ? (sbyte)BitMath.HighBitPosition(value) : (sbyte)-1;
         }
 
         /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
@@ -30,7 +30,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or MaxValue when the value is less than 1.</returns>
         public static ushort Log2(this ushort value) {
-            return BitMath.HighBitPosition(value);
+            return (ushort)BitMath.HighBitPosition(value);
         }
 
         /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
@@ -39,7 +39,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or -1 when the value is less than 1.</returns>
         public static short Log2(this short value) {
-            return (value > 0) ? BitMath.HighBitPosition(value) : (short) -1;
+            return (value > 0) ? (short)BitMath.HighBitPosition(value) : (short)-1;
         }
 
         /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
@@ -48,7 +48,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or MaxValue when the value is less than 1.</returns>
         public static uint Log2(this uint value) {
-            return BitMath.HighBitPosition(value);
+            return (uint)BitMath.HighBitPosition(value);
         }
 
         /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
@@ -66,7 +66,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or MaxValue when the value is less than 1.</returns>
         public static ulong Log2(this ulong value) {
-            return BitMath.HighBitPosition(value);
+            return (ulong)BitMath.HighBitPosition(value);
         }
 
         /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
@@ -75,9 +75,8 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose base 2 log is desired.</param>
         /// <returns>The base 2 log of a positive integer, or -1 when the value is less than 1.</returns>
         public static long Log2(this long value) {
-            return (value > 0) ? BitMath.HighBitPosition(value) : -1;
+            return (value > 0) ? BitMath.HighBitPosition(value) : -1L;
         }
-
         /// <summary>Determines if the specified value is a power of 2.</summary>
         /// <param name="value">The value to be tested as a power of 2.</param>
         /// <returns>True if the value is a power of 2, otherwise false.</returns>

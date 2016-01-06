@@ -1,59 +1,65 @@
-﻿namespace SoftWx.Numerics {
+﻿//#define StandaloneUInt128 // if StandaloneUInt128 is defined UInt128 can operate standalone, without needing other classes in SoftWx.Numerics
+// comment the #define if UInt128 is used as part of the SoftWx.Numerics library
+namespace SoftWx.Numerics {
     /// <summary>Represents a 128-bit unsigned integer.</summary>
     /// <remarks>The UInt128 struct is immutable.</remarks>
     public struct UInt128 {
-         readonly ulong hi;
-         readonly ulong lo;
+        private readonly ulong hi;
+        private readonly ulong lo;
 
         /// <summary>Gets a value that represents the number 0 (zero).</summary>
-        public static UInt128 Zero = new UInt128(0, 0);
+        public readonly static UInt128 Zero = new UInt128(0, 0);
 
         /// <summary>Gets a value that represents the number 1 (one).</summary>
-        public static UInt128 One = new UInt128(0, 1);
-        
-        /// <summary>Represents the largest possible value of UInt128.</summary>
-        public static UInt128 MaxValue = new UInt128(ulong.MaxValue, ulong.MaxValue);
-        
-        /// <summary>Represents the smallest possible value of UInt128.</summary>
-        public static UInt128 MinValue = UInt128.Zero;
+        public readonly static UInt128 One = new UInt128(0, 1);
 
-        /// <summary>Computes the 128 bit product of two 64 bit integers.</summary>
+        /// <summary>Represents the largest possible value of UInt128.</summary>
+        public readonly static UInt128 MaxValue = new UInt128(ulong.MaxValue, ulong.MaxValue);
+
+        /// <summary>Represents the smallest possible value of UInt128.</summary>
+        public readonly static UInt128 MinValue = UInt128.Zero;
+
+        /// <summary>Computes the 128 bit product of two 64 bit unsigned integers.</summary>
         /// <param name="left">The value to be multiplied by right.</param>
         /// <param name="right">The value to be multiplied by left.</param>
         /// <returns>The UInt128 product of multiplying left and right.</returns>
         public static UInt128 Multiply(ulong left, ulong right) {
-            ulong lhi = left >> 32;
-            ulong rhi = right >> 32;
-            ulong high = (uint)right * (ulong)(uint)left;
-            ulong low = (uint)high;
-            high >>= 32;
-            high += lhi * (uint)right;
-            ulong midHi = (high >> 32);
-            midHi += (lhi * rhi);
-            high = (uint)high;
-            high += (rhi * (uint)left);
-            low += (high << 32);
-            high >>= 32;
-            return new UInt128(high + midHi, low);
+            unchecked {
+                ulong lhi = left >> 32;
+                ulong rhi = right >> 32;
+                ulong high = (uint)right * (ulong)(uint)left;
+                ulong low = (uint)high;
+                high >>= 32;
+                high += lhi * (uint)right;
+                ulong midHi = (high >> 32);
+                midHi += (lhi * rhi);
+                high = (uint)high;
+                high += (rhi * (uint)left);
+                low += (high << 32);
+                high >>= 32;
+                return new UInt128(high + midHi, low);
+            }
         }
 
-        /// <summary>Computes the 128 bit product of squaring a 64 bit integer.</summary>
+        /// <summary>Computes the 128 bit product of squaring a 64 bit unsigned integer.</summary>
         /// <param name="value">The value to be squared (multiplied by itself).</param>
         /// <returns>The UInt128 product of squaring the specified value.</returns>
         public static UInt128 Square(ulong value) {
-            ulong hi = value >> 32;
-            ulong hiLo = hi * (uint)value;
-            ulong high = (uint)value * (ulong)(uint)value;
-            ulong low = (uint)high;
-            high >>= 32;
-            high += hiLo;
-            ulong midHi = (high >> 32);
-            midHi += (hi * hi);
-            high = (uint)high;
-            high += hiLo;
-            low += (high << 32);
-            high >>= 32;
-            return new UInt128(high + midHi, low);
+            unchecked {
+                ulong hi = value >> 32;
+                ulong hiLo = hi * (uint)value;
+                ulong high = (uint)value * (ulong)(uint)value;
+                ulong low = (uint)high;
+                high >>= 32;
+                high += hiLo;
+                ulong midHi = (high >> 32);
+                midHi += (hi * hi);
+                high = (uint)high;
+                high += hiLo;
+                low += (high << 32);
+                high >>= 32;
+                return new UInt128(high + midHi, low);
+            }
         }
 
         /// <summary>Creates an instance of UInt128.</summary>
@@ -73,22 +79,29 @@
         /// <summary>Returns the upper 64 bits of the UInt128 value.</summary>
         public ulong High { get { return this.hi; } }
 
-        /// <summary>Returns the most significant set bit of the specified value.</summary>
-        /// <remarks>Example: HighBit(10) returns 8, i.e. high bit of 00001010 is 00001000.</remarks>
-        /// <param name="value">The value whose most significant bit is desired.</param>
-        /// <returns>The value parameter's the most significant bit.</returns>
-        public UInt128 HighBit() {
-            return (this.hi == 0) ? new UInt128(0UL, this.lo.HighBit()) : new UInt128(this.hi.HighBit(), 0UL);
+        /// <summary>Returns a value indicating whether this instance is equal to a specified object.</summary>
+        /// <param name="obj">An object to compare to this instance.</param>
+        /// <returns>True if obj is an instance of UInt128 and equals the value of this instance; otherwise, false.</returns>
+        public override bool Equals(object obj) {
+            if (!(obj is UInt128)) {
+                return false;
+            }
+            return this == (UInt128)obj;
         }
 
-        /// <summary>Returns the most significant set bit position of the specified value,
-        /// or MaxValue if no bits were set. The least significant bit position is 0.</summary>
-        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
-        /// <param name="value">The value whose most significant bit position is desired.</param>
-        /// <returns>The value parameter's most significant bit position.</returns>
-        public ulong HighBitPosition() {
-            return (this.hi == 0) ? (this.lo == 0) ? ulong.MaxValue : this.lo.HighBitPosition()
-                : 64UL + this.hi.HighBitPosition();
+        /// <summary>Returns the hash code for this instance.</summary>
+        /// <returns>A 32-bit signed integer hash code.</returns>
+        public override int GetHashCode() {
+            return this.hi.GetHashCode() ^ this.lo.GetHashCode();
+        }
+
+        /// <summary>Returns the string representation of this instance.</summary>
+        /// <returns>The string representation of this instance.</returns>
+        public override string ToString() {
+            string loStr = this.lo.ToString("X");
+            if (this.hi == 0) return loStr;
+            loStr = new string('0', 16 - loStr.Length) + loStr;
+            return this.hi.ToString("X") + loStr;
         }
 
         /// <summary>Defines an explicit conversion of a UInt128 value to an unsigned long value.</summary>
@@ -194,9 +207,10 @@
         /// <param name="right">The second value to add.</param>
         /// <returns>The sum of left and right.</returns>
         public static UInt128 operator +(UInt128 left, UInt128 right) {
-            ulong rightHi = right.hi;
-            if (left.lo > ulong.MaxValue - right.lo) rightHi++;
-            return new UInt128(left.hi + rightHi, left.lo + right.lo);
+            ulong newLo = unchecked(left.lo + right.lo);
+            ulong newHi = left.hi + right.hi;
+            if (newLo < left.lo) newHi++;
+            return new UInt128(newHi, newLo);
         }
 
         /// <summary>Subtracts a UInt128 value from another UInt128 value.</summary>
@@ -204,7 +218,7 @@
         /// <param name="right">The value to subtract.</param>
         /// <returns>The value resulting from subtracting right from left.</returns>
         public static UInt128 operator -(UInt128 left, UInt128 right) {
-            return new UInt128(left.hi - right.hi - ((left.lo < right.lo) ? 1UL : 0UL), left.lo - right.lo);
+            return new UInt128(left.hi - right.hi - ((left.lo < right.lo) ? 1UL : 0UL), unchecked(left.lo - right.lo));
         }
 
         /// <summary>Returns the remainder that results from dividing a UInt128 value by an unsigned long value.</summary>
@@ -225,7 +239,7 @@
             if (right.IsULong) return left % right.lo;
             if (left.IsULong || left < right) return left;
 
-            int bits = (int)left.HighBitPosition() - (int)right.HighBitPosition();
+            int bits = left.HighBitPosition() - right.HighBitPosition();
             UInt128 sub = right;
             sub <<= bits;
             for (; bits >= 0; bits--) {
@@ -236,124 +250,112 @@
             return 0;
         }
 
-        /// <summary>Returns a value indicating whether this instance is equal to a specified object.</summary>
-        /// <param name="obj">An object to compare to this instance.</param>
-        /// <returns>True if obj is an instance of UInt128 and equals the value of this instance; otherwise, false.</returns>
-        public override bool Equals(object obj) {
-            if (!(obj is UInt128)) {
-                return false;
-            }
-            return this == (UInt128)obj;
-        }
-
-        /// <summary>Returns the hash code for this instance.</summary>
-        /// <returns>A 32-bit signed integer hash code.</returns>
-        public override int GetHashCode() {
-            return this.hi.GetHashCode() ^ this.lo.GetHashCode();
-        }
-
         private ulong Mod64(ulong denominator) {
-            if (denominator <= 1) return 0;
-            if (denominator.IsPowerOf2()) return this.lo & (denominator - 1);
-            ulong u1 = this.hi;
-            ulong u0 = this.lo;
-            //prevent incorrect results if divide would overflow
-            if (u1 >= denominator) u1 -= ((u1 / denominator) * denominator);
-            if (u1 == 0) return u0 % denominator;
+            unchecked {
+                if (denominator <= 1) return 0;
+                if (IsPowerOf2(denominator)) return this.lo & (denominator - 1);
+                ulong u1 = this.hi;
+                ulong u0 = this.lo;
+                //prevent incorrect results if divide would overflow
+                if (u1 >= denominator) u1 -= ((u1 / denominator) * denominator);
+                if (u1 == 0) return u0 % denominator;
 
-            const ulong b = 1ul << 32;
-            ulong un1, un0, vn1, vn0, q1, q0, un32, un21, un10, rhat, left, right;
-            int s;
-            s = (int)denominator.LeadingZeroBits();
-            denominator <<= s;
-            un10 = u0 << s;
-            un32 = (s==0) ? u1 : (u1 << s) | (u0 >> (64 - s));
-            un1 = un10 >> 32;
-            un0 = (uint)un10;//un10 & 0xffffffff;
-            vn1 = denominator >> 32;
-            q1 = un32 / vn1;
-            rhat = un32 - ((un32 / vn1) * vn1);// un32 % vn1;
-            vn0 = (uint)denominator; //denominator & 0xffffffff;
-            left = q1 * vn0;
-            right = (rhat << 32) + un1;
-            while ((left > right) || (q1 >= b)) {
-                q1--;
-                rhat += vn1;
-                if (rhat >= b) break;
-                left -= vn0;
-                right = (rhat << 32) | un1;
-            }
-            un21 = (un32 << 32) + (un1 - (q1 * denominator));
-            q0 = un21 / vn1;
-            rhat = un21 - ((un21 / vn1) * vn1);// un21 % vn1;
-            left = q0 * vn0;
-            right = (rhat << 32) | un0;
-            while ((left > right) || (q0 >= b)) {
-                q0--;
-                rhat += vn1;
-                if (rhat >= b) break;
-                left -= vn0;
+                const ulong b = 1ul << 32;
+                ulong un1, un0, vn1, vn0, q1, q0, un32, un21, un10, rhat, left, right;
+                int s;
+                s = LeadingZeroBits(denominator);
+                denominator <<= s;
+                un10 = u0 << s;
+                un32 = (s == 0) ? u1 : (u1 << s) | (u0 >> (64 - s));
+                un1 = un10 >> 32;
+                un0 = (uint)un10;//un10 & 0xffffffff;
+                vn1 = denominator >> 32;
+                q1 = un32 / vn1;
+                rhat = un32 - ((un32 / vn1) * vn1);// un32 % vn1;
+                vn0 = (uint)denominator; //denominator & 0xffffffff;
+                left = q1 * vn0;
+                right = (rhat << 32) + un1;
+                while ((left > right) || (q1 >= b)) {
+                    q1--;
+                    rhat += vn1;
+                    if (rhat >= b) break;
+                    left -= vn0;
+                    right = (rhat << 32) | un1;
+                }
+                un21 = (un32 << 32) + (un1 - (q1 * denominator));
+                q0 = un21 / vn1;
+                rhat = un21 - ((un21 / vn1) * vn1);// un21 % vn1;
+                left = q0 * vn0;
                 right = (rhat << 32) | un0;
+                while ((left > right) || (q0 >= b)) {
+                    q0--;
+                    rhat += vn1;
+                    if (rhat >= b) break;
+                    left -= vn0;
+                    right = (rhat << 32) | un0;
+                }
+                return ((un21 << 32) + (un0 - (q0 * denominator))) >> s;
             }
-            return ((un21 << 32) + (un0 - (q0 * denominator))) >> s;
         }
 
         private ulong DivMod64(ulong denominator, out ulong remainder) {
-            ulong u1 = this.hi;
-            ulong u0 = this.lo;
-            const ulong b = 1ul << 32;
-            ulong un1, un0, vn1, vn0, q1, q0, un32, un21, un10, rhat, left, right;
-            if (this.hi > denominator) return remainder = ulong.MaxValue;
-            int s;
-            s = (int)denominator.LeadingZeroBits();
-            denominator <<= s;
-            vn1 = denominator >> 32;
-            vn0 = denominator & 0xffffffff;
-            if (s > 0) {
-                un32 = (u1 << s) | (u0 >> (64 - s));
-                un10 = u0 << s;
-            } else {
-                un32 = u1;
-                un10 = u0;
-            }
-            un1 = un10 >> 32;
-            un0 = un10 & 0xffffffff;
-            q1 = un32 / vn1;
-            rhat = un32 % vn1;
-            left = q1 * vn0;
-            right = (rhat << 32) + un1;
-            while (true) {
-                if ((q1 >= b) || (left > right)) {
-                    q1--;
-                    rhat += vn1;
-                    if (rhat < b) {
-                        left -= vn0;
-                        right = (rhat << 32) | un1;
-                        continue;
-                    }
+            unchecked {
+                ulong u1 = this.hi;
+                ulong u0 = this.lo;
+                const ulong b = 1ul << 32;
+                ulong un1, un0, vn1, vn0, q1, q0, un32, un21, un10, rhat, left, right;
+                if (this.hi > denominator) return remainder = ulong.MaxValue;
+                int s;
+                s = LeadingZeroBits(denominator);
+                denominator <<= s;
+                vn1 = denominator >> 32;
+                vn0 = denominator & 0xffffffff;
+                if (s > 0) {
+                    un32 = (u1 << s) | (u0 >> (64 - s));
+                    un10 = u0 << s;
+                } else {
+                    un32 = u1;
+                    un10 = u0;
                 }
-                break;
-            }
-            un21 = (un32 << 32) + (un1 - (q1 * denominator));
-            q0 = un21 / vn1;
-            rhat = un21 % vn1;
-            left = q0 * vn0;
-            right = (rhat << 32) | un0;
-            while (true) {
-                if ((q0 >= b) || (left > right)) {
-                    q0--;
-                    rhat += vn1;
-                    if (rhat < b) {
-                        left -= vn0;
-                        right = (rhat << 32) | un0;
-                        continue;
+                un1 = un10 >> 32;
+                un0 = un10 & 0xffffffff;
+                q1 = un32 / vn1;
+                rhat = un32 % vn1;
+                left = q1 * vn0;
+                right = (rhat << 32) + un1;
+                while (true) {
+                    if ((q1 >= b) || (left > right)) {
+                        q1--;
+                        rhat += vn1;
+                        if (rhat < b) {
+                            left -= vn0;
+                            right = (rhat << 32) | un1;
+                            continue;
+                        }
                     }
+                    break;
                 }
-                break;
+                un21 = (un32 << 32) + (un1 - (q1 * denominator));
+                q0 = un21 / vn1;
+                rhat = un21 % vn1;
+                left = q0 * vn0;
+                right = (rhat << 32) | un0;
+                while (true) {
+                    if ((q0 >= b) || (left > right)) {
+                        q0--;
+                        rhat += vn1;
+                        if (rhat < b) {
+                            left -= vn0;
+                            right = (rhat << 32) | un0;
+                            continue;
+                        }
+                    }
+                    break;
+                }
+                remainder = ((un21 << 32) + (un0 - (q0 * denominator))) >> s;
+                q1 <<= 32;
+                return q1 | q0;
             }
-            remainder = ((un21 << 32) + (un0 - (q0 * denominator))) >> s;
-            q1 <<= 32;
-            return q1 | q0;
         }
 
         //private UInt128 DivMod128(UInt128 denominator, out UInt128 remainder) {
@@ -388,5 +390,48 @@
         //        return result;
         //    }
         //}
+
+        // If UInt128 is used standalone, without the rest of the SoftWx.Numerics library,
+        // then the following methods from that library are needed, and included below.
+#if StandaloneUInt128
+        /// <summary>Returns the most significant set bit position of the specified value,
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
+        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
+        /// <param name="value">The value whose most significant bit position is desired.</param>
+        /// <returns>The value parameter's most significant bit position.</returns>
+        public int HighBitPosition() {
+            return (this.hi != 0) ? 64 + HighBitPosition(this.hi) : HighBitPosition(this.lo);
+        }
+        private int HighBitPosition(ulong value) {
+            uint high = (uint)(value >> 32);
+            return (high != 0) ? 32 + HighBitPosition(high) : HighBitPosition((uint)value);
+        }
+        private static readonly byte[] DeBruijnLSBsSet = new byte[] {
+            0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
+            8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31
+        };
+        private int HighBitPosition(uint value) {
+            if (value == 0) return -1;
+            value |= value >> 1;
+            value |= value >> 2;
+            value |= value >> 4;
+            value |= value >> 8;
+            return DeBruijnLSBsSet[unchecked((value | value >> 16) * 0x07c4acddu) >> 27];
+        }
+        /// <summary>Returns the count of leading zero bits in the specified value.</summary>
+        /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
+        /// <param name="value">The value whose leading zero bit count is desired.</param>
+        /// <returns>The count of the value parameter's leading zero bits.</returns>
+        private int LeadingZeroBits(ulong value) {
+            return 63 - HighBitPosition(value);
+        }
+        /// <summary>Determines if the specified value is a power of 2.</summary>
+        /// <param name="value">The value to be tested as a power of 2.</param>
+        /// <returns>True if the value is a power of 2, otherwise false.</returns>
+        private bool IsPowerOf2(ulong value) {
+            return ((value & unchecked(value - 1UL)) == 0) && (value != 0);
+        }
+#endif
     }
 }
+
