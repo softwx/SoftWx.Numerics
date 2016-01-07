@@ -95,6 +95,7 @@ namespace SoftWx.Numerics.Profile {
             int i1, ir; i1 = 123;
             ulong ul1, ulr; ul1 = 123;
             long l1, lr; l1 = 123;
+            ulong ull1, ullr; ull1 = 123;
             var bench = new Bench();
             bench.Time("byte.Log2", () => { br = b1.Log2(); br = b1.Log2(); br = b1.Log2(); br = b1.Log2(); br = b1.Log2(); }, 5);
             bench.Time("sbyte.Log2", () => { sbr = sb1.Log2(); sbr = sb1.Log2(); sbr = sb1.Log2(); sbr = sb1.Log2(); sbr = sb1.Log2(); }, 5);
@@ -104,6 +105,7 @@ namespace SoftWx.Numerics.Profile {
             bench.Time("int.Log2", () => { ir = i1.Log2(); ir = i1.Log2(); ir = i1.Log2(); ir = i1.Log2(); ir = i1.Log2(); }, 5);
             bench.Time("ulong.Log2", () => { ulr = ul1.Log2(); ulr = ul1.Log2(); ulr = ul1.Log2(); ulr = ul1.Log2(); ulr = ul1.Log2(); }, 5);
             bench.Time("long.Log2", () => { lr = l1.Log2(); lr = l1.Log2(); lr = l1.Log2(); lr = l1.Log2(); lr = l1.Log2(); }, 5);
+            bench.Time("UInt128.Log2", () => { ullr = ull1.Log2(); ullr = ull1.Log2(); ullr = ull1.Log2(); ullr = ull1.Log2(); ullr = ull1.Log2(); }, 5);
             bench.Time("byte.IsPowerOf2", () => { bo = b1.IsPowerOf2(); bo = b1.IsPowerOf2(); bo = b1.IsPowerOf2(); bo = b1.IsPowerOf2(); bo = b1.IsPowerOf2(); }, 5);
             bench.Time("sbyte.IsPowerOf2", () => { bo = sb1.IsPowerOf2(); bo = sb1.IsPowerOf2(); bo = sb1.IsPowerOf2(); bo = sb1.IsPowerOf2(); bo = sb1.IsPowerOf2(); }, 5);
             bench.Time("ushort.IsPowerOf2", () => { bo = us1.IsPowerOf2(); bo = us1.IsPowerOf2(); bo = us1.IsPowerOf2(); bo = us1.IsPowerOf2(); bo = us1.IsPowerOf2(); }, 5);
@@ -112,6 +114,7 @@ namespace SoftWx.Numerics.Profile {
             bench.Time("int.IsPowerOf2", () => { bo = i1.IsPowerOf2(); bo = i1.IsPowerOf2(); bo = i1.IsPowerOf2(); bo = i1.IsPowerOf2(); bo = i1.IsPowerOf2(); }, 5);
             bench.Time("ulong.IsPowerOf2", () => { bo = ul1.IsPowerOf2(); bo = ul1.IsPowerOf2(); bo = ul1.IsPowerOf2(); bo = ul1.IsPowerOf2(); bo = ul1.IsPowerOf2(); }, 5);
             bench.Time("long.IsPowerOf2", () => { bo = l1.IsPowerOf2(); bo = l1.IsPowerOf2(); bo = l1.IsPowerOf2(); bo = l1.IsPowerOf2(); bo = l1.IsPowerOf2(); }, 5);
+            bench.Time("UInt128.IsPowerOf2", () => { bo = ull1.IsPowerOf2(); bo = ull1.IsPowerOf2(); bo = ull1.IsPowerOf2(); bo = ull1.IsPowerOf2(); bo = ull1.IsPowerOf2(); }, 5);
             bench.Time("byte.PowerOf2Floor", () => { br = b1.PowerOf2Floor(); br = b1.PowerOf2Floor(); br = b1.PowerOf2Floor(); br = b1.PowerOf2Floor(); br = b1.PowerOf2Floor(); }, 5);
             bench.Time("sbyte.PowerOf2Floor", () => { sbr = sb1.PowerOf2Floor(); sbr = sb1.PowerOf2Floor(); sbr = sb1.PowerOf2Floor(); sbr = sb1.PowerOf2Floor(); sbr = sb1.PowerOf2Floor(); }, 5);
             bench.Time("ushort.PowerOf2Floor", () => { usr = us1.PowerOf2Floor(); usr = us1.PowerOf2Floor(); usr = us1.PowerOf2Floor(); usr = us1.PowerOf2Floor(); usr = us1.PowerOf2Floor(); }, 5);
@@ -120,6 +123,7 @@ namespace SoftWx.Numerics.Profile {
             bench.Time("int.PowerOf2Floor", () => { ir = i1.PowerOf2Floor(); ir = i1.PowerOf2Floor(); ir = i1.PowerOf2Floor(); ir = i1.PowerOf2Floor(); ir = i1.PowerOf2Floor(); }, 5);
             bench.Time("ulong.PowerOf2Floor", () => { ulr = ul1.PowerOf2Floor(); ulr = ul1.PowerOf2Floor(); ulr = ul1.PowerOf2Floor(); ulr = ul1.PowerOf2Floor(); ulr = ul1.PowerOf2Floor(); }, 5);
             bench.Time("long.PowerOf2Floor", () => { lr = l1.PowerOf2Floor(); lr = l1.PowerOf2Floor(); lr = l1.PowerOf2Floor(); lr = l1.PowerOf2Floor(); lr = l1.PowerOf2Floor(); }, 5);
+            bench.Time("UInt128.PowerOf2Floor", () => { ullr = ull1.PowerOf2Floor(); ullr = ull1.PowerOf2Floor(); ullr = ull1.PowerOf2Floor(); ullr = ull1.PowerOf2Floor(); ullr = ull1.PowerOf2Floor(); }, 5);
             bench.Time("byte.PowerOf2Ceiling", () => { br = b1.PowerOf2Ceiling(); br = b1.PowerOf2Ceiling(); br = b1.PowerOf2Ceiling(); br = b1.PowerOf2Ceiling(); br = b1.PowerOf2Ceiling(); }, 5);
             bench.Time("sbyte.PowerOf2Ceiling", () => { sbr = sb1.PowerOf2Ceiling(); sbr = sb1.PowerOf2Ceiling(); sbr = sb1.PowerOf2Ceiling(); sbr = sb1.PowerOf2Ceiling(); sbr = sb1.PowerOf2Ceiling(); }, 5);
             bench.Time("ushort.PowerOf2Ceiling", () => { usr = us1.PowerOf2Ceiling(); usr = us1.PowerOf2Ceiling(); usr = us1.PowerOf2Ceiling(); usr = us1.PowerOf2Ceiling(); usr = us1.PowerOf2Ceiling(); }, 5);
@@ -128,6 +132,7 @@ namespace SoftWx.Numerics.Profile {
             bench.Time("int.PowerOf2Ceiling", () => { ir = i1.PowerOf2Ceiling(); ir = i1.PowerOf2Ceiling(); ir = i1.PowerOf2Ceiling(); ir = i1.PowerOf2Ceiling(); ir = i1.PowerOf2Ceiling(); }, 5);
             bench.Time("ulong.PowerOf2Ceiling", () => { ulr = ul1.PowerOf2Ceiling(); ulr = ul1.PowerOf2Ceiling(); ulr = ul1.PowerOf2Ceiling(); ulr = ul1.PowerOf2Ceiling(); ulr = ul1.PowerOf2Ceiling(); }, 5);
             bench.Time("long.PowerOf2Ceiling", () => { lr = l1.PowerOf2Ceiling(); lr = l1.PowerOf2Ceiling(); lr = l1.PowerOf2Ceiling(); lr = l1.PowerOf2Ceiling(); lr = l1.PowerOf2Ceiling(); }, 5);
+            bench.Time("UInt128.PowerOf2Ceiling", () => { ullr = ull1.PowerOf2Ceiling(); ullr = ull1.PowerOf2Ceiling(); ullr = ull1.PowerOf2Ceiling(); ullr = ull1.PowerOf2Ceiling(); ullr = ull1.PowerOf2Ceiling(); }, 5);
         }
         static void ProfileBitMath() {
             byte b1, br; b1 = 123;

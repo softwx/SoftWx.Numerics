@@ -77,6 +77,17 @@ namespace SoftWx.Numerics {
         public static long Log2(this long value) {
             return (value > 0) ? BitMath.HighBitPosition(value) : -1L;
         }
+
+        /// <summary>Returns the integer logarithm base 2 (Floor(Log2(value))) of the specified value
+        /// , or MaxValue if value is less than 1, to denote Log2 is undefined for such values.</summary>
+        /// <remarks>Example: Log2(10) returns 3.</remarks>
+        /// <param name="value">The value whose base 2 log is desired.</param>
+        /// <returns>The base 2 log of a positive integer, or MaxValue when the value is less than 1.</returns>
+        public static UInt128 Log2(this UInt128 value) {
+            int hiPos = BitMath.HighBitPosition(value);
+            return (hiPos >= 0) ? new UInt128(0, (uint)BitMath.HighBitPosition(value)) : UInt128.MaxValue;
+        }
+
         /// <summary>Determines if the specified value is a power of 2.</summary>
         /// <param name="value">The value to be tested as a power of 2.</param>
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
@@ -131,6 +142,13 @@ namespace SoftWx.Numerics {
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
         public static bool IsPowerOf2(this long value) {
             return ((value & unchecked(value - 1L)) == 0) && (value > 0);
+        }
+
+        /// <summary>Determines if the specified value is a power of 2.</summary>
+        /// <param name="value">The value to be tested as a power of 2.</param>
+        /// <returns>True if the value is a power of 2, otherwise false.</returns>
+        public static bool IsPowerOf2(this UInt128 value) {
+            return ((value & unchecked(value - 1)) == 0) && (value != 0);
         }
 
         /// <summary>Returns the nearest power of 2 that's equal or less than the specified value.</summary>
@@ -204,6 +222,15 @@ namespace SoftWx.Numerics {
         /// or 0 if the value is less than 1.</returns>
         public static long PowerOf2Floor(this long value) {
             return (value > 0) ? BitMath.HighBit(value) : 0;
+        }
+
+        /// <summary>Returns the nearest power of 2 that's equal or less than the specified value.</summary>
+        /// <remarks>Example: PowerOf2Floor(10) returns 8.</remarks>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
+        /// <returns>The nearest power of 2 that's equal or less than the value parameter,
+        /// or 0 if the value is less than 1.</returns>
+        public static UInt128 PowerOf2Floor(this UInt128 value) {
+            return BitMath.HighBit(value);
         }
 
         /// <summary>Returns the nearest power of 2 that's equal or greater than the specified value.</summary>
@@ -324,6 +351,17 @@ namespace SoftWx.Numerics {
             value |= value >> 8;
             value |= value >> 16;
             return long.MaxValue & unchecked((value | (value >> 32)) + 1);
+        }
+
+        /// <summary>Returns the nearest power of 2 that's equal or greater than the specified value.</summary>
+        /// <remarks>Example: PowerOf2Ceiling(10) returns 16.</remarks>
+        /// <param name="value">The value whose nearest power of 2 is desired.</param>
+        /// <returns>The nearest power of 2 that's equal or greater than the value parameter,
+        /// or 0 if the result would be greater than the type's maximum value.</returns>
+        public static UInt128 PowerOf2Ceiling(this UInt128 value) {
+            if (value == 0) return 1;
+            if (IsPowerOf2(value)) return value;
+            return value.HighBit() << 1;
         }
     }
 }

@@ -172,6 +172,14 @@ namespace SoftWx.Numerics {
             return left.lo <= right.lo;
         }
 
+        /// <summary>Performs a bitwise And operation on two values.</summary>
+        /// <param name="left">The first value.</param>
+        /// <param name="right">The second value.</param>
+        /// <returns>The result of the bitwise And operation.</returns>
+        public static UInt128 operator &(UInt128 left, UInt128 right) {
+            return new UInt128(left.hi & right.hi, left.lo & right.lo);
+        }
+
         /// <summary>Shifts a UInt128 value a specified number of bits to the left.</summary>
         /// <param name="value">The value whose bits are to be shifted.</param>
         /// <param name="shift">The number of bits to shift value to the left.</param>
@@ -253,7 +261,7 @@ namespace SoftWx.Numerics {
         private ulong Mod64(ulong denominator) {
             unchecked {
                 if (denominator <= 1) return 0;
-                if (IsPowerOf2(denominator)) return this.lo & (denominator - 1);
+                if (denominator.IsPowerOf2()) return this.lo & (denominator - 1);
                 ulong u1 = this.hi;
                 ulong u0 = this.lo;
                 //prevent incorrect results if divide would overflow
@@ -263,7 +271,7 @@ namespace SoftWx.Numerics {
                 const ulong b = 1ul << 32;
                 ulong un1, un0, vn1, vn0, q1, q0, un32, un21, un10, rhat, left, right;
                 int s;
-                s = LeadingZeroBits(denominator);
+                s = denominator.LeadingZeroBits();
                 denominator <<= s;
                 un10 = u0 << s;
                 un32 = (s == 0) ? u1 : (u1 << s) | (u0 >> (64 - s));
@@ -306,7 +314,7 @@ namespace SoftWx.Numerics {
                 ulong un1, un0, vn1, vn0, q1, q0, un32, un21, un10, rhat, left, right;
                 if (this.hi > denominator) return remainder = ulong.MaxValue;
                 int s;
-                s = LeadingZeroBits(denominator);
+                s = denominator.LeadingZeroBits();
                 denominator <<= s;
                 vn1 = denominator >> 32;
                 vn0 = denominator & 0xffffffff;
@@ -393,16 +401,10 @@ namespace SoftWx.Numerics {
 
         // If UInt128 is used standalone, without the rest of the SoftWx.Numerics library,
         // then the following methods from that library are needed, and included below.
+    }
 #if StandaloneUInt128
-        /// <summary>Returns the most significant set bit position of the specified value,
-        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
-        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
-        /// <param name="value">The value whose most significant bit position is desired.</param>
-        /// <returns>The value parameter's most significant bit position.</returns>
-        public int HighBitPosition() {
-            return (this.hi != 0) ? 64 + HighBitPosition(this.hi) : HighBitPosition(this.lo);
-        }
-        private int HighBitPosition(ulong value) {
+    internal static class SoftWxNumerics {
+        public static int HighBitPosition(this ulong value) {
             uint high = (uint)(value >> 32);
             return (high != 0) ? 32 + HighBitPosition(high) : HighBitPosition((uint)value);
         }
@@ -410,7 +412,7 @@ namespace SoftWx.Numerics {
             0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
             8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31
         };
-        private int HighBitPosition(uint value) {
+        public static int HighBitPosition(this uint value) {
             if (value == 0) return -1;
             value |= value >> 1;
             value |= value >> 2;
@@ -422,16 +424,24 @@ namespace SoftWx.Numerics {
         /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
-        private int LeadingZeroBits(ulong value) {
+        public static int LeadingZeroBits(this ulong value) {
             return 63 - HighBitPosition(value);
         }
         /// <summary>Determines if the specified value is a power of 2.</summary>
         /// <param name="value">The value to be tested as a power of 2.</param>
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
-        private bool IsPowerOf2(ulong value) {
+        public static bool IsPowerOf2(this ulong value) {
             return ((value & unchecked(value - 1UL)) == 0) && (value != 0);
         }
-#endif
+        /// <summary>Returns the most significant set bit position of the specified value,
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
+        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
+        /// <param name="value">The value whose most significant bit position is desired.</param>
+        /// <returns>The value parameter's most significant bit position.</returns>
+        public static int HighBitPosition(this UInt128 value) {
+            return (value.High != 0) ? 64 + HighBitPosition(value.High) : HighBitPosition(value.Low);
+        }
     }
+#endif
 }
 

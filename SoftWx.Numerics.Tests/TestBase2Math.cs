@@ -14,6 +14,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(ushort.MaxValue, Base2Math.Log2((ushort)0), "ushort");
             Assert.AreEqual(uint.MaxValue, Base2Math.Log2((uint)0), "uint");
             Assert.AreEqual(ulong.MaxValue, Base2Math.Log2((ulong)0), "ulong");
+            Assert.AreEqual(UInt128.MaxValue, Base2Math.Log2((UInt128)0), "UInt128");
         }
 
         [Test]
@@ -42,6 +43,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(0, Base2Math.Log2((int)1), "int");
             Assert.AreEqual(0, Base2Math.Log2((ulong)1), "ulong");
             Assert.AreEqual(0, Base2Math.Log2((long)1), "long");
+            Assert.AreEqual(UInt128.Zero, Base2Math.Log2((UInt128)1), "UInt128");
         }
 
         [Test]
@@ -54,6 +56,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(1, Base2Math.Log2((int)2), "int");
             Assert.AreEqual(1, Base2Math.Log2((ulong)2), "ulong");
             Assert.AreEqual(1, Base2Math.Log2((long)2), "long");
+            Assert.AreEqual((UInt128)1, Base2Math.Log2((UInt128)2), "UInt128");
         }
 
         [Test]
@@ -66,6 +69,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(3, Base2Math.Log2((int)10), "int");
             Assert.AreEqual(3, Base2Math.Log2((ulong)10), "ulong");
             Assert.AreEqual(3, Base2Math.Log2((long)10), "long");
+            Assert.AreEqual((UInt128)3, Base2Math.Log2((UInt128)10), "UInt128");
         }
 
         [Test]
@@ -79,6 +83,7 @@ namespace SoftWx.Numerics.Tests {
                 Assert.AreEqual((int)expected, Base2Math.Log2((int)v), "int=>" + v);
                 Assert.AreEqual((ulong)expected, Base2Math.Log2((ulong)v), "ulong=>" + v);
                 Assert.AreEqual((long)expected, Base2Math.Log2((long)v), "long=>" + v);
+                Assert.AreEqual((UInt128)expected, Base2Math.Log2((UInt128)v), "UInt128=>" + v);
                 if (v == byte.MaxValue) break;
                 v++;
             }
@@ -115,6 +120,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(false, Base2Math.IsPowerOf2((int)0), "int");
             Assert.AreEqual(false, Base2Math.IsPowerOf2((ulong)0), "ulong");
             Assert.AreEqual(false, Base2Math.IsPowerOf2((long)0), "long");
+            Assert.AreEqual(false, Base2Math.IsPowerOf2((UInt128)0), "UInt128");
         }
 
         [Test]
@@ -127,6 +133,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(true, Base2Math.IsPowerOf2((int)1), "int");
             Assert.AreEqual(true, Base2Math.IsPowerOf2((ulong)1), "ulong");
             Assert.AreEqual(true, Base2Math.IsPowerOf2((long)1), "long");
+            Assert.AreEqual(true, Base2Math.IsPowerOf2((UInt128)1), "UInt128");
         }
 
         [Test]
@@ -139,6 +146,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(true, Base2Math.IsPowerOf2((int)2), "int");
             Assert.AreEqual(true, Base2Math.IsPowerOf2((ulong)2), "ulong");
             Assert.AreEqual(true, Base2Math.IsPowerOf2((long)2), "long");
+            Assert.AreEqual(true, Base2Math.IsPowerOf2((UInt128)2), "UInt128");
         }
 
         [Test]
@@ -151,6 +159,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(false, Base2Math.IsPowerOf2((int)3), "int");
             Assert.AreEqual(false, Base2Math.IsPowerOf2((ulong)3), "ulong");
             Assert.AreEqual(false, Base2Math.IsPowerOf2((long)3), "long");
+            Assert.AreEqual(false, Base2Math.IsPowerOf2((UInt128)3), "UInt128");
         }
 
         [Test]
@@ -164,6 +173,7 @@ namespace SoftWx.Numerics.Tests {
                 Assert.AreEqual(expected, Base2Math.IsPowerOf2((int)v), "int=>" + v);
                 Assert.AreEqual(expected, Base2Math.IsPowerOf2((ulong)v), "ulong=>" + v);
                 Assert.AreEqual(expected, Base2Math.IsPowerOf2((long)v), "long=>" + v);
+                Assert.AreEqual(expected, Base2Math.IsPowerOf2((UInt128)v), "UInt128=>" + v);
                 if (v == byte.MaxValue) break;
                 v++;
             }
@@ -192,6 +202,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(0, Base2Math.PowerOf2Floor((int)0), "int");
             Assert.AreEqual(0, Base2Math.PowerOf2Floor((ulong)0), "ulong");
             Assert.AreEqual(0, Base2Math.PowerOf2Floor((long)0), "long");
+            Assert.AreEqual(UInt128.Zero, Base2Math.PowerOf2Floor((UInt128)0), "UInt128");
         }
 
         [Test]
@@ -212,6 +223,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(1, Base2Math.PowerOf2Floor((int)1), "int");
             Assert.AreEqual(1, Base2Math.PowerOf2Floor((ulong)1), "ulong");
             Assert.AreEqual(1, Base2Math.PowerOf2Floor((long)1), "long");
+            Assert.AreEqual((UInt128)1, Base2Math.PowerOf2Floor((UInt128)1), "UInt128");
         }
 
         [Test]
@@ -224,6 +236,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(2, Base2Math.PowerOf2Floor((int)3), "int");
             Assert.AreEqual(2, Base2Math.PowerOf2Floor((ulong)3), "ulong");
             Assert.AreEqual(2, Base2Math.PowerOf2Floor((long)3), "long");
+            Assert.AreEqual((UInt128)2, Base2Math.PowerOf2Floor((UInt128)3), "UInt128");
         }
 
         [Test]
@@ -237,6 +250,7 @@ namespace SoftWx.Numerics.Tests {
                 Assert.AreEqual(expected, Base2Math.PowerOf2Floor((int)v), "int=>" + v);
                 Assert.AreEqual(expected, Base2Math.PowerOf2Floor((ulong)v), "ulong=>" + v);
                 Assert.AreEqual(expected, Base2Math.PowerOf2Floor((long)v), "long=>" + v);
+                Assert.AreEqual((UInt128)expected, Base2Math.PowerOf2Floor((UInt128)v), "UInt128=>" + v);
                 if (v == byte.MaxValue) break;
                 v++;
             }
@@ -265,6 +279,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((int)0), "int");
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((ulong)0), "ulong");
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((long)0), "long");
+            Assert.AreEqual((UInt128)1, Base2Math.PowerOf2Ceiling((UInt128)0), "UInt128");
         }
 
         [Test]
@@ -285,6 +300,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((int)1), "int");
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((ulong)1), "ulong");
             Assert.AreEqual(1, Base2Math.PowerOf2Ceiling((long)1), "long");
+            Assert.AreEqual((UInt128)1, Base2Math.PowerOf2Ceiling((UInt128)1), "UInt128");
         }
 
         [Test]
@@ -297,6 +313,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(4, Base2Math.PowerOf2Ceiling((int)3), "int");
             Assert.AreEqual(4, Base2Math.PowerOf2Ceiling((ulong)3), "ulong");
             Assert.AreEqual(4, Base2Math.PowerOf2Ceiling((long)3), "long");
+            Assert.AreEqual((UInt128)4, Base2Math.PowerOf2Ceiling((UInt128)3), "UInt128");
         }
 
         [Test]
@@ -309,6 +326,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(0, Base2Math.PowerOf2Ceiling(int.MaxValue), "int");
             Assert.AreEqual(0, Base2Math.PowerOf2Ceiling(ulong.MaxValue), "ulong");
             Assert.AreEqual(0, Base2Math.PowerOf2Ceiling(long.MaxValue), "long");
+            Assert.AreEqual(UInt128.Zero, Base2Math.PowerOf2Ceiling(UInt128.MaxValue), "UInt128");
         }
 
         [Test]
@@ -322,6 +340,7 @@ namespace SoftWx.Numerics.Tests {
                 Assert.AreEqual(expected, Base2Math.PowerOf2Ceiling((int)v), "int=>" + v);
                 Assert.AreEqual(expected, Base2Math.PowerOf2Ceiling((ulong)v), "ulong=>" + v);
                 Assert.AreEqual(expected, Base2Math.PowerOf2Ceiling((long)v), "long=>" + v);
+                Assert.AreEqual((UInt128)expected, Base2Math.PowerOf2Ceiling((UInt128)v), "UInt128=>" + v);
                 if (v == byte.MaxValue >> 1) break;
                 v++;
             }
