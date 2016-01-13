@@ -75,6 +75,28 @@ namespace SoftWx.Numerics {
             return (long)Gcd((ulong)value1, (ulong)value2);
         }
 
+        /// <summary>Computes the greatest common divisor of two values.</summary>
+        /// <param name="value1">The first value.</param>
+        /// <param name="value2">The other value.</param>
+        /// <returns>The greatest common divisor of the two values.</returns>
+        public static UInt128 Gcd(this UInt128 value1, UInt128 value2) {
+            if ((value1.High | value2.High) == 0UL) return Gcd(value1.Low, value2.Low);
+            var two = new UInt128(0, 2);
+            UInt128 t;
+            if (value1 > value2) {
+                t = value1;
+                value1 = value2;
+                value2 = t;
+            }
+            while (value1 >= two) {
+                t = value2;
+                value2 = value1;
+                value1 = t % value1;
+            }
+            if (value1 == 0) return value2;
+            return UInt128.One;
+        }
+
         /// <summary>Determines if the specified values are coprime to each other.</summary>
         /// <param name="value1">The value to be tested.</param>
         /// <param name="value2">The other value to be tested.</param>
@@ -125,6 +147,19 @@ namespace SoftWx.Numerics {
             // This works for 0 as well since only 1 and -1 are coprime to 0.
             return ((((value1 | value2) & 1) != 0)
                     && (Gcd(value1, value2) == 1));
+        }
+
+        /// <summary>Determines if the specified values are coprime to each other.</summary>
+        /// <param name="value1">The value to be tested.</param>
+        /// <param name="value2">The other value to be tested.</param>
+        /// <returns>True if the values are coprime to each other, otherwise, false.</returns>
+        public static bool IsCoprime(this UInt128 value1, UInt128 value2) {
+            // 25% of possible pairings are even num to even num so handle them
+            // with a bit twiddle that's much faster than GCD function. If they
+            // are both even, then they can't be coprime (2 is common divisor).
+            // This works for 0 as well since only 1 and -1 are coprime to 0.
+            return ((((value1.Low | value2.Low) & 1) != 0)
+                    && (Gcd(value1, value2) == UInt128.One));
         }
 
         /// <summary>Computes the nearest number less than or equal to the
@@ -189,6 +224,20 @@ namespace SoftWx.Numerics {
                 if (v1.IsCoprime(v2)) return -(long)v1;
             }
             return 0;
+        }
+
+        /// <summary>Computes the nearest number less than or equal to the
+        /// specified start value that is coprime to another specified value.
+        /// Returns 0 if no coprime was found in the range MinValue to start.</summary>
+        /// <param name="start">The start value.</param>
+        /// <param name="value2">The value to test against.</param>
+        /// <returns>The largest value that is less than or equal to the start value
+        /// and also coprime to the other specified value.</returns>
+        public static UInt128 NearestCoprimeFloor(this UInt128 start, UInt128 value2) {
+            if (start == UInt128.Zero) return UInt128.Zero;
+            if (value2 == UInt128.Zero) return UInt128.One;
+            while (!IsCoprime(start, value2)) start--;
+            return start;
         }
 
         /// <summary>Computes the nearest number greater than or equal to the
@@ -273,6 +322,21 @@ namespace SoftWx.Numerics {
             }
         }
 
+        /// <summary>Computes the nearest number greater than or equal to the
+        /// specified start value that is coprime to another specified value.
+        /// Returns 0 if no coprime was found in the range start to MaxValue.</summary>
+        /// <param name="start">The start value.</param>
+        /// <param name="value2">The value to test against.</param>
+        /// <returns>The largest value that is less than or equal to the start value
+        /// and also coprime to the other specified value.</returns>
+        public static UInt128 NearestCoprimeCeiling(this UInt128 start, UInt128 value2) {
+            if ((value2 == 0) && (start > 1)) return UInt128.Zero;
+            while (!IsCoprime(start, value2)) {
+                if (start == ulong.MaxValue) return UInt128.Zero;
+                start++;
+            }
+            return start;
+        }
     }
 }
 /*

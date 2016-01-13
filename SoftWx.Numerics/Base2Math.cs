@@ -359,7 +359,7 @@ namespace SoftWx.Numerics {
         /// <returns>The nearest power of 2 that's equal or greater than the value parameter,
         /// or 0 if the result would be greater than the type's maximum value.</returns>
         public static UInt128 PowerOf2Ceiling(this UInt128 value) {
-            if (value == 0) return 1;
+            if (value == 0) return UInt128.One;
             if (IsPowerOf2(value)) return value;
             return value.HighBit() << 1;
         }

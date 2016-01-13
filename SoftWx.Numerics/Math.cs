@@ -187,7 +187,7 @@ namespace SoftWx.Numerics {
             if (exponent < 3) {
                 if (exponent == 0) return 1;
                 if (exponent == 1) return value;
-                if (exponent == 2) return (value == (uint)value) ? (value * value) % modulus : UInt128.Square(value) % modulus; 
+                if (exponent == 2) return UInt128.Square(value) % modulus; 
             }
             if (modulus == (uint)modulus) return ModPow(value, exponent, (uint)modulus);
             ulong result = 1;
@@ -197,19 +197,19 @@ namespace SoftWx.Numerics {
                     if (exponent == 1) return result;
                 }
                 exponent /= 2;
-                value = (value == (uint)value) ? (value * value) % modulus : UInt128.Square(value) % modulus;
+                value = UInt128.Square(value) % modulus;
             }
         }
 
-        private static ulong ModPow(this ulong v, ulong e, uint m) {
-            ulong result = 1;
+        private static uint ModPow(this ulong v, ulong e, uint m) {
+            uint result = 1;
             while (true) {
                 if ((e & 1) != 0) {
-                    result = (result * v) % m;
+                    result = (uint)(((ulong)result * v) % m);
                     if (e == 1) return result;
                 }
                 e /= 2;
-                v = (v * v) % m;
+                v = (uint)((ulong)v * v) % m;
             }
         }
     }

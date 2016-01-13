@@ -2,11 +2,11 @@
 ##### C# library of math extensions to .Net numeric types
 NuGet package at (coming soon)
 
-Currently contains bit fiddling, and base 2 math methods for the 8 built-in integer types (byte, sbyte, ushort, short, uint, int, ulong, and long).
-Soon will add in prime number related functions (deterministic Miller Rabin) described in series of blog posts starting with (http://blog.softwx.net/2013/05/miller-rabin-primality-test-in-c.html).
+Currently contains bit fiddling, base 2 math, general math, and prime number math methods for the 8 built-in integer types (byte, sbyte, ushort, short, uint, int, ulong, and long), and the SoftWx.Numerics.UInt128 type.
+Next, will be adding in prime number related functions (deterministic Miller Rabin) described in series of blog posts starting with (http://blog.softwx.net/2013/05/miller-rabin-primality-test-in-c.html).
 This github library is meant to replace the code that went with those blog posts.
 
-This is currently a work in progress. Still to do: add unit test for new stuff, complete implementation of UInt128, add Miller Rabin prime methods, with new speed optimizations made after the code was posted the blog post mentioned above.
+This is currently a work in progress. Still to do: add unit tests for UInt128, add to implementation of UInt128, and add Miller Rabin prime methods, with new speed optimizations made after the code was posted the blog post mentioned above.
 
 Classes:
 * BitMath - optimized bit fiddling methods for integer types
@@ -38,12 +38,10 @@ Classes:
   * Square(ulong,ulon) - Computes the 128 bit product of squaring a 64 bit unsigned integer
   * IsULong - Determines if the UInt128 value is less than or equal to UInt64.MaxValue
   * Low - Returns the lower 64 bits of the UInt128 value
-  * High - Returns the upper 64 bits of the UInt128 value
-  * HighBit - Returns the most significant set bit
-  * HighBitPosition - Returns the most significant set bit position
   * Equals - Returns a value indicating whether this instance is equal to a specified object
   * GetHashCode - Returns the hash code for this instance
+  * ToString - Simple ToString implementation
   * implicit cast - ulong to UInt128
   * explicit cast - UInt128 to ulong
-  * operators - equality(==), inequality(!=), greater than(>), less than(<), greater than or equal(>=), less than or equal(<=), left shift(<<), right shift(>>), multiplication(*), addition(+), subtraction(-), modulus(%)
+  * operators - equality(==), inequality(!=), greater than(>), less than(<), greater than or equal(>=), less than or equal(<=), bitwise complement(~), bitwise and(&), bitwise or(|), left shift(<<), right shift(>>), addition(+), subtraction(-), increment(++), decrement(--), multiplication(*), modulus(%)
   

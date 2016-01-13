@@ -31,23 +31,29 @@ namespace SoftWx.Numerics.Profile {
             int i1, ir, i2; i1 = 123; i2 = 127;
             ulong ul1, ulr, ul2; ul1 = 123; ul2 = 127;
             long l1, lr, l2; l1 = 123; l2 = 127;
+            UInt128 ull1, ullr, ull2; ull1 = 123; ull2 = 127;
             var bench = new Bench();
+            ullr = UInt128.Zero;
             bench.Time("uint.Gcd", () => { uir = ui1.Gcd(ui2); uir = ui1.Gcd(ui2); uir = ui1.Gcd(ui2); uir = ui1.Gcd(ui2); uir = ui1.Gcd(ui2); }, 5);
             bench.Time("int.Gcd", () => { ir = i1.Gcd(i2); ir = i1.Gcd(i2); ir = i1.Gcd(i2); ir = i1.Gcd(i2); ir = i1.Gcd(i2); }, 5);
             bench.Time("ulong.Gcd", () => { ulr = ul1.Gcd(ul2); ulr = ul1.Gcd(ul2); ulr = ul1.Gcd(ul2); ulr = ul1.Gcd(ul2); ulr = ul1.Gcd(ul2); }, 5);
             bench.Time("long.Gcd", () => { lr = l1.Gcd(l2); lr = l1.Gcd(l2); lr = l1.Gcd(l2); lr = l1.Gcd(l2); lr = l1.Gcd(l2); }, 5);
+            bench.Time("UInt128.Gcd", () => { ullr = ull1.Gcd(ull2); ullr = ull1.Gcd(ull2); ullr = ull1.Gcd(ull2); ullr = ull1.Gcd(ull2); ullr = ull1.Gcd(ull2); }, 5);
             bench.Time("uint.IsCoprime", () => { bo = ui1.IsCoprime(ui2); bo = ui1.IsCoprime(ui2); bo = ui1.IsCoprime(ui2); bo = ui1.IsCoprime(ui2); bo = ui1.IsCoprime(ui2); }, 5);
             bench.Time("int.IsCoprime", () => { bo = i1.IsCoprime(i2); bo = i1.IsCoprime(i2); bo = i1.IsCoprime(i2); bo = i1.IsCoprime(i2); bo = i1.IsCoprime(i2); }, 5);
             bench.Time("ulong.IsCoprime", () => { bo = ul1.IsCoprime(ul2); bo = ul1.IsCoprime(ul2); bo = ul1.IsCoprime(ul2); bo = ul1.IsCoprime(ul2); bo = ul1.IsCoprime(ul2); }, 5);
             bench.Time("long.IsCoprime", () => { bo = l1.IsCoprime(l2); bo = l1.IsCoprime(l2); bo = l1.IsCoprime(l2); bo = l1.IsCoprime(l2); bo = l1.IsCoprime(l2); }, 5);
+            bench.Time("UInt128.IsCoprime", () => { bo = ull1.IsCoprime(ull2); bo = ull1.IsCoprime(ull2); bo = ull1.IsCoprime(ull2); bo = ull1.IsCoprime(ull2); bo = ull1.IsCoprime(ull2); }, 5);
             bench.Time("uint.NearestCoprimeFloor", () => { uir = ui1.NearestCoprimeFloor(ui2); uir = ui1.NearestCoprimeFloor(ui2); uir = ui1.NearestCoprimeFloor(ui2); uir = ui1.NearestCoprimeFloor(ui2); uir = ui1.NearestCoprimeFloor(ui2); }, 5);
             bench.Time("int.NearestCoprimeFloor", () => { ir = i1.NearestCoprimeFloor(i2); ir = i1.NearestCoprimeFloor(i2); ir = i1.NearestCoprimeFloor(i2); ir = i1.NearestCoprimeFloor(i2); ir = i1.NearestCoprimeFloor(i2); }, 5);
             bench.Time("ulong.NearestCoprimeFloor", () => { ulr = ul1.NearestCoprimeFloor(ul2); ulr = ul1.NearestCoprimeFloor(ul2); ulr = ul1.NearestCoprimeFloor(ul2); ulr = ul1.NearestCoprimeFloor(ul2); ulr = ul1.NearestCoprimeFloor(ul2); }, 5);
             bench.Time("long.NearestCoprimeFloor", () => { lr = l1.NearestCoprimeFloor(l2); lr = l1.NearestCoprimeFloor(l2); lr = l1.NearestCoprimeFloor(l2); lr = l1.NearestCoprimeFloor(l2); lr = l1.NearestCoprimeFloor(l2); }, 5);
+            bench.Time("UInt128.NearestCoprimeFloor", () => { ullr = ull1.NearestCoprimeFloor(ull2); ullr = ull1.NearestCoprimeFloor(ull2); ullr = ull1.NearestCoprimeFloor(ull2); ullr = ull1.NearestCoprimeFloor(ull2); ullr = ull1.NearestCoprimeFloor(ull2); }, 5);
             bench.Time("uint.NearestCoprimeCeiling", () => { uir = ui1.NearestCoprimeCeiling(ui2); uir = ui1.NearestCoprimeCeiling(ui2); uir = ui1.NearestCoprimeCeiling(ui2); uir = ui1.NearestCoprimeCeiling(ui2); uir = ui1.NearestCoprimeCeiling(ui2); }, 5);
             bench.Time("int.NearestCoprimeCeiling", () => { ir = i1.NearestCoprimeCeiling(i2); ir = i1.NearestCoprimeCeiling(i2); ir = i1.NearestCoprimeCeiling(i2); ir = i1.NearestCoprimeCeiling(i2); ir = i1.NearestCoprimeCeiling(i2); }, 5);
             bench.Time("ulong.NearestCoprimeCeiling", () => { ulr = ul1.NearestCoprimeCeiling(ul2); ulr = ul1.NearestCoprimeCeiling(ul2); ulr = ul1.NearestCoprimeCeiling(ul2); ulr = ul1.NearestCoprimeCeiling(ul2); ulr = ul1.NearestCoprimeCeiling(ul2); }, 5);
             bench.Time("long.NearestCoprimeCeiling", () => { lr = l1.NearestCoprimeCeiling(l2); lr = l1.NearestCoprimeCeiling(l2); lr = l1.NearestCoprimeCeiling(l2); lr = l1.NearestCoprimeCeiling(l2); lr = l1.NearestCoprimeCeiling(l2); }, 5);
+            bench.Time("UInt128.NearestCoprimeCeiling", () => { ullr = ull1.NearestCoprimeCeiling(ull2); ullr = ull1.NearestCoprimeCeiling(ull2); ullr = ull1.NearestCoprimeCeiling(ull2); ullr = ull1.NearestCoprimeCeiling(ull2); ullr = ull1.NearestCoprimeCeiling(ull2); }, 5);
         }
         static void ProfileMath() {
             bool bo;

@@ -13,6 +13,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(0, PrimeMath.Gcd((int)0, (int)0), "int");
             Assert.AreEqual(0, PrimeMath.Gcd((ulong)0, (ulong)0), "ulong");
             Assert.AreEqual(0, PrimeMath.Gcd((long)0, (long)0), "long");
+            Assert.AreEqual(UInt128.Zero, PrimeMath.Gcd((UInt128)0, (UInt128)0), "UInt128");
         }
 
         [Test]
@@ -25,6 +26,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(9, PrimeMath.Gcd((int)9, (int)0), "int");
             Assert.AreEqual(9, PrimeMath.Gcd((ulong)9, (ulong)0), "ulong");
             Assert.AreEqual(9, PrimeMath.Gcd((long)9, (long)0), "long");
+            Assert.AreEqual((UInt128)9, PrimeMath.Gcd((UInt128)9, (UInt128)0), "UInt128");
         }
 
         [Test]
@@ -33,6 +35,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(1, PrimeMath.Gcd((int)23, (int)101), "int");
             Assert.AreEqual(1, PrimeMath.Gcd((ulong)23, (ulong)101), "ulong");
             Assert.AreEqual(1, PrimeMath.Gcd((long)23, (long)101), "long");
+            Assert.AreEqual(UInt128.One, PrimeMath.Gcd((UInt128)23, (UInt128)101), "UInt128");
         }
 
         [Test]
@@ -53,6 +56,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(false, PrimeMath.IsCoprime((int)0, (int)0), "int");
             Assert.AreEqual(false, PrimeMath.IsCoprime((ulong)0, (ulong)0), "ulong");
             Assert.AreEqual(false, PrimeMath.IsCoprime((long)0, (long)0), "long");
+            Assert.AreEqual(false, PrimeMath.IsCoprime((UInt128)0, (UInt128)0), "UInt128");
         }
 
         [Test]
@@ -61,6 +65,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(true, PrimeMath.IsCoprime((int)0, (int)1), "int");
             Assert.AreEqual(true, PrimeMath.IsCoprime((ulong)0, (ulong)1), "ulong");
             Assert.AreEqual(true, PrimeMath.IsCoprime((long)0, (long)1), "long");
+            Assert.AreEqual(true, PrimeMath.IsCoprime((UInt128)0, (UInt128)1), "UInt128");
         }
 
         [Test]
@@ -76,6 +81,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(true, PrimeMath.IsCoprime((int)1, (int)1), "int");
             Assert.AreEqual(true, PrimeMath.IsCoprime((ulong)1, (ulong)1), "ulong");
             Assert.AreEqual(true, PrimeMath.IsCoprime((long)1, (long)1), "long");
+            Assert.AreEqual(true, PrimeMath.IsCoprime((UInt128)1, (UInt128)1), "UInt128");
         }
 
         [Test]
@@ -98,6 +104,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(false, PrimeMath.IsCoprime((int)11, (int)11), "int");
             Assert.AreEqual(false, PrimeMath.IsCoprime((ulong)11, (ulong)11), "ulong");
             Assert.AreEqual(false, PrimeMath.IsCoprime((long)11, (long)11), "long");
+            Assert.AreEqual(false, PrimeMath.IsCoprime((UInt128)11, (UInt128)11), "UInt128");
         }
 
         [Test]
@@ -106,6 +113,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(true, PrimeMath.IsCoprime((int)11, (int)13), "int");
             Assert.AreEqual(true, PrimeMath.IsCoprime((ulong)11, (ulong)13), "ulong");
             Assert.AreEqual(true, PrimeMath.IsCoprime((long)11, (long)13), "long");
+            Assert.AreEqual(true, PrimeMath.IsCoprime((UInt128)11, (UInt128)13), "UInt128");
         }
 
         [Test]
@@ -114,6 +122,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(false, PrimeMath.IsCoprime((int)10, (int)12), "int");
             Assert.AreEqual(false, PrimeMath.IsCoprime((ulong)10, (ulong)12), "ulong");
             Assert.AreEqual(false, PrimeMath.IsCoprime((long)10, (long)12), "long");
+            Assert.AreEqual(false, PrimeMath.IsCoprime((UInt128)10, (UInt128)12), "UInt128");
         }
 
         [Test]
@@ -136,6 +145,7 @@ namespace SoftWx.Numerics.Tests {
                     Assert.AreEqual(PrimeMath.IsCoprime((int)i, (int)j), PrimeMath.IsCoprime((int)j, (int)i), "int");
                     Assert.AreEqual(PrimeMath.IsCoprime((ulong)i, (ulong)j), PrimeMath.IsCoprime((ulong)j, (ulong)i), "ulong");
                     Assert.AreEqual(PrimeMath.IsCoprime((long)i, (long)j), PrimeMath.IsCoprime((long)j, (long)i), "long");
+                    Assert.AreEqual(PrimeMath.IsCoprime((UInt128)(ulong)i, (UInt128)(ulong)j), PrimeMath.IsCoprime((UInt128)(ulong)j, (UInt128)(ulong)i), "UInt128");
                 }
             }
         }
@@ -144,6 +154,7 @@ namespace SoftWx.Numerics.Tests {
         public void NearestCoprimeFloor0And0UnsignedShouldReturn0() {
             Assert.AreEqual(0, PrimeMath.NearestCoprimeFloor((uint)0, (uint)0), "uint");
             Assert.AreEqual(0, PrimeMath.NearestCoprimeFloor((ulong)0, (ulong)0), "ulong");
+            Assert.AreEqual(UInt128.Zero, PrimeMath.NearestCoprimeFloor((UInt128)0, (UInt128)0), "UInt128");
         }
 
         [Test]
@@ -164,6 +175,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(1, PrimeMath.NearestCoprimeFloor((int)1, (int)1), "int");
             Assert.AreEqual(1, PrimeMath.NearestCoprimeFloor((ulong)1, (ulong)1), "ulong");
             Assert.AreEqual(1, PrimeMath.NearestCoprimeFloor((long)1, (long)1), "long");
+            Assert.AreEqual(UInt128.One, PrimeMath.NearestCoprimeFloor((UInt128)1, (UInt128)1), "UInt128");
         }
 
         [Test]
@@ -172,6 +184,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(8, PrimeMath.NearestCoprimeFloor((int)10, (int)15), "int");
             Assert.AreEqual(8, PrimeMath.NearestCoprimeFloor((ulong)10, (ulong)15), "ulong");
             Assert.AreEqual(8, PrimeMath.NearestCoprimeFloor((long)10, (long)15), "long");
+            Assert.AreEqual((UInt128)8, PrimeMath.NearestCoprimeFloor((UInt128)10, (UInt128)15), "UInt128");
         }
 
         [Test]
@@ -198,6 +211,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(1, PrimeMath.NearestCoprimeCeiling((int)0, (int)0), "int");
             Assert.AreEqual(1, PrimeMath.NearestCoprimeCeiling((ulong)0, (ulong)0), "ulong");
             Assert.AreEqual(1, PrimeMath.NearestCoprimeCeiling((long)0, (long)0), "long");
+            Assert.AreEqual(UInt128.One, PrimeMath.NearestCoprimeCeiling((UInt128)0, (UInt128)0), "UInt128");
         }
 
         [Test]
@@ -206,6 +220,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(0, PrimeMath.NearestCoprimeCeiling(2, (int)0), "int");
             Assert.AreEqual(0, PrimeMath.NearestCoprimeCeiling((ulong)2, (ulong)0), "ulong");
             Assert.AreEqual(0, PrimeMath.NearestCoprimeCeiling((long)2, (long)0), "long");
+            Assert.AreEqual(UInt128.Zero, PrimeMath.NearestCoprimeCeiling((UInt128)2, (UInt128)0), "UInt128");
         }
 
         [Test]
@@ -214,6 +229,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(1, PrimeMath.NearestCoprimeCeiling((int)1, (int)1), "int");
             Assert.AreEqual(1, PrimeMath.NearestCoprimeCeiling((ulong)1, (ulong)1), "ulong");
             Assert.AreEqual(1, PrimeMath.NearestCoprimeCeiling((long)1, (long)1), "long");
+            Assert.AreEqual(UInt128.One, PrimeMath.NearestCoprimeCeiling((UInt128)1, (UInt128)1), "UInt128");
         }
 
         [Test]
@@ -222,6 +238,7 @@ namespace SoftWx.Numerics.Tests {
             Assert.AreEqual(11, PrimeMath.NearestCoprimeCeiling((int)10, (int)15), "int");
             Assert.AreEqual(11, PrimeMath.NearestCoprimeCeiling((ulong)10, (ulong)15), "ulong");
             Assert.AreEqual(11, PrimeMath.NearestCoprimeCeiling((long)10, (long)15), "long");
+            Assert.AreEqual((UInt128)11, PrimeMath.NearestCoprimeCeiling((UInt128)10, (UInt128)15), "UInt128");
         }
 
         [Test]
