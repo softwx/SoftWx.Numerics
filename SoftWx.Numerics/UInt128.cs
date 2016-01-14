@@ -401,7 +401,7 @@ namespace SoftWx.Numerics {
             return left.Mod(right);
         }
 
-        private UInt128 Divide(UInt128 denominator) {
+        internal UInt128 Divide(UInt128 denominator) {
             UInt128 remainder = this;
             UInt128 result = 0;
             ulong resLo, den;
@@ -441,7 +441,7 @@ namespace SoftWx.Numerics {
             return resLo + remainder.Divide(denominator);
         }
 
-        private UInt128 Divide(ulong denominator) {
+        internal UInt128 Divide(ulong denominator) {
             ulong hi = this.hi;
             ulong lo = this.lo;
             //prevent incorrect results if ulong divide would overflow
@@ -497,7 +497,7 @@ namespace SoftWx.Numerics {
                 return ((q1 << 32) | q0);
             }
         }
-        private UInt128 Divide(uint denominator) {
+        internal UInt128 Divide(uint denominator) {
             uint hihi = (uint)(this.hi >> 32);
             var reshihi = (hihi == 0) ? 0 : hihi / denominator;
             var remainder = (hihi == 0) ? (uint)this.hi : (((ulong)(hihi - (hihi / denominator) * denominator)) << 32) | ((uint)this.hi);
@@ -511,7 +511,7 @@ namespace SoftWx.Numerics {
             return new UInt128((ulong)reshihi << 32 | reshilo, (ulong)reslohi << 32 | reslolo);
         }
 
-        private UInt128 Mod(UInt128 denominator) {
+        internal UInt128 Mod(UInt128 denominator) {
             UInt128 remainder = this;
             ulong resLo, den;
             int denHiBit = denominator.hi.HighBitPosition();
@@ -528,6 +528,7 @@ namespace SoftWx.Numerics {
             } else {
                 // mod by shifted divide
                 int denShift = denHiBit + 2;
+                denShift -= 32;
                 den = (denominator >> denShift).lo;
                 den++;
                 if (den > remainder.hi) {
@@ -544,7 +545,7 @@ namespace SoftWx.Numerics {
             return remainder.Mod(denominator);
         }
 
-        private ulong Mod(ulong denominator) {
+        internal ulong Mod(ulong denominator) {
             unchecked {
                 ulong hi = this.hi;
                 ulong lo = this.lo;
@@ -593,7 +594,7 @@ namespace SoftWx.Numerics {
             }
         }
 
-        private uint Mod(uint denominator) {
+        internal uint Mod(uint denominator) {
             var hihi = (uint)(this.hi >> 32);
             var remainder = (hihi == 0) ? (uint)this.hi : (((ulong)(hihi - (hihi / denominator) * denominator)) << 32) | ((uint)this.hi);
             var remHi = (remainder % denominator) << 32;
