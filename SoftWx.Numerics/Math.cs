@@ -187,29 +187,29 @@ namespace SoftWx.Numerics {
             if (exponent < 3) {
                 if (exponent == 0) return 1;
                 if (exponent == 1) return value;
-                if (exponent == 2) return UInt128.Square(value) % modulus; 
+                if (exponent == 2) return UInt128.Square(value).Mod(modulus);
             }
-            if (modulus == (uint)modulus) return ModPow(value, exponent, (uint)modulus);
+            if (modulus == (uint)modulus) return ModPow((uint)value, exponent, (uint)modulus);
             ulong result = 1;
             while (true) {
                 if ((exponent & 1) != 0) {
-                    result = MulMod(result, value, modulus);
+                    result = UInt128.Multiply(result, value).Mod(modulus);
                     if (exponent == 1) return result;
                 }
                 exponent /= 2;
-                value = UInt128.Square(value) % modulus;
+                value = UInt128.Square(value).Mod(modulus);
             }
         }
 
-        private static uint ModPow(this ulong v, ulong e, uint m) {
+        private static uint ModPow(this uint v, ulong e, uint m) {
             uint result = 1;
             while (true) {
                 if ((e & 1) != 0) {
-                    result = (uint)(((ulong)result * v) % m);
+                    result = (uint)((result * (ulong)v) % m);
                     if (e == 1) return result;
                 }
                 e /= 2;
-                v = (uint)((ulong)v * v) % m;
+                v = (uint)((v * (ulong)v) % m);
             }
         }
     }
