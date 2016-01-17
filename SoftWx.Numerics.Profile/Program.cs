@@ -23,14 +23,14 @@ namespace SoftWx.Numerics.Profile {
         }
         static void ProfilePrimeMath() {
             bool bo;
-            byte b1, br, b2; b1 = 123; b2 = 127;
-            sbyte sb1, sbr, sb2; sb1 = 123; sb2 = 127;
-            ushort us1, usr, us2; us1 = 123; us2 = 127;
-            short s1, sr, s2; s1 = 123; s2 = 127;
-            uint ui1, uir, ui2; ui1 = 123; ui2 = 127;
-            int i1, ir, i2; i1 = 123; i2 = 127;
-            ulong ul1, ulr, ul2; ul1 = 123; ul2 = 127;
-            long l1, lr, l2; l1 = 123; l2 = 127;
+            byte b1, br, b2; b1 = sbyte.MaxValue - 7; b2 = sbyte.MaxValue - 13;
+            sbyte sb1, sbr, sb2; sb1 = (sbyte)b1; sb2 = (sbyte)b2;
+            ushort us1, usr, us2; us1 = short.MaxValue - 7; us2 = short.MaxValue - 13;
+            short s1, sr, s2; s1 = (short)us1; s2 = (short)us2;
+            uint ui1, uir, ui2; ui1 = int.MaxValue - 7; ui2 = int.MaxValue - 13;
+            int i1, ir, i2; i1 = (int)ui1; i2 = (int)ui2;
+            ulong ul1, ulr, ul2; ul1 = long.MaxValue - 7; ul2 = long.MaxValue - 13;
+            long l1, lr, l2; l1 = (long)ul1; l2 = (long)ul2;
             UInt128 ull1, ullr, ull2; ull1 = 123; ull2 = 127;
             var bench = new Bench();
             ullr = UInt128.Zero;
@@ -54,17 +54,21 @@ namespace SoftWx.Numerics.Profile {
             bench.Time("ulong.NearestCoprimeCeiling", () => { ulr = ul1.NearestCoprimeCeiling(ul2); ulr = ul1.NearestCoprimeCeiling(ul2); ulr = ul1.NearestCoprimeCeiling(ul2); ulr = ul1.NearestCoprimeCeiling(ul2); ulr = ul1.NearestCoprimeCeiling(ul2); }, 5);
             bench.Time("long.NearestCoprimeCeiling", () => { lr = l1.NearestCoprimeCeiling(l2); lr = l1.NearestCoprimeCeiling(l2); lr = l1.NearestCoprimeCeiling(l2); lr = l1.NearestCoprimeCeiling(l2); lr = l1.NearestCoprimeCeiling(l2); }, 5);
             bench.Time("UInt128.NearestCoprimeCeiling", () => { ullr = ull1.NearestCoprimeCeiling(ull2); ullr = ull1.NearestCoprimeCeiling(ull2); ullr = ull1.NearestCoprimeCeiling(ull2); ullr = ull1.NearestCoprimeCeiling(ull2); ullr = ull1.NearestCoprimeCeiling(ull2); }, 5);
+            bench.Time("uint.IsPrime", () => { bo = ui1.IsPrime(); bo = ui1.IsPrime(); bo = ui1.IsPrime(); bo = ui1.IsPrime(); bo = ui1.IsPrime(); }, 5);
+            bench.Time("int.IsPrime", () => { bo = i1.IsPrime(); bo = i1.IsPrime(); bo = i1.IsPrime(); bo = i1.IsPrime(); bo = i1.IsPrime(); }, 5);
+            bench.Time("ulong.IsPrime", () => { bo = ul1.IsPrime(); bo = ul1.IsPrime(); bo = ul1.IsPrime(); bo = ul1.IsPrime(); bo = ul1.IsPrime(); }, 5);
+            bench.Time("long.IsPrime", () => { bo = l1.IsPrime(); bo = l1.IsPrime(); bo = l1.IsPrime(); bo = l1.IsPrime(); bo = l1.IsPrime(); }, 5);
+            bench.Time("uint.NearestPrimeFloor", () => { uir = ui1.NearestPrimeFloor(); uir = ui1.NearestPrimeFloor(); uir = ui1.NearestPrimeFloor(); uir = ui1.NearestPrimeFloor(); uir = ui1.NearestPrimeFloor(); }, 5);
+            bench.Time("int.NearestPrimeFloor", () => { ir = i1.NearestPrimeFloor(); ir = i1.NearestPrimeFloor(); ir = i1.NearestPrimeFloor(); ir = i1.NearestPrimeFloor(); ir = i1.NearestPrimeFloor(); }, 5);
+            bench.Time("ulong.NearestPrimeFloor", () => { ulr = ul1.NearestPrimeFloor(); ulr = ul1.NearestPrimeFloor(); ulr = ul1.NearestPrimeFloor(); ulr = ul1.NearestPrimeFloor(); ulr = ul1.NearestPrimeFloor(); }, 5);
+            bench.Time("long.NearestPrimeFloor", () => { lr = l1.NearestPrimeFloor(); lr = l1.NearestPrimeFloor(); lr = l1.NearestPrimeFloor(); lr = l1.NearestPrimeFloor(); lr = l1.NearestPrimeFloor(); }, 5);
+            bench.Time("uint.NearestPrimeCeiling", () => { uir = ui1.NearestPrimeCeiling(); uir = ui1.NearestPrimeCeiling(); uir = ui1.NearestPrimeCeiling(); uir = ui1.NearestPrimeCeiling(); uir = ui1.NearestPrimeCeiling(); }, 5);
+            bench.Time("int.NearestPrimeCeiling", () => { ir = i1.NearestPrimeCeiling(); ir = i1.NearestPrimeCeiling(); ir = i1.NearestPrimeCeiling(); ir = i1.NearestPrimeCeiling(); ir = i1.NearestPrimeCeiling(); }, 5);
+            bench.Time("ulong.NearestPrimeCeiling", () => { ulr = ul1.NearestPrimeCeiling(); ulr = ul1.NearestPrimeCeiling(); ulr = ul1.NearestPrimeCeiling(); ulr = ul1.NearestPrimeCeiling(); ulr = ul1.NearestPrimeCeiling(); }, 5);
+            bench.Time("long.NearestPrimeCeiling", () => { lr = l1.NearestPrimeCeiling(); lr = l1.NearestPrimeCeiling(); lr = l1.NearestPrimeCeiling(); lr = l1.NearestPrimeCeiling(); lr = l1.NearestPrimeCeiling(); }, 5);
         }
         static void ProfileMath() {
             bool bo;
-            //byte b1, br, b2; b1 = 123; b2 = 127;
-            //sbyte sb1, sbr, sb2; sb1 = 123; sb2 = 127;
-            //ushort us1, usr, us2; us1 = 123; us2 = 127;
-            //short s1, sr, s2; s1 = 123; s2 = 127;
-            //uint ui1, uir, ui2; ui1 = 123; ui2 = 127;
-            //int i1, ir, i2; i1 = 123; i2 = 127;
-            //ulong ul1, ulr, ul2; ul1 = 123; ul2 = 127;
-            //long l1, lr, l2; l1 = 123; l2 = 127;
             byte b1, br, b2; b1 = sbyte.MaxValue-7; b2 = sbyte.MaxValue-13;
             sbyte sb1, sbr, sb2; sb1 = (sbyte)b1; sb2 = (sbyte)b2;
             ushort us1, usr, us2; us1 = short.MaxValue-7; us2 = short.MaxValue-13;

@@ -1,4 +1,4 @@
-﻿// Copyright ©2012-2015 SoftWx, Inc.
+﻿// Copyright ©2012-2016 SoftWx, Inc.
 // Released under the MIT License the text of which appears at the end of this file.
 // <authors> Steve Hatchett
 namespace SoftWx.Numerics {
