@@ -129,7 +129,7 @@ namespace SoftWx.Numerics {
             if (modulus <= 0) return 0;
             unchecked {
                 if ((value1 | value2) >= 0) return (long)MulMod((ulong)value1, (ulong)value2, (ulong)modulus);
-                return ((1 | (value1 ^ value2)>>63)) * (long)MulMod(value1.AbsU(), value2.AbsU(), (ulong)modulus);
+                return ((1 | (value1 ^ value2) >> 63)) * (long)MulMod(value1.AbsU(), value2.AbsU(), (ulong)modulus);
             }
         }
 
@@ -141,8 +141,9 @@ namespace SoftWx.Numerics {
         /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
         /// <returns>The remainder after dividing value raised to the exponent power.</returns>
         public static uint ModPow(this uint value, uint exponent, uint modulus) {
+            if (modulus == 0) return 0;
             value %= modulus;
-            if ((value | modulus) == 0) return 0;
+            if (value == 0) return 0;
             switch (exponent) {
                 case 0: return 1;
                 case 1: return value % modulus;
@@ -150,27 +151,28 @@ namespace SoftWx.Numerics {
                 default:
                     uint result = 1;
                     if (modulus == (ushort)modulus) return ModPow(value, exponent, (ushort)modulus);
-                    while (true) {
+                    if ((exponent & 1) == 1) result = value;
+                    while ((exponent /= 2) != 0) {
+                        value = (uint)((value * (ulong)value) % modulus);
                         if ((exponent & 1) != 0) {
                             result = (uint)((result * (ulong)value) % modulus);
-                            if (exponent == 1) return result;
                         }
-                        exponent /= 2;
-                        value = (uint)((value * (ulong)value) % modulus);
                     }
+                    return result;
             }
         }
 
-        private static uint ModPow(this uint v, uint e, ushort m) {
+        // when modulus is a ushort, there's no need to worry about uint multiplication overflowing
+        private static uint ModPow(this uint value, uint exponent, ushort modulus) {
             uint result = 1;
-            while (true) {
-                if ((e & 1) != 0) {
-                    result = (result * v) % m;
-                    if (e == 1) return result;
+            if ((exponent & 1) != 0) result = value;
+            while ((exponent /= 2) != 0) {
+                value = (value * value) % modulus;
+                if ((exponent & 1) != 0) {
+                    result = (result * value) % modulus;
                 }
-                e /= 2;
-                v = (v * v) % m;
             }
+            return result;
         }
 
         /// <summary>Compute the modulo (division remainder) of a number raised to the power
@@ -181,36 +183,37 @@ namespace SoftWx.Numerics {
         /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
         /// <returns>The remainder after dividing value raised to the exponent power.</returns>
         public static ulong ModPow(this ulong value, ulong exponent, ulong modulus) {
+            if (modulus == 0) return 0;
             value %= modulus;
-            //if ((m == 0) || (b == 0)) return 0;
-            if ((modulus | value) == 0) return 0;
+            if (value == 0) return 0;
             if (exponent < 3) {
                 if (exponent == 0) return 1;
                 if (exponent == 1) return value;
                 if (exponent == 2) return UInt128.Square(value).Mod(modulus);
             }
-            if (modulus == (uint)modulus) return ModPow((uint)value, exponent, (uint)modulus);
+            if (modulus == (uint)modulus) return ModPow(value, exponent, (uint)modulus);
             ulong result = 1;
-            while (true) {
+            if ((exponent & 1) == 1) result = value;
+            while ((exponent /= 2) != 0) {
+                value = UInt128.Square(value).Mod(modulus);
                 if ((exponent & 1) != 0) {
                     result = UInt128.Multiply(result, value).Mod(modulus);
-                    if (exponent == 1) return result;
                 }
-                exponent /= 2;
-                value = UInt128.Square(value).Mod(modulus);
             }
+            return result;
         }
 
-        private static uint ModPow(this uint v, ulong e, uint m) {
-            uint result = 1;
-            while (true) {
-                if ((e & 1) != 0) {
-                    result = (uint)((result * (ulong)v) % m);
-                    if (e == 1) return result;
+        // when modulus is a uint, there's no need to worry about ulong multiplication overflowing
+        private static ulong ModPow(this ulong value, ulong exponent, uint modulus) {
+            ulong result = 1;
+            if ((exponent & 1) == 1) result = value;
+            while ((exponent /= 2) != 0) {
+                value = (value * value) % modulus;
+                if ((exponent & 1) != 0) {
+                    result = (result * value) % modulus;
                 }
-                e /= 2;
-                v = (uint)((v * (ulong)v) % m);
             }
+            return result;
         }
     }
 }

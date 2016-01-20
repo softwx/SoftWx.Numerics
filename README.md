@@ -3,7 +3,7 @@
 NuGet package at (coming soon)
 
 Currently contains bit fiddling, base 2 math, general math, and prime number math methods for the 8 built-in integer types (byte, sbyte, ushort, short, uint, int, ulong, and long), and the SoftWx.Numerics.UInt128 type. The library originally started with some blog posts (http://blog.softwx.net/2013/05/miller-rabin-primality-test-in-c.html) on deterministic Miller Rabin prime testing.
-This github library is meant to replace and improve the code that went with those blog posts.
+This github library is meant to replace and improve the code that went with those blog posts. To run the Profile project included in this repository's solution, you'll need to bring in the NuGet package SoftWx.Diagnostics.
 
 Next, will be catching up unit tests for recently added methods.
 
@@ -26,7 +26,7 @@ Classes:
   * PowerOf2Floor - Returns the nearest power of 2 that's equal or less than the specified value
   * PowerOf2Ceiling - Returns the nearest power of 2 that's equal or greater than the specified value
 * Math - optimized general math methods, similar to those in .Net's Math class
-  * AbsU - Returns the absolute value of the specified signed value as a corresponding unsigned type
+  * AbsU - Returns the absolute value of the specified signed value as a corresponding unsigned type, without overflow
   * MulMod - Returns the product of two values, modulus a third value
   * ModPow - Returns a value raised to a specified value, modulus a third value
 * PrimeMath - optimized methods related to prime numbers
@@ -39,9 +39,10 @@ Classes:
   * NearestPrimeCeiling - Computes the prime number nearest, but not smaller than the specified start value
 * UInt128 - Represents 128 bit unsigned integers.
   * Multiply(ulong,ulong) - Computes the 128 bit product of two 64 bit unsigned integers
-  * Square(ulong,ulon) - Computes the 128 bit product of squaring a 64 bit unsigned integer
+  * Square(ulong,ulong) - Computes the 128 bit product of squaring a 64 bit unsigned integer
   * IsULong - Determines if the UInt128 value is less than or equal to UInt64.MaxValue
   * Low - Returns the lower 64 bits of the UInt128 value
+  * High - Returns the upper 64 bits of the UInt128 value
   * Equals - Returns a value indicating whether this instance is equal to a specified object
   * GetHashCode - Returns the hash code for this instance
   * ToString - Simple ToString implementation

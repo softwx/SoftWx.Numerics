@@ -33,20 +33,22 @@ namespace SoftWx.Numerics {
             unchecked {
                 ulong lhi = left >> 32;
                 ulong rhi = right >> 32;
-                ulong high = (uint)right * (ulong)(uint)left;
-                ulong low = (uint)high;
-                high >>= 32;
-                high += lhi * (uint)right;
-                ulong midHi = (high >> 32);
-                midHi += (lhi * rhi);
-                high = (uint)high;
-                high += (rhi * (uint)left);
-                low += (high << 32);
-                high >>= 32;
-                return new UInt128(high + midHi, low);
+                if ((lhi | rhi) == 0) return left * right;
+                ulong hi = lhi * rhi;
+                ulong llo = (uint)left;
+                ulong mid = llo * rhi;
+                ulong rlo = (uint)right;
+                ulong lo = llo * rlo;
+                ulong mid2 = rlo * lhi;
+                mid += mid2;
+                hi += mid >> 32;
+                if (mid < mid2) hi += 1ul << 32;
+                mid <<= 32;
+                lo += mid;
+                if (lo < mid) hi++;
+                return new UInt128(hi, lo);
             }
         }
-
         /// <summary>Computes the 128 bit product of squaring a 64 bit unsigned integer.</summary>
         /// <param name="value">The value to be squared (multiplied by itself).</param>
         /// <returns>The UInt128 product of squaring the specified value.</returns>
@@ -54,21 +56,19 @@ namespace SoftWx.Numerics {
             if (value == (uint)value) return value * value;
             unchecked {
                 ulong hi = value >> 32;
-                ulong hiLo = hi * (uint)value;
-                ulong high = (uint)value * (ulong)(uint)value;
-                ulong low = (uint)high;
-                high >>= 32;
-                high += hiLo;
-                ulong midHi = (high >> 32);
-                midHi += (hi * hi);
-                high = (uint)high;
-                high += hiLo;
-                low += (high << 32);
-                high >>= 32;
-                return new UInt128(high + midHi, low);
+                ulong lo = (uint)value;
+                ulong mid = lo * hi;
+                hi *= hi;
+                lo *= lo;
+                // mid is 2*lo*hi, but we skipped multiplying by 2 and account for it in the 
+                // off by one shifts below so we wouldn't lose data by shifting off a bit doing *2
+                hi += mid >> 31;
+                mid <<= 33;
+                lo += mid;
+                if (lo < mid) hi++;
+                return new UInt128(hi, lo);
             }
         }
-
         /// <summary>Creates an instance of UInt128.</summary>
         /// <param name="high">The most significant 64 bits.</param>
         /// <param name="low">The least significant 64 bits.</param>
@@ -570,7 +570,7 @@ namespace SoftWx.Numerics {
                 vn0 = (uint)denominator;
                 vn1 = denominator >> 32;
                 q1 = un32 / vn1;
-                if (q1 > 0) {
+                if (q1 != 0) {
                     rhat = un32 - ((un32 / vn1) * vn1);// un32 % vn1;
                     left = q1 * vn0;
                     right = (rhat << 32) + un1;

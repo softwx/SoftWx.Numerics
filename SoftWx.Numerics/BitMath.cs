@@ -194,7 +194,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose least significant bit position is desired.</param>
         /// <returns>The value parameter's least significant bit position.</returns>
         public static int LowBitPosition(this byte value) {
-            return (int)(sbyte)msbPos256[value & -value];
+            return (sbyte)msbPos256[value & -value];
         }
 
         /// <summary>Returns the least significant set bit position of the specified value,
@@ -203,7 +203,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose least significant bit position is desired.</param>
         /// <returns>The value parameter's least significant bit position.</returns>
         public static int LowBitPosition(this sbyte value) {
-            return (int)(sbyte)msbPos256[value & -value];
+            return (sbyte)msbPos256[value & -value];
         }
 
         /// <summary>Returns the least significant set bit position of the specified value,
@@ -232,6 +232,8 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose least significant bit position is desired.</param>
         /// <returns>The value parameter's least significant bit position.</returns>
         public static int LowBitPosition(this uint value) {
+            var lowByte = (byte)value;
+            if (lowByte != 0) return lowByte.LowBitPosition();
             return (value != 0) ? DeBruijnMSBSet[unchecked((value & (1u + ~value)) * 0x077cb531u) >> 27] : -1;
         }
 
@@ -241,7 +243,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose least significant bit position is desired.</param>
         /// <returns>The value parameter's least significant bit position.</returns>
         public static int LowBitPosition(this int value) {
-            return (int)LowBitPosition((uint)value);
+            return LowBitPosition((uint)value);
         }
 
         /// <summary>Returns the least significant set bit position of the specified value,
@@ -250,9 +252,11 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose least significant bit position is desired.</param>
         /// <returns>The value parameter's least significant bit position.</returns>
         public static int LowBitPosition(this ulong value) {
+            var lowByte = (byte)value;
+            if (lowByte != 0) return lowByte.LowBitPosition();
             uint low = (uint)value;
-            return (low != 0) ? LowBitPosition(low)
-                : (value != 0) ? (32 + LowBitPosition((uint)(value >> 32))) : -1;
+            if (low != 0) return DeBruijnMSBSet[unchecked((value & (1u + ~low)) * 0x077cb531u) >> 27];
+            return (value != 0) ? (32 + LowBitPosition((uint)(value >> 32))) : -1;
         }
 
         /// <summary>Returns the least significant set bit position of the specified value,
@@ -396,6 +400,8 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose trailing zero bit count is desired.</param>
         /// <returns>The count of the value parameter's trailing zero bits.</returns>
         public static int TrailingZeroBits(this uint value) {
+            var lowByte = (byte)value;
+            if (lowByte != 0) return msbPos256[lowByte & -lowByte];
             return (value != 0) ? DeBruijnMSBSet[unchecked((value & (1u + ~value)) * 0x077cb531u) >> 27] : 32;
         }
 
@@ -412,6 +418,8 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose trailing zero bit count is desired.</param>
         /// <returns>The count of the value parameter's trailing zero bits.</returns>
         public static int TrailingZeroBits(this ulong value) {
+            var lowByte = (byte)value;
+            if (lowByte != 0) return msbPos256[lowByte & -lowByte];
             uint low = (uint)value;
             if (low != 0) return DeBruijnMSBSet[unchecked((low & (1u + ~low)) * 0x077cb531u) >> 27];
             return 32 + TrailingZeroBits((uint)(value >> 32));

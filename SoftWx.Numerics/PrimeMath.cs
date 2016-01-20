@@ -346,9 +346,6 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value to be tested for primality.</param>
         /// <returns>True if the value is prime, otherwise, false.</returns>
         public static bool IsPrime(this uint value) {
-            // handle all even values
-            if ((value & 1) == 0) return value == 2;
-//            if (value < 1000000) return value.PrimeTrial();
             // take care of the simple cases of small primes and the
             // common composites having those primes as factors
             if ((value & 1) == 0) return value == 2;
@@ -357,12 +354,13 @@ namespace SoftWx.Numerics {
             if ((value % 7) == 0) return value == 7;
             if (value == 1) return false;
             if (value < 1000000) {
-                // for small values, faster to determine prime by trial division
+                // for small values, faster to determine prime by trial division at this point
                 for (uint i = 11, skip = 2; (i <= ushort.MaxValue) && (i * i <= value); i += skip, skip = 6 - skip) {
                     if (value % i == 0) return false;
                 }
                 return true;
             };
+            // handle rest of small primes (checking more than this gives negligible benefit, on average)
             if (((value % 11) == 0) || ((value % 13) == 0) || ((value % 17) == 0) 
                 || ((value % 19) == 0) || ((value % 23) == 0) || ((value % 29) == 0) 
                 || ((value % 31) == 0) || ((value % 37) == 0) || ((value % 41) == 0) 
@@ -397,27 +395,27 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value to be tested for primality.</param>
         /// <returns>True if the value is prime, otherwise, false.</returns>
         public static bool IsPrime(this ulong value) {
+            // quick return for even numbers
             if ((value & 1) == 0) return value == 2;
+
+            // for values in uint range, quicker to let that method handle them
             if (value == (uint)value) return ((uint)value).IsPrime();
-            if ((value % 3) == 0) return value == 3;
-            if ((value % 5) == 0) return value == 5;
-            if ((value % 7) == 0) return value == 7;
-            if ((value % 11) == 0) return value == 11;
-            if (value == 1) return false;
-            if (/*((value % 11) == 0) ||*/ ((value % 13) == 0) || ((value % 17) == 0)
+
+            // take care of the simple cases of small primes and the
+            // common composites having those primes as factors
+            // (checking more than this gives negligible benefit, on average)
+            if (((value % 3) == 0) || ((value % 5) == 0) || ((value % 7) == 0)
+                || ((value % 11) == 0) || ((value % 13) == 0) || ((value % 17) == 0)
                 || ((value % 19) == 0) || ((value % 23) == 0) || ((value % 29) == 0)
                 || ((value % 31) == 0) || ((value % 37) == 0) || ((value % 41) == 0)
                 || ((value % 43) == 0) || ((value % 47) == 0) || ((value % 53) == 0)
-                || ((value % 59) == 0) || ((value % 61) == 0) || ((value % 67) == 0)
-                || ((value % 71) == 0) || ((value % 73) == 0) || ((value % 79) == 0)
+                || ((value % 59) == 0) || ((value % 61) == 0) || ((value % 67) == 0)) return false;
+            if (((value % 71) == 0) || ((value % 73) == 0) || ((value % 79) == 0)
                 || ((value % 83) == 0) || ((value % 89) == 0) || ((value % 97) == 0)
-                || ((value % 101) == 0) || ((value % 103) == 0) || ((value % 107) == 0) 
+                || ((value % 101) == 0) || ((value % 103) == 0) || ((value % 107) == 0)
                 || ((value % 109) == 0) || ((value % 113) == 0) || ((value % 127) == 0)
                 || ((value % 131) == 0) || ((value % 137) == 0) || ((value % 139) == 0)
-                || ((value % 149) == 0) 
-                ) {
-                return (value <= 149);
-            }
+                || ((value % 149) == 0)) return false;
 
             // use deterministic Miller-Rabin with most efficient witness array for the value being tested
             return InternalMillerRabin(value, witnessSets[WitnessIndex(value)]);
@@ -567,11 +565,10 @@ namespace SoftWx.Numerics {
             // compute n − 1 as (2^s)·d (where d is odd)
             uint valLessOne = value - 1;
             uint d = valLessOne / 2; // we know that value is odd and valLessOne is even, so unroll 1st iter of loop
-            uint s = 1;
+            int s = 0;
             if ((d % 1) == 0) {
-                s = BitMath.DeBruijnMSBSet[unchecked((d & (1u + ~d)) * 0x077cb531u) >> 27]; // count of trailing zero bits
-                d >>= (int)s;
-                s++;
+                s = d.TrailingZeroBits();
+                d >>= s;
             }
             // test value against each witness
             for (int i = 0; i < witnesses.Length; i++) {
@@ -581,11 +578,11 @@ namespace SoftWx.Numerics {
                     aL %= value;
                     if (aL < 2) continue;
                 }
-                a = (uint)aL; // safe to discard upper 4 bytes, because we ensured a < the uint value
+                a = (uint)aL; // safe to ignore upper 4 bytes, because we ensured a < the uint value
                 if (a == valLessOne) continue;
                 uint x = a.ModPow(d, value); // overflow safe version of x = Math.Pow(a, d) % value
                 if (x == 1) continue;
-                for (uint r = 1; (x != valLessOne) && (r < s); r++) {
+                for (int r = 0; (x != valLessOne) && (r < s); r++) {
                     x = (uint)((x * (ulong)x) % value); // overflow safe version of x = (x * x) % value
                     if (x == 1) return false;
                 }
@@ -603,11 +600,10 @@ namespace SoftWx.Numerics {
             // compute n − 1 as (2^s)·d (where d is odd)
             ulong valLessOne = value - 1;
             ulong d = valLessOne / 2; // we know that value is odd and valLessOne is even, so unroll 1st iter of loop
-            ulong s = 1;
+            int s = 0;
             if ((d % 1) == 0) {
-                s = (ulong)d.TrailingZeroBits();
-                d >>= (int)s;
-                s++;
+                s = d.TrailingZeroBits();
+                d >>= s;
             }
             // test value against each witness
             for (int i = 0; i < witnesses.Length; i++) {
@@ -619,12 +615,8 @@ namespace SoftWx.Numerics {
                 if (a == valLessOne) continue;
                 ulong x = a.ModPow(d, value); // overflow safe version of x = Math.Pow(a, d) % value
                 if (x == 1) continue;
-                for (uint r = 1; (x != valLessOne) && (r < s); r++) {
-                    if (x == (uint)x) {
-                        x = (x * x) % value;
-                    } else {
-                        x = UInt128.Square(x).Mod(value);
-                    }
+                for (int r = 0; (x != valLessOne) && (r < s); r++) {
+                    x = UInt128.Square(x).Mod(value);
                     if (x == 1) return false;
                 }
                 if (x != valLessOne) return false;
