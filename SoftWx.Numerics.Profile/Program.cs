@@ -145,15 +145,15 @@ namespace SoftWx.Numerics.Profile {
             bench.Time("UInt128.PowerOf2Ceiling", () => { ullr = ull1.PowerOf2Ceiling(); ullr = ull1.PowerOf2Ceiling(); ullr = ull1.PowerOf2Ceiling(); ullr = ull1.PowerOf2Ceiling(); ullr = ull1.PowerOf2Ceiling(); }, 5);
         }
         static void ProfileBitMath() {
-            byte b1, br; b1 = 123;
-            sbyte sb1, sbr; sb1 = 123;
-            ushort us1, usr; us1 = 123;
-            short s1, sr; s1 = 123;
-            uint ui1, uir; ui1 = 123;
-            int i1, ir; i1 = 123;
-            ulong ul1, ulr; ul1 = 123;
-            long l1, lr; l1 = 123;
-            UInt128 ull1, ullr; ull1 = new UInt128(0, 123);
+            byte b1, br; b1 = 0x18;
+            sbyte sb1, sbr; sb1 = 0x18;
+            ushort us1, usr; us1 = 0x1ff8;
+            short s1, sr; s1 = 0x1ff8;
+            uint ui1, uir; ui1 = 0x1ffffff8;
+            int i1, ir; i1 = 0x1ffffff8;
+            ulong ul1, ulr; ul1 = 0x1ffffffffffffff8;
+            long l1, lr; l1 = 0x1ffffffffffffff8;
+            UInt128 ull1, ullr; ull1 = new UInt128(0x1fffffffffffffff, 0xfffffffffffffff8);
             var bench = new Bench();
             bench.Time("byte.LowBit", () => { br = b1.LowBit(); br = b1.LowBit(); br = b1.LowBit(); br = b1.LowBit(); br = b1.LowBit(); }, 5);
             bench.Time("sbyte.LowBit", () => { sbr = sb1.LowBit(); sbr = sb1.LowBit(); sbr = sb1.LowBit(); sbr = sb1.LowBit(); sbr = sb1.LowBit(); }, 5);

@@ -239,6 +239,12 @@ namespace SoftWx.Numerics {
         public static UInt128 operator &(UInt128 left, UInt128 right) {
             return new UInt128(left.hi & right.hi, left.lo & right.lo);
         }
+        public static UInt128 operator &(UInt128 left, ulong right) {
+            return new UInt128(0, left.lo & right);
+        }
+        public static UInt128 operator &(ulong left, UInt128 right) {
+            return new UInt128(0, left & right.lo);
+        }
 
         /// <summary>Performs a bitwise Or operation on two values.</summary>
         /// <param name="left">The first value.</param>
@@ -246,6 +252,22 @@ namespace SoftWx.Numerics {
         /// <returns>The result of the bitwise Or operation.</returns>
         public static UInt128 operator |(UInt128 left, UInt128 right) {
             return new UInt128(left.hi | right.hi, left.lo | right.lo);
+        }
+
+        /// <summary>Performs a bitwise Or operation on two values.</summary>
+        /// <param name="left">The first value.</param>
+        /// <param name="right">The second value.</param>
+        /// <returns>The result of the bitwise Or operation.</returns>
+        public static UInt128 operator |(UInt128 left, ulong right) {
+            return new UInt128(left.hi, left.lo | right);
+        }
+
+        /// <summary>Performs a bitwise Or operation on two values.</summary>
+        /// <param name="left">The first value.</param>
+        /// <param name="right">The second value.</param>
+        /// <returns>The result of the bitwise Or operation.</returns>
+        public static UInt128 operator |(ulong left, UInt128 right) {
+            return new UInt128(right.hi, left | right.lo);
         }
 
         /// <summary>Shifts a UInt128 value a specified number of bits to the left.</summary>
@@ -279,12 +301,21 @@ namespace SoftWx.Numerics {
             return new UInt128(newHi, newLo);
         }
 
+        /// <summary>Adds a ulong value to an UInt128 value.</summary>
+        /// <param name="left">The first value to add.</param>
+        /// <param name="right">The second value to add.</param>
+        /// <returns>The sum of left and right.</returns>
         public static UInt128 operator +(UInt128 left, ulong right) {
             ulong newLo = unchecked(left.lo + right);
             ulong newHi = left.hi;
             if (newLo < left.lo) newHi++;
             return new UInt128(newHi, newLo);
         }
+
+        /// <summary>Adds a UInt128 value to a ulong value.</summary>
+        /// <param name="left">The first value to add.</param>
+        /// <param name="right">The second value to add.</param>
+        /// <returns>The sum of left and right.</returns>
         public static UInt128 operator +(ulong left, UInt128 right) {
             return right + left;
         }
@@ -297,6 +328,10 @@ namespace SoftWx.Numerics {
             return new UInt128(left.hi - right.hi - ((left.lo < right.lo) ? 1UL : 0UL), unchecked(left.lo - right.lo));
         }
 
+        /// <summary>Subtracts a ulong value from a UInt128 value.</summary>
+        /// <param name="left">The value to subtract from.</param>
+        /// <param name="right">The value to subtract.</param>
+        /// <returns>The value resulting from subtracting right from left.</returns>
         public static UInt128 operator -(UInt128 left, ulong right) {
             return new UInt128(left.hi - ((left.lo < right) ? 1UL : 0UL), unchecked(left.lo - right));
         }
@@ -321,19 +356,23 @@ namespace SoftWx.Numerics {
         /// <param name="right">The second value to multiply.</param>
         /// <returns>The productof multiplying left and right.</returns>
         public static UInt128 operator *(UInt128 left, UInt128 right) {
-            //var result = UInt128.Multiply(left.lo, right.lo);
-            //var temp = UInt128.Multiply(left.lo, right.hi);
-            //result += new UInt128(temp.lo, 0UL);
-            //temp = UInt128.Multiply(left.hi, right.lo);
-            //return result + new UInt128(temp.lo, 0UL);
             var result = UInt128.Multiply(left.lo, right.lo);
             return new UInt128(result.hi + (left.lo * right.hi) + (left.hi * right.lo), result.lo);
         }
 
+        /// <summary>Multiplies a UInt128 value and a ulong value.</summary>
+        /// <param name="left">The first value to multiply.</param>
+        /// <param name="right">The second value to multiply.</param>
+        /// <returns>The productof multiplying left and right.</returns>
         public static UInt128 operator *(UInt128 left, ulong right) {
             var result = UInt128.Multiply(left.lo, right);
             return new UInt128(result.hi + (left.hi * right), result.lo);
         }
+
+        /// <summary>Multiplies a ulong value and a UInt128 value.</summary>
+        /// <param name="left">The first value to multiply.</param>
+        /// <param name="right">The second value to multiply.</param>
+        /// <returns>The productof multiplying left and right.</returns>
         public static UInt128 operator *(ulong left, UInt128 right) {
             return right * left;
         }
@@ -348,6 +387,7 @@ namespace SoftWx.Numerics {
             //if (right.IsPowerOf2()) return left >> right.HighBitPosition();
             return left.Divide(right);
         }
+
         /// <summary>Divides a UInt128 value by an unsigned long value using integer division.</summary>
         /// <param name="left">The value to be divided.</param>
         /// <param name="right">The value to divide by.</param>
@@ -367,7 +407,6 @@ namespace SoftWx.Numerics {
             if (right == 0) throw new DivideByZeroException();
             if (left < right) return UInt128.Zero;
             if (left.hi == 0) return left.lo / right;
-            //if (right.IsPowerOf2()) return left >> right.HighBitPosition();
             return left.Divide(right);
         }
 
@@ -434,7 +473,7 @@ namespace SoftWx.Numerics {
                     resLo = DivUnchecked(remainder.hi, remainder.lo, den);
                     resLo >>= denShift;
                 } else {
-                    // need overflow check
+                    // avoids overflow
                     result = remainder.Divide(den);
                     result >>= denShift;
                     resLo = result.lo;

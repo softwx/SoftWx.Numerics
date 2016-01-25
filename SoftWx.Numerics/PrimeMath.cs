@@ -27,7 +27,7 @@ namespace SoftWx.Numerics {
                 value1 = value2;
                 value2 = t;
             }
-            while (value1 >= 2) {
+            while (value1 > 1) {
                 t = value2;
                 value2 = value1;
                 value1 = t % value1;
@@ -50,20 +50,27 @@ namespace SoftWx.Numerics {
         /// <param name="value2">The other value.</param>
         /// <returns>The greatest common divisor of the two values.</returns>
         public static ulong Gcd(this ulong value1, ulong value2) {
-            if (((value1 | value2) >> 32) == 0UL) return Gcd((uint)value1, (uint)value2);
-            ulong t;
+            ulong t = value1 | value2;
+            if ((uint)t == t) return Gcd((uint)value1, (uint)value2);
             if (value1 > value2) {
                 t = value1;
                 value1 = value2;
                 value2 = t;
             }
-            while (value1 >= 2) {
-                t = value2;
-                value2 = value1;
-                value1 = t % value1;
+            while (value1 > 1) {
+                t = value1;
+                if ((value2 >> 3) < t) {
+                    while ((value2 -= t) > t) ;
+                    value1 = value2;
+                    value2 = t;
+                } else {
+                    if ((uint)value2 == value2) return Gcd((uint)value1, (uint)value2);
+                    value1 = value2 % t;
+                    value2 = t;
+                }
             }
             if (value1 == 0) return value2;
-            return 1u;
+            return 1;
         }
 
         /// <summary>Computes the greatest common divisor of two values.</summary>
@@ -81,17 +88,26 @@ namespace SoftWx.Numerics {
         /// <returns>The greatest common divisor of the two values.</returns>
         public static UInt128 Gcd(this UInt128 value1, UInt128 value2) {
             if ((value1.High | value2.High) == 0UL) return Gcd(value1.Low, value2.Low);
-            var two = new UInt128(0, 2);
             UInt128 t;
             if (value1 > value2) {
                 t = value1;
                 value1 = value2;
                 value2 = t;
             }
-            while (value1 >= two) {
-                t = value2;
-                value2 = value1;
-                value1 = t % value1;
+            while (value1 > 1) {
+                t = value1;
+                value1 = value2 - t;
+                if (value1 >= t) {
+                    value1 -= t;
+                    if (value1 >= t) {
+                        value1 -= t;
+                        if (value1 >= t) {
+                            if (value1.High != 0) value1 %= t;
+                            else return Gcd((ulong)t, (ulong)value1);
+                        }
+                    }
+                }
+                value2 = t;
             }
             if (value1 == 0) return value2;
             return UInt128.One;
