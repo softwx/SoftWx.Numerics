@@ -189,7 +189,10 @@ namespace SoftWx.Numerics {
             if (exponent < 3) {
                 if (exponent == 0) return 1;
                 if (exponent == 1) return value;
-                if (exponent == 2) return UInt128.Square(value).Mod(modulus);
+                if (exponent == 2) {
+                    var sqr = UInt128.Square(value);
+                    return (modulus == (uint)modulus) ? sqr.Mod((uint)modulus) : sqr.Mod(modulus);
+                }
             }
             if (modulus == (uint)modulus) return ModPow(value, exponent, (uint)modulus);
             ulong result = 1;

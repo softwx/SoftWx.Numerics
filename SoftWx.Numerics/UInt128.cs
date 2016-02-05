@@ -444,196 +444,242 @@ namespace SoftWx.Numerics {
             return left.Mod(right);
         }
 
-        internal UInt128 Divide(UInt128 denominator) {
+        // denominator must be <= this and > ulong.MaxValue
+        internal ulong Divide(UInt128 denominator) {
             UInt128 remainder = this;
-            UInt128 result = 0;
-            ulong resLo, den;
+            ulong result = 0;
             int denHiBit = denominator.hi.HighBitPosition();
-            int remHiBit = this.hi.HighBitPosition();
-            int diff = remHiBit - denHiBit;
-            if (diff <= 3) {
-                // div by subtraction
-                resLo = 0;
-                do {
-                    resLo++;
-                    remainder -= denominator;
-                } while (remainder >= denominator);
-                return resLo;
-            }
-            if (denHiBit > 10) {
-                // div by divide high ulongs
-                resLo = this.hi / (denominator.hi + 1); 
-            } else {
-                // div by shifted divide
-                int denShift = denHiBit + 2;
-                den = (denominator >> denShift).lo;
-                den++;
-                if (den >= remainder.hi) {
-                    // no danger of overflow
-                    resLo = DivUnchecked(remainder.hi, remainder.lo, den);
-                    resLo >>= denShift;
+            do {
+                int remHiBit = remainder.hi.HighBitPosition();
+                int diff = remHiBit - denHiBit;
+                if (diff <= 3) {
+                    // div by subtraction
+                    do {
+                        result++;
+                        remainder -= denominator;
+                    } while (remainder >= denominator);
+                    return result;
+                }
+                ulong resLo, den;
+                if ((denHiBit >= 18) && (diff <= 24)) {
+                    // div by divide high ulongs
+                    resLo = remainder.hi / (denominator.hi + 1); // we don't have to worry about denominator.hi being MaxValue and overflowing, because that case handled above
                 } else {
-                    // avoids overflow
-                    result = remainder.Divide(den);
-                    result >>= denShift;
-                    resLo = result.lo;
-                }
-            }
-            remainder = this - (denominator * resLo);
-            if (remainder < denominator) return resLo;
-            return resLo + remainder.Divide(denominator);
-        }
-
-        internal UInt128 Divide(ulong denominator) {
-            ulong hi = this.hi;
-            ulong lo = this.lo;
-            //prevent incorrect results if ulong divide would overflow
-            ulong resHi = 0;
-            if (hi >= denominator) {
-                //if (lo != 0) hi++;
-                resHi = hi / denominator;
-                hi = this.hi - (resHi * denominator);
-            }
-            return new UInt128(resHi, DivUnchecked(hi, lo, denominator));
-        }
-
-        private ulong DivUnchecked(ulong hi, ulong lo, ulong denominator) {
-            unchecked {
-                //const ulong b = 1ul << 32;
-                ulong un1, un0, vn1, vn0, q1, q0, un32, un21, un10, rhat, left, right;
-                int s;
-                s = denominator.LeadingZeroBits();
-                denominator <<= s;
-                un10 = lo << s;
-                un32 = (s == 0) ? hi : (hi << s) | (lo >> (64 - s));
-                un21 = un32 << 32;
-                un1 = un10 >> 32;
-                un21 += un1;
-                un0 = (uint)un10;
-                vn0 = (uint)denominator;
-                vn1 = denominator >> 32;
-                q1 = un32 / vn1;
-                if (q1 != 0) {
-                    rhat = un32 - ((un32 / vn1) * vn1); // un32 % vn1;
-                    left = q1 * vn0;
-                    right = (rhat << 32) + un1;
-                    while ((left > right) || (q1 != (uint)q1)) {
-                        q1--;
-                        rhat += vn1;
-                        if (rhat != (uint)rhat) break;
-                        left -= vn0;
-                        right = (rhat << 32) | un1;
+                    // div by shifted divide
+                    int denShift = denHiBit + 1;
+                    den = (denominator >> denShift).lo;
+                    if (den > remainder.hi) {
+                        // no danger of overflow
+                        den++;
+                        if (den == 0) {
+                            // handle the rare case where the shifted den + 1 overflows
+                            denShift++;
+                            den = 1UL << 31;
+                        }
+                        resLo = DivUnchecked(remainder.hi, remainder.lo, den);
+                        resLo >>= denShift;
+                    } else {
+                        // avoid overflow
+                        den++; // den + 1 can't overflow, because it's less then remainder.hi
+                        ulong resHi = remainder.hi / den;
+                        ulong remHi = remainder.hi - ((remainder.hi / den) * den);
+                        var tempResult = new UInt128(resHi, DivUnchecked(remHi, remainder.lo, den));
+                        tempResult >>= denShift;
+                        resLo = tempResult.lo;
                     }
-                    un21 -= (q1 * denominator);
                 }
-                q0 = un21 / vn1;
-                rhat = un21 - ((un21 / vn1) * vn1);// un21 % vn1;
-                left = q0 * vn0;
-                right = (rhat << 32) | un0;
-                while ((left > right) || (q0 != (uint)q0)) {
-                    q0--;
-                    rhat += vn1;
+                result += resLo;
+                remainder -= (denominator * resLo);
+            } while (remainder >= denominator) ;
+            return result;
+        }
+
+        // denominator must be > uint.MaxValue
+        internal UInt128 Divide(ulong denominator) {
+            ulong resHi = 0;
+            ulong remHi = this.hi;
+            //prevent incorrect results if ulong divide would overflow
+            if (remHi >= denominator) {
+                resHi = remHi / denominator;
+                remHi -= (resHi * denominator);
+            }
+            return new UInt128(resHi, DivUnchecked(remHi, this.lo, denominator));
+        }
+        
+        // denominator must be > uint.MaxValue and > the high parameter
+        private ulong DivUnchecked(ulong high, ulong low, ulong denominator) {
+            unchecked {
+                ulong hiShLo, denHi, denLo, quotHi, quotLo, mid, shLoMid, shLo, rhat, left, right;
+
+                if ((denominator >> 63) != 0) {
+                    mid = high;
+                    shLo = low;
+                } else {
+                    // unwind first few iterations of loop to count leading zero bits but use
+                    // bit fiddle if more than 3 to avoid time consuming count when there are
+                    // many leading zero bits. Doing a quick test of the 4 most significant 
+                    // bit positions covers about 94% of possible ulong denominator values.
+                    int s;
+                    if ((denominator >> 62) != 0) s = 1;
+                    else if ((denominator >> 61) != 0) s = 2;
+                    else if ((denominator >> 60) != 0) s = 3;
+                    else s = ((uint)(denominator >> 32)).LeadingZeroBits();
+                    denominator <<= s;
+                    mid = (high << s) | (low >> (64 - s));
+                    shLo = low << s;
+                }
+                shLoMid = mid << 32;
+                hiShLo = shLo >> 32;
+                shLoMid += hiShLo;
+                denLo = (uint)denominator;
+                denHi = denominator >> 32;
+                quotHi = mid / denHi;
+                if (quotHi != 0) {
+                    rhat = mid - ((mid / denHi) * denHi);
+                    right = (rhat << 32) | hiShLo;
+                    left = quotHi * denLo;
+                    while ((quotHi != (uint)quotHi) || (left > right)) {
+                        quotHi--;
+                        rhat += denHi;
+                        if (rhat != (uint)rhat) break;
+                        right = (rhat << 32) | hiShLo;
+                        left -= denLo;
+                    }
+                    shLoMid -= (quotHi * denominator);
+                    quotHi <<= 32;
+                }
+                quotLo = shLoMid / denHi;
+                rhat = shLoMid - ((shLoMid / denHi) * denHi);
+                right = (rhat << 32) | (uint)shLo;
+                left = quotLo * denLo;
+                while ((quotLo != (uint)quotLo) || (left > right)) {
+                    quotLo--;
+                    rhat += denHi;
                     if (rhat != (uint)rhat) break;
-                    left -= vn0;
-                    right = (rhat << 32) | un0;
+                    right = (rhat << 32) | (uint)shLo;
+                    left -= denLo;
                 }
-                return ((q1 << 32) | q0);
+                return quotHi | quotLo;
             }
         }
         internal UInt128 Divide(uint denominator) {
             uint hihi = (uint)(this.hi >> 32);
             var reshihi = (hihi == 0) ? 0 : hihi / denominator;
-            var remainder = (hihi == 0) ? (uint)this.hi : (((ulong)(hihi - (hihi / denominator) * denominator)) << 32) | ((uint)this.hi);
+            var remainder = (hihi == 0) ? (uint)(this.hi) : (((ulong)(hihi - (hihi / denominator) * denominator)) << 32) | ((uint)(this.hi));
             var reshilo = (uint)(remainder / denominator);
             var remHi = remainder - reshilo * denominator;
             remainder = remHi << 32 | (uint)(this.lo >> 32);
             var reslohi = (uint)(remainder / denominator);
             remHi = remainder - reslohi * denominator;
-            remainder = remHi << 32 | (uint)this.lo;
+            remainder = remHi << 32 | (uint)(this.lo);
             var reslolo = (uint)(remainder / denominator);
             return new UInt128((ulong)reshihi << 32 | reshilo, (ulong)reslohi << 32 | reslolo);
         }
 
+        // denominator must be <= this and > ulong.MaxValue
         internal UInt128 Mod(UInt128 denominator) {
             UInt128 remainder = this;
-            ulong resLo, den;
             int denHiBit = denominator.hi.HighBitPosition();
-            int remHiBit = this.hi.HighBitPosition();
-            int diff = remHiBit - denHiBit;
-            if (diff <= 3) {
-                // mod by subtraction
-                do remainder -= denominator; while (remainder >= denominator);
-                return remainder;
-            }
-            if (denHiBit > 10) { // we don't have to worry about denominator.hi being MaxValue and overflowing, because that case handled above
-                // mod by divide high ulongs
-                resLo = this.hi / (denominator.hi + 1);
-            } else {
-                // mod by shifted divide
-                int denShift = denHiBit + 2;
-                denShift -= 32;
-                den = (denominator >> denShift).lo;
-                den++;
-                if (den > remainder.hi) {
-                    resLo = DivUnchecked(remainder.hi, remainder.lo, den);
-                    resLo >>= denShift;
-                } else {
-                    var result = remainder.Divide(den);
-                    result >>= denShift;
-                    resLo = result.lo;
+            do {
+                int remHiBit = remainder.hi.HighBitPosition();
+                int diff = remHiBit - denHiBit;
+                if (diff <= 3) {
+                    // mod by subtraction
+                    do remainder -= denominator; while (remainder >= denominator);
+                    return remainder;
                 }
-            }
-            remainder = this - (denominator * resLo);
-            if (remainder < denominator) return remainder;
-            return remainder.Mod(denominator);
+                ulong resLo, den;
+                if ((denHiBit >= 18) && (diff <= 24)) {
+                    // mod by divide high ulongs
+                    resLo = remainder.hi / (denominator.hi + 1); // we don't have to worry about denominator.hi being MaxValue and overflowing, because that case handled above
+                } else {
+                    // mod by shifted divide
+                    int denShift = denHiBit + 1;
+                    den = (denominator >> denShift).lo;
+                    if (den > remainder.hi) {
+                        // no danger of overflow
+                        den++;
+                        if (den == 0) {
+                            // handle the rare case where the shifted den + 1 overflows
+                            denShift++;
+                            den = 1UL << 31;
+                        }
+                        resLo = DivUnchecked(remainder.hi, remainder.lo, den);
+                        resLo >>= denShift;
+                    } else {
+                        // avoid overflow
+                        den++; // den + 1 can't overflow, because it's less then remainder.hi
+                        ulong resHi = remainder.hi / den;
+                        ulong remHi = remainder.hi - ((remainder.hi / den) * den);
+                        var tempResult = new UInt128(resHi, DivUnchecked(remHi, remainder.lo, den));
+                        tempResult >>= denShift;
+                        resLo = tempResult.lo;
+                    }
+                }
+                remainder -= (denominator * resLo);
+            } while (remainder >= denominator);
+            return remainder;
         }
 
+        // denominator must be > uint.MaxValue
         internal ulong Mod(ulong denominator) {
             unchecked {
-                ulong hi = this.hi;
-                ulong lo = this.lo;
+                ulong high = this.hi;
+                ulong low = this.lo;
                 //prevent incorrect results if divide would overflow
-                if (hi >= denominator) hi -= ((hi / denominator) * denominator);
-                if (hi == 0) return lo - ((lo / denominator) * denominator);// lo % denominator;
+                if (high >= denominator) high -= ((high / denominator) * denominator);
+                if (high == 0) return low - ((low / denominator) * denominator);
 
-                ulong un1, un0, vn1, vn0, q1, q0, un32, un21, un10, rhat, left, right;
-                int s;
-                s = denominator.LeadingZeroBits();
-                denominator <<= s;
-                un10 = lo << s;
-                un32 = (s == 0) ? hi : (hi << s) | (lo >> (64 - s));
-                un21 = un32 << 32;
-                un1 = un10 >> 32;
-                un21 += un1;
-                un0 = (uint)un10;
-                vn0 = (uint)denominator;
-                vn1 = denominator >> 32;
-                q1 = un32 / vn1;
-                if (q1 != 0) {
-                    rhat = un32 - ((un32 / vn1) * vn1);// un32 % vn1;
-                    left = q1 * vn0;
-                    right = (rhat << 32) + un1;
-                    while ((left > right) || (q1 != (uint)q1)) {
-                        q1--;
-                        rhat += vn1;
+                ulong hiShLo, denHi, denLo, quotHi, quotLo, mid, shLoMid, shLo, rhat, left, right;
+                int shift;
+                if ((denominator >> 63) != 0) {
+                    mid = high;
+                    shLo = low;
+                    shift = 0;
+                } else {
+                    // unwind first few iterations of loop to count leading zero bits but use
+                    // bit fiddle if more than 3 to avoid time consuming count when there are
+                    // many leading zero bits. Doing a quick test of the 4 most significant 
+                    // bit positions covers about 94% of possible ulong denominator values.
+                    if ((denominator >> 62) != 0) shift = 1;
+                    else if ((denominator >> 61) != 0) shift = 2;
+                    else if ((denominator >> 60) != 0) shift = 3;
+                    else shift = ((uint)(denominator >> 32)).LeadingZeroBits();
+                    denominator <<= shift;
+                    mid = (high << shift) | (low >> (64 - shift));
+                    shLo = low << shift;
+                }
+                shLoMid = mid << 32;
+                hiShLo = shLo >> 32;
+                shLoMid += hiShLo;
+                denLo = (uint)denominator;
+                denHi = denominator >> 32;
+                quotHi = mid / denHi;
+                if (quotHi != 0) {
+                    rhat = mid - ((mid / denHi) * denHi);
+                    right = (rhat << 32) | hiShLo;
+                    left = quotHi * denLo;
+                    while ((quotHi != (uint)quotHi) || (left > right)) {
+                        quotHi--;
+                        rhat += denHi;
                         if (rhat != (uint)rhat) break;
-                        left -= vn0;
-                        right = (rhat << 32) | un1;
+                        right = (rhat << 32) | hiShLo;
+                        left -= denLo;
                     }
-                    un21 -= (q1 * denominator);
+                    shLoMid -= (quotHi * denominator);
                 }
-                q0 = un21 / vn1;
-                rhat = un21 - ((un21 / vn1) * vn1);// un21 % vn1;
-                left = q0 * vn0;
-                right = (rhat << 32) | un0;
-                while ((left > right) || (q0 != (uint)q0)) {
-                    q0--;
-                    rhat += vn1;
+                quotLo = shLoMid / denHi;
+                rhat = shLoMid - ((shLoMid / denHi) * denHi);
+                right = (rhat << 32) | (uint)shLo;
+                left = quotLo * denLo;
+                while ((quotLo != (uint)quotLo) || (left > right)) {
+                    quotLo--;
+                    rhat += denHi;
                     if (rhat != (uint)rhat) break;
-                    left -= vn0;
-                    right = (rhat << 32) | un0;
+                    right = (rhat << 32) | (uint)shLo;
+                    left -= denLo;
                 }
-                return ((un21 << 32) + (un0 - (q0 * denominator))) >> s;
+                return ((shLoMid << 32) + (((uint)shLo) - (quotLo * denominator))) >> shift;
             }
         }
 

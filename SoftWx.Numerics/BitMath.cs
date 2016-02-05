@@ -293,7 +293,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose most significant bit position is desired.</param>
         /// <returns>The value parameter's most significant bit position.</returns>
         public static int HighBitPosition(this byte value) {
-            return (int)(sbyte)msbPos256[value];
+            return (sbyte)msbPos256[value];
         }
 
         /// <summary>Returns the most significant set bit position of the specified value,
@@ -311,8 +311,9 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose most significant bit position is desired.</param>
         /// <returns>The value parameter's most significant bit position.</returns>
         public static int HighBitPosition(this ushort value) {
-            int high = (byte)(value >> 8);
-            return (high != 0) ? 8 + msbPos256[high] : (int)(sbyte)msbPos256[(byte)value];
+            byte hiByte = (byte)(value >> 8);
+            if (hiByte != 0) return 8 + msbPos256[hiByte];
+            return (sbyte)msbPos256[(byte)value];
         }
 
         /// <summary>Returns the most significant set bit position of the specified value,
@@ -330,8 +331,10 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose most significant bit position is desired.</param>
         /// <returns>The value parameter's most significant bit position.</returns>
         public static int HighBitPosition(this uint value) {
-            ushort high = (ushort)(value >> 16);
-            return (high != 0) ? 16 + HighBitPosition(high) : HighBitPosition((ushort)value);
+            byte hiByte = (byte)(value >> 24);
+            if (hiByte != 0) return 24 + msbPos256[hiByte];
+            hiByte = (byte)(value >> 16);
+            return (hiByte != 0) ? 16 + msbPos256[hiByte] : HighBitPosition((ushort)value);
         }
 
         /// <summary>Returns the most significant set bit position of the specified value,
@@ -368,7 +371,12 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose most significant bit position is desired.</param>
         /// <returns>The value parameter's most significant bit position.</returns>
         public static int HighBitPosition(this UInt128 value) {
-            return (value.High != 0) ? 64 + HighBitPosition(value.High) : HighBitPosition(value.Low);
+            byte hiByte = (byte)(value.High >> 56);
+            if (hiByte != 0) return (128 - 8) + msbPos256[hiByte];
+            hiByte = (byte)(value.High >> 16);
+            if (hiByte != 0) return (128 - 16) + msbPos256[hiByte];
+            uint high = (uint)(value.High >> 32);
+            return (value.High != 0) ? 64 + HighBitPosition(high) : HighBitPosition(value.Low);
         }
 
         /// <summary>Returns the count of trailing zero bits in the specified value.</summary>
@@ -457,7 +465,7 @@ namespace SoftWx.Numerics {
         /// <returns>The count of the value parameter's leading zero bits.</returns>
         public static int LeadingZeroBits(this byte value) {
             // note that (byte)(7 - 255) = 8, so no need to test for value == 0
-            return (byte)(7 - msbPos256[value]);
+            return (byte)unchecked(7 - msbPos256[value]);
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
@@ -473,7 +481,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
         public static int LeadingZeroBits(this ushort value) {
-            return 15 - HighBitPosition(value);
+            return unchecked(15 - HighBitPosition(value));
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
@@ -489,7 +497,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
         public static int LeadingZeroBits(this uint value) {
-            return 31 - HighBitPosition(value);
+            return unchecked(31 - HighBitPosition(value));
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
@@ -505,7 +513,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
         public static int LeadingZeroBits(this ulong value) {
-            return 63 - HighBitPosition(value);
+            return unchecked(63 - HighBitPosition(value));
         }
 
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>

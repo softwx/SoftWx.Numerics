@@ -1,6 +1,7 @@
 ﻿// Copyright ©2012-2016 SoftWx, Inc.
 // Released under the MIT License the text of which appears at the end of this file.
 // <authors> Steve Hatchett
+
 namespace SoftWx.Numerics {
     /// <summary>
     /// Numeric extension methods for math operations related to prime numbers
@@ -48,10 +49,20 @@ namespace SoftWx.Numerics {
         /// <summary>Computes the greatest common divisor of two values.</summary>
         /// <param name="value1">The first value.</param>
         /// <param name="value2">The other value.</param>
+        /// <remarks>This is the Euclidean algorithm with a modification that
+        /// does mod by subtraction when the two values are close to each
+        /// other. This was the result of experimenting with the iterative
+        /// binary GCD algorithm, which gave great results for most inputs,
+        /// but such terrible results for some inputs that it was on average
+        /// worse than straight Euclidean within the range of ints dealt with.
+        /// But adding some subtration mod into Euclidean outperformed both.
+        /// Also adding in the shifting of even values from binary GCD did not
+        /// help. While the subtraction mod modification helped greatly with
+        /// ulong values, and somewhat with UInt128 values, it didn't noticeably
+        /// improve GCD of the uint value range.</remarks>
         /// <returns>The greatest common divisor of the two values.</returns>
         public static ulong Gcd(this ulong value1, ulong value2) {
-            ulong t = value1 | value2;
-            if ((uint)t == t) return Gcd((uint)value1, (uint)value2);
+            ulong t;
             if (value1 > value2) {
                 t = value1;
                 value1 = value2;
@@ -62,7 +73,7 @@ namespace SoftWx.Numerics {
                 if ((value2 >> 3) < t) {
                     while ((value2 -= t) > t) ;
                     value1 = value2;
-                    value2 = t;
+                    value2 = t; // redundant having this here and below rather than just one after the if/else, but it saves a branch
                 } else {
                     if ((uint)value2 == value2) return Gcd((uint)value1, (uint)value2);
                     value1 = value2 % t;
@@ -85,9 +96,13 @@ namespace SoftWx.Numerics {
         /// <summary>Computes the greatest common divisor of two values.</summary>
         /// <param name="value1">The first value.</param>
         /// <param name="value2">The other value.</param>
+        /// <remarks>It's faster to do the mod by subtraction by trying it a few
+        /// times rather than testing first as done in the ulong version. This is
+        /// probably because the shift operation and the greater than test is more
+        /// expensive for UInt128.</remarks>
         /// <returns>The greatest common divisor of the two values.</returns>
         public static UInt128 Gcd(this UInt128 value1, UInt128 value2) {
-            if ((value1.High | value2.High) == 0UL) return Gcd(value1.Low, value2.Low);
+            if ((value2.High == 0UL) && (value1.High == 0UL)) return Gcd(value1.Low, value2.Low);
             UInt128 t;
             if (value1 > value2) {
                 t = value1;
@@ -609,7 +624,7 @@ namespace SoftWx.Numerics {
         }
         /// <summary>Determines if the specified odd value, >= 3 is a prime number, using the
         /// Miller-Rabin algorithm.</summary>
-        /// <param name="value">The uint value (which must be odd and >=3) to be tested for primality.</param>
+        /// <param name="value">The uint value (which must be odd and > uint.MaxValue) to be tested for primality.</param>
         /// <param name="witnesses">The witnesses to be used.</param>
         /// <returns>True if the value is prime, otherwise, false.</returns>
         private static bool InternalMillerRabin(ulong value, ulong[] witnesses) {
