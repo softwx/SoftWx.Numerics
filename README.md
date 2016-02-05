@@ -48,5 +48,5 @@ Classes:
   * ToString - Simple ToString implementation
   * implicit cast - ulong to UInt128
   * explicit cast - UInt128 to ulong
-  * operators - equality(==), inequality(!=), greater than(>), less than(<), greater than or equal(>=), less than or equal(<=), bitwise complement(~), bitwise and(&), bitwise or(|), left shift(<<), right shift(>>), addition(+), subtraction(-), increment(++), decrement(--), multiplication(*), modulus(%)
+  * operators - equality(==), inequality(!=), greater than(>), less than(<), greater than or equal(>=), less than or equal(<=), bitwise complement(~), bitwise and(&), bitwise or(|), left shift(<<), right shift(>>), addition(+), subtraction(-), increment(++), decrement(--), multiplication(*), division(/), modulus(%)
   
