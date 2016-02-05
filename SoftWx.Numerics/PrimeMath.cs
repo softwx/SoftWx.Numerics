@@ -597,7 +597,7 @@ namespace SoftWx.Numerics {
             uint valLessOne = value - 1;
             uint d = valLessOne / 2; // we know that value is odd and valLessOne is even, so unroll 1st iter of loop
             int s = 0;
-            if ((d % 1) == 0) {
+            if ((d << 31) == 0) {
                 s = d.TrailingZeroBits();
                 d >>= s;
             }
@@ -632,7 +632,7 @@ namespace SoftWx.Numerics {
             ulong valLessOne = value - 1;
             ulong d = valLessOne / 2; // we know that value is odd and valLessOne is even, so unroll 1st iter of loop
             int s = 0;
-            if ((d % 1) == 0) {
+            if ((d << 63) == 0) {
                 s = d.TrailingZeroBits();
                 d >>= s;
             }

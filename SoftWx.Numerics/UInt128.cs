@@ -469,7 +469,7 @@ namespace SoftWx.Numerics {
                     int denShift = denHiBit + 1;
                     den = (denominator >> denShift).lo;
                     if (den > remainder.hi) {
-                        // no danger of overflow
+                        // we already know division quotient will fit in a ulong
                         den++;
                         if (den == 0) {
                             // handle the rare case where the shifted den + 1 overflows
@@ -479,7 +479,7 @@ namespace SoftWx.Numerics {
                         resLo = DivUnchecked(remainder.hi, remainder.lo, den);
                         resLo >>= denShift;
                     } else {
-                        // avoid overflow
+                        // ensure division quotient will fit in a ulong
                         den++; // den + 1 can't overflow, because it's less then remainder.hi
                         ulong resHi = remainder.hi / den;
                         ulong remHi = remainder.hi - ((remainder.hi / den) * den);
@@ -498,7 +498,7 @@ namespace SoftWx.Numerics {
         internal UInt128 Divide(ulong denominator) {
             ulong resHi = 0;
             ulong remHi = this.hi;
-            //prevent incorrect results if ulong divide would overflow
+            //ensure we can divide a UInt128 by a ulong, and have the quotient fit in a ulong
             if (remHi >= denominator) {
                 resHi = remHi / denominator;
                 remHi -= (resHi * denominator);
@@ -597,7 +597,7 @@ namespace SoftWx.Numerics {
                     int denShift = denHiBit + 1;
                     den = (denominator >> denShift).lo;
                     if (den > remainder.hi) {
-                        // no danger of overflow
+                        // we already know division quotient will fit in a ulong
                         den++;
                         if (den == 0) {
                             // handle the rare case where the shifted den + 1 overflows
@@ -607,7 +607,7 @@ namespace SoftWx.Numerics {
                         resLo = DivUnchecked(remainder.hi, remainder.lo, den);
                         resLo >>= denShift;
                     } else {
-                        // avoid overflow
+                        // ensure division quotient will fit in a ulong
                         den++; // den + 1 can't overflow, because it's less then remainder.hi
                         ulong resHi = remainder.hi / den;
                         ulong remHi = remainder.hi - ((remainder.hi / den) * den);
@@ -626,7 +626,7 @@ namespace SoftWx.Numerics {
             unchecked {
                 ulong high = this.hi;
                 ulong low = this.lo;
-                //prevent incorrect results if divide would overflow
+                //ensure we can divide a UInt128 by a ulong, and have the quotient fit in a ulong
                 if (high >= denominator) high -= ((high / denominator) * denominator);
                 if (high == 0) return low - ((low / denominator) * denominator);
 
