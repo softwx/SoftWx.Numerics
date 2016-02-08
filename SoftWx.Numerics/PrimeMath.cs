@@ -563,7 +563,6 @@ namespace SoftWx.Numerics {
             return (res <= long.MaxValue) ? (long)res : 0;
         }
 
-        /// <summary>
         // precomputed witnesses and the maximum value up to which they guarantee primality
         private static readonly ulong[] witnessMaxes = new ulong[] {
             341531, 1050535501, 350269456337, 55245642489451, 7999252175582851, 585226005592931977, ulong.MaxValue};

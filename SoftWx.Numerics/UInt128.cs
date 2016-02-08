@@ -239,9 +239,19 @@ namespace SoftWx.Numerics {
         public static UInt128 operator &(UInt128 left, UInt128 right) {
             return new UInt128(left.hi & right.hi, left.lo & right.lo);
         }
+
+        /// <summary>Performs a bitwise And operation on two values.</summary>
+        /// <param name="left">The first value.</param>
+        /// <param name="right">The second value.</param>
+        /// <returns>The result of the bitwise And operation.</returns>
         public static UInt128 operator &(UInt128 left, ulong right) {
             return new UInt128(0, left.lo & right);
         }
+
+        /// <summary>Performs a bitwise And operation on two values.</summary>
+        /// <param name="left">The first value.</param>
+        /// <param name="right">The second value.</param>
+        /// <returns>The result of the bitwise And operation.</returns>
         public static UInt128 operator &(ulong left, UInt128 right) {
             return new UInt128(0, left & right.lo);
         }

@@ -2,6 +2,9 @@
 // Released under the MIT License the text of which appears at the end of this file.
 // <authors> Steve Hatchett
 namespace SoftWx.Numerics {
+    /// <summary>
+    /// Numeric extension methods for general math operations on integer numeric types.
+    /// </summary>
     public static class Math {
         /// <summary>Returns the absolute value of the specified signed value
         /// as a corresponding unsigned type. Absolute value of MinValue is 
@@ -73,6 +76,12 @@ namespace SoftWx.Numerics {
             return (sbyte)((value1 * value2) % modulus);
         }
 
+        /// <summary>Compute the modulo (division remainder) of a number multiplied by another number.</summary>
+        /// <remarks>Overflow safe for all input values. </remarks>
+        /// <param name="value1">The number to be multiplied by value2.</param>
+        /// <param name="value2">The number to be multiplied by value1.</param>
+        /// <param name="modulus">The number by which to divide value raised to the exponent power.</param>
+        /// <returns>The remainder after dividing the product of multiplying value1 and value2.</returns>
         public static ushort MulMod(this ushort value1, ushort value2, ushort modulus) {
             return (ushort)((value1 * value2) % modulus);
         }
