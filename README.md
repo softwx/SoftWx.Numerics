@@ -5,9 +5,7 @@ NuGet package at (coming soon)
 Currently contains bit fiddling, base 2 math, general math, and prime number math methods for the 8 built-in integer types (byte, sbyte, ushort, short, uint, int, ulong, and long), and the SoftWx.Numerics.UInt128 type. The library originally started with some blog posts (http://blog.softwx.net/2013/05/miller-rabin-primality-test-in-c.html) on deterministic Miller Rabin prime testing.
 This github library is meant to replace and improve the code that went with those blog posts. To run the Profile project included in this repository's solution, you'll need to bring in the NuGet package SoftWx.Diagnostics.
 
-Next, will be catching up unit tests for recently added methods.
-
-This is currently a work in progress. Still to do: add unit tests for UInt128, add to implementation of UInt128, and add unit tests for prime related methods.
+This is currently a work in progress. Still to do: add unit tests for prime related methods.
 
 Classes:
 * BitMath - optimized bit fiddling methods for integer types
