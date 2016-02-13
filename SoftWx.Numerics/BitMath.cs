@@ -302,7 +302,7 @@ namespace SoftWx.Numerics {
         /// <param name="value">The value whose most significant bit position is desired.</param>
         /// <returns>The value parameter's most significant bit position.</returns>
         public static int HighBitPosition(this sbyte value) {
-            return (int)(sbyte)msbPos256[(byte)value]; // the cast to byte is not redundant (avoids sign bit extension)
+            return (sbyte)msbPos256[(byte)value]; // the cast to byte is not redundant (avoids sign bit extension)
         }
 
         /// <summary>Returns the most significant set bit position of the specified value,

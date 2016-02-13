@@ -121,7 +121,7 @@ namespace SoftWx.Numerics.Tests {
         [Test]
         public void SubtractOperatorShouldHandleUnderflow() {
             var expected = new UInt128(ulong.MaxValue, ulong.MaxValue);
-            var actual = new UInt128(0, 9) - new UInt128(0, 10);
+            var actual = unchecked(new UInt128(0, 9) - new UInt128(0, 10));
             Assert.AreEqual(expected, actual);
         }
         [Test]

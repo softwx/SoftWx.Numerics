@@ -9,7 +9,7 @@ using System;
 namespace SoftWx.Numerics {
     /// <summary>Represents a 128-bit unsigned integer.</summary>
     /// <remarks>The UInt128 struct is immutable.</remarks>
-    public struct UInt128 : IEquatable<UInt128> {
+    public struct UInt128 : IEquatable<UInt128>, IComparable, IComparable<UInt128> {
         private readonly ulong hi;
         private readonly ulong lo;
 
@@ -123,6 +123,33 @@ namespace SoftWx.Numerics {
             if (this.hi == 0) return loStr;
             loStr = new string('0', (64/4) - loStr.Length) + loStr;
             return this.hi.ToString("X") + ' ' + loStr;
+        }
+
+        /// <summary>Compares the current instance with another object of the same type and 
+        /// returns an integer that indicates whether the current instance precedes, follows,
+        /// or occurs in the same position in the sort order as the other object.</summary>
+        /// <param name="other">An object to compare with this instance.</param>
+        /// <returns>A value that indicates the relative order of the itmes being compared. 
+        /// The return value has these meanings: -1 This is less than other, 0 this equals
+        /// other, 1 this is greater than other.</returns>
+        public int CompareTo(object other) {
+            if (other == null) return 1;
+            if (!(other is UInt128)) throw new ArgumentException("Argument must be UInt128");
+            UInt128 num = (UInt128)other;
+            if (this > num) return 1;
+            return (this == num) ? 0 : -1;
+        }
+
+        /// <summary>Compares the current instance with another object of the same type and 
+        /// returns an integer that indicates whether the current instance precedes, follows,
+        /// or occurs in the same position in the sort order as the other object.</summary>
+        /// <param name="other">An object to compare with this instance.</param>
+        /// <returns>A value that indicates the relative order of the itmes being compared. 
+        /// The return value has these meanings: -1 This is less than other, 0 this equals
+        /// other, 1 this is greater than other.</returns>
+        public int CompareTo(UInt128 other) {
+            if (this > other)  return 1;
+            return (this == other) ? 0 : -1;
         }
 
         /// <summary>Defines an explicit conversion of a UInt128 value to an unsigned long value.</summary>
@@ -702,18 +729,18 @@ namespace SoftWx.Numerics {
             remainder = remHi | (uint)(this.lo);
             return (uint)(remainder % denominator);
         }
-
     }
 #if StandaloneUInt128
     internal static class SoftWxNumerics {
-        public static int HighBitPosition(this ulong value) {
-            uint high = (uint)(value >> 32);
-            return (high != 0) ? 32 + HighBitPosition(high) : HighBitPosition((uint)value);
-        }
         private static readonly byte[] DeBruijnLSBsSet = new byte[] {
             0, 9, 1, 10, 13, 21, 2, 29, 11, 14, 16, 18, 22, 25, 3, 30,
             8, 12, 20, 28, 15, 17, 24, 7, 19, 27, 23, 6, 26, 5, 4, 31
         };
+        /// <summary>Returns the most significant set bit position of the specified value,
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
+        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
+        /// <param name="value">The value whose most significant bit position is desired.</param>
+        /// <returns>The value parameter's most significant bit position.</returns>
         public static int HighBitPosition(this uint value) {
             if (value == 0) return -1;
             value |= value >> 1;
@@ -722,12 +749,21 @@ namespace SoftWx.Numerics {
             value |= value >> 8;
             return DeBruijnLSBsSet[unchecked((value | value >> 16) * 0x07c4acddu) >> 27];
         }
+        /// <summary>Returns the most significant set bit position of the specified value,
+        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
+        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
+        /// <param name="value">The value whose most significant bit position is desired.</param>
+        /// <returns>The value parameter's most significant bit position.</returns>
+        public static int HighBitPosition(this ulong value) {
+            uint high = (uint)(value >> 32);
+            return (high != 0) ? 32 + HighBitPosition(high) : HighBitPosition((uint)value);
+        }
         /// <summary>Returns the count of leading zero bits in the specified value.</summary>
         /// <remarks>Example: LeadingZeroBits(10) returns 4, i.e. 00001010 has 4 leading 0 bits.</remarks>
         /// <param name="value">The value whose leading zero bit count is desired.</param>
         /// <returns>The count of the value parameter's leading zero bits.</returns>
-        public static int LeadingZeroBits(this ulong value) {
-            return 63 - HighBitPosition(value);
+        public static int LeadingZeroBits(this uint value) {
+            return unchecked(31 - HighBitPosition(value));
         }
         /// <summary>Determines if the specified value is a power of 2.</summary>
         /// <param name="value">The value to be tested as a power of 2.</param>
@@ -746,14 +782,6 @@ namespace SoftWx.Numerics {
         /// <returns>True if the value is a power of 2, otherwise false.</returns>
         public static bool IsPowerOf2(this UInt128 value) {
             return ((value & unchecked(value - 1)) == 0) && (value != 0);
-        }
-        /// <summary>Returns the most significant set bit position of the specified value,
-        /// or -1 if no bits were set. The least significant bit position is 0.</summary>
-        /// <remarks>Example: HighBitPosition(10) returns 3, i.e. high bit of 00001010 is position 3.</remarks>
-        /// <param name="value">The value whose most significant bit position is desired.</param>
-        /// <returns>The value parameter's most significant bit position.</returns>
-        public static int HighBitPosition(this UInt128 value) {
-            return (value.High != 0) ? 64 + HighBitPosition(value.High) : HighBitPosition(value.Low);
         }
     }
 #endif

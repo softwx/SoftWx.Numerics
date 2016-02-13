@@ -65,7 +65,7 @@ namespace SoftWx.Numerics.Tests {
             byte v = byte.MinValue;
             while(true) {
                 byte expected = BitMath.LowBit(v);
-                Assert.AreEqual((sbyte)expected, BitMath.LowBit((sbyte)v), "sbyte");
+                Assert.AreEqual(unchecked((sbyte)expected), BitMath.LowBit(unchecked((sbyte)v)), "sbyte");
                 Assert.AreEqual((ushort)expected, BitMath.LowBit((ushort)v), "ushort");
                 Assert.AreEqual((short)expected, BitMath.LowBit((short)v), "short");
                 Assert.AreEqual((uint)expected, BitMath.LowBit((uint)v), "uint");
@@ -122,7 +122,7 @@ namespace SoftWx.Numerics.Tests {
             byte v = byte.MinValue;
             while (true) {
                 byte expected = BitMath.HighBit(v);
-                Assert.AreEqual((sbyte)expected, BitMath.HighBit((sbyte)v), "sbyte");
+                Assert.AreEqual(unchecked((sbyte)expected), BitMath.HighBit(unchecked((sbyte)v)), "sbyte");
                 Assert.AreEqual((ushort)expected, BitMath.HighBit((ushort)v), "ushort");
                 Assert.AreEqual((short)expected, BitMath.HighBit((short)v), "short");
                 Assert.AreEqual((uint)expected, BitMath.HighBit((uint)v), "uint");
@@ -192,7 +192,7 @@ namespace SoftWx.Numerics.Tests {
             byte v = byte.MinValue;
             while (true) {
                 int expected = BitMath.LowBitPosition(v);
-                Assert.AreEqual(expected, BitMath.LowBitPosition((sbyte)v), "sbyte");
+                Assert.AreEqual(expected, BitMath.LowBitPosition(unchecked((sbyte)v)), "sbyte");
                 Assert.AreEqual(expected, BitMath.LowBitPosition((ushort)v), "short");
                 Assert.AreEqual(expected, BitMath.LowBitPosition((short)v), "short");
                 Assert.AreEqual(expected, BitMath.LowBitPosition((uint)v), "uint");
@@ -249,7 +249,7 @@ namespace SoftWx.Numerics.Tests {
             byte v = byte.MinValue;
             while (true) {
                 int expected = BitMath.HighBitPosition(v);
-                Assert.AreEqual(expected, BitMath.HighBitPosition((sbyte)v), "sbyte");
+                Assert.AreEqual(expected, BitMath.HighBitPosition(unchecked((sbyte)v)), "sbyte");
                 Assert.AreEqual(expected, BitMath.HighBitPosition((ushort)v), "ushort");
                 Assert.AreEqual(expected, BitMath.HighBitPosition((short)v), "short");
                 Assert.AreEqual(expected, BitMath.HighBitPosition((uint)v), "uint");
@@ -318,7 +318,7 @@ namespace SoftWx.Numerics.Tests {
         public void TrailingZeroBitsByteShouldMatchWider() {
             byte v = byte.MinValue;
             while (true) {
-                Assert.AreEqual(BitMath.TrailingZeroBits(v), BitMath.TrailingZeroBits((sbyte)v), "sbyte");
+                Assert.AreEqual(BitMath.TrailingZeroBits(v), BitMath.TrailingZeroBits(unchecked((sbyte)v)), "sbyte");
                 if (v == 0) {
                     v++;
                     continue; // the result for 0 is type dependant
@@ -418,7 +418,7 @@ namespace SoftWx.Numerics.Tests {
             byte v = byte.MinValue;
             while (true) {
                 int expected = BitMath.SignificantBits(v);
-                Assert.AreEqual(expected, BitMath.SignificantBits((sbyte)v), "sbyte");
+                Assert.AreEqual(expected, BitMath.SignificantBits(unchecked((sbyte)v)), "sbyte");
                 Assert.AreEqual(expected, BitMath.SignificantBits((ushort)v), "ushort");
                 Assert.AreEqual(expected, BitMath.SignificantBits((short)v), "short");
                 Assert.AreEqual(expected, BitMath.SignificantBits((uint)v), "uint");
@@ -487,7 +487,7 @@ namespace SoftWx.Numerics.Tests {
         public void BitCountByteShouldMatchWider() {
             byte v = byte.MinValue;
             while (true) {
-                Assert.AreEqual(BitMath.BitCount(v), BitMath.BitCount((sbyte)v), "sbyte");
+                Assert.AreEqual(BitMath.BitCount(v), BitMath.BitCount(unchecked((sbyte)v)), "sbyte");
                 Assert.AreEqual(BitMath.BitCount(v), BitMath.BitCount((ushort)v), "ushort");
                 Assert.AreEqual(BitMath.BitCount(v), BitMath.BitCount((short)v), "short");
                 Assert.AreEqual(BitMath.BitCount(v), BitMath.BitCount((uint)v), "uint");

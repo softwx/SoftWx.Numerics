@@ -2,19 +2,23 @@
 <package >
   <metadata>
     <id>SoftWx.Numerics</id>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <title>SoftWx.Numerics</title>
     <authors>Steve Hatchett</authors>
     <owners>SoftWx, Inc.</owners>
     <description>
-      Library containing a UInt128 class, and extensions to .Net's built in integral data types.
+Library containing a UInt128 class, and extensions to .Net's built in integral data types.
+The version targeting .Net 4.5 is implemented as a Portable Class Library.
+The methods in this library were written with speed in mind. UInt128 operations are generally much faster than BigInteger.
+Includes an IsPrime method for ulong that's pretty fast even for ulong values near MaxValue, as it uses the Miller-Rabin algorithm that's deterministic (not probable) over the range of ulong values.
     </description>
     <releaseNotes>
-      2.0.0 First NuGet release. Added UInt128 class, removed dependency on BigInteger, numerous other improvements.
-      1.0.0 First release, via http://blog.softwx.net
+2.0.1 Added IComparable interface implementations to UInt128.
+2.0.0 First NuGet release. Added UInt128 class, removed dependency on BigInteger, numerous other improvements.
+1.0.0 First release, via http://blog.softwx.net
     </releaseNotes>
     <summary>
-      Assembly containing methods to support benchmarking speed and memory consumption of .Net code.
+Library containing a UInt128 class, and extensions to .Net's built in integral data types.
     </summary>
     <language>en-US</language>
     <projectUrl>https://github.com/softwx/SoftWx.Numerics</projectUrl>
@@ -29,12 +33,15 @@
     </dependencies>
     <references></references>
     <frameworkAssemblies></frameworkAssemblies>
-    <tags>SoftWx benchmark benchmarking memory</tags>
+    <tags>SoftWx Prime IsPrime Gcd UInt128 Integer Numeric</tags>
   </metadata>
   <files>
-    <file src="..\SoftWx.Numerics\bin\release\net35\SoftWx.Numerics.*" target="lib\net35" />
-    <file src="..\SoftWx.Numerics\bin\release\net40\SoftWx.Numerics.*" target="lib\net40" />
-    <file src="..\SoftWx.Numerics\bin\release\net45\SoftWx.Numerics.*" target="lib\net45" />
+    <file src="..\SoftWx.Numerics\bin\release\net35\SoftWx.Numerics.dll" target="lib\net35" />
+    <file src="..\SoftWx.Numerics\bin\release\net35\SoftWx.Numerics.xml" target="lib\net35" />
+    <file src="..\SoftWx.Numerics\bin\release\net40\SoftWx.Numerics.dll" target="lib\net40" />
+    <file src="..\SoftWx.Numerics\bin\release\net40\SoftWx.Numerics.xml" target="lib\net40" />
+    <file src="..\SoftWx.Numerics\bin\release\net45\SoftWx.Numerics.dll" target="lib\net45" />
+    <file src="..\SoftWx.Numerics\bin\release\net45\SoftWx.Numerics.xml" target="lib\net45" />
     <file src="tools\" target="tools" />
     <file src="content\" target="content" />
   </files>
